@@ -49,6 +49,7 @@
 /* USER CODE END Header */
 
 /* Includes ------------------------------------------------------------------*/
+
 #include "main.h"
 #include "cmsis_os.h"
 
@@ -56,7 +57,7 @@
 /* USER CODE BEGIN Includes */
 #include <math.h>
 #include "dwt_stm32_delay.h"
-
+#include "locki.h"
 /* Private variables ---------------------------------------------------------*/
 ADC_HandleTypeDef hadc1;
 CAN_HandleTypeDef hcan1;
@@ -77,17 +78,18 @@ void StartTarea1(void const * argument);
 
 /* Variables para depuracion */
 int ContTarea1 = 0;
-int VelocidadActual = 0;
+int valorSemaforo= 0;
 /*Prioridades de las Tareas Periodicas*/
 #define PR_TAREA1 2
 #define PR_TAREA2 3
 
 /*Periodos de las tareas*/
-#define T_TAREA1 300
+#define T_TAREAVELOCIDAD 250
 #define T_TAREA2 800
 
 #define TRUE 1
 #define FALSE 0
+pobject_t *VelocidadActual;
 //función auxiliar de estandarización de valores:
 int map(int x, int in_min, int in_max, int out_min, int out_max)
 {
@@ -105,7 +107,7 @@ void myTask01(void const * argument){
 		
 	  HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_8); 
 		
-    osDelay(T_TAREA1);
+    osDelay(T_TAREAVELOCIDAD);
   }
 	
 }
@@ -125,39 +127,15 @@ void myTask02(void const * argument){
 	
 }
 
-/**if (VelocidadActual<64){
-				
-				HAL_GPIO_WritePin(GPIOD, GPIO_PIN_12,1);
-				HAL_GPIO_WritePin(GPIOD, GPIO_PIN_13,0);
-				HAL_GPIO_WritePin(GPIOD, GPIO_PIN_14,0);
-				HAL_GPIO_WritePin(GPIOD, GPIO_PIN_15,0);
-			}else{
-				if(VelocidadActual<128){
-					HAL_GPIO_WritePin(GPIOD, GPIO_PIN_12,0);
-				HAL_GPIO_WritePin(GPIOD, GPIO_PIN_13,1);
-				HAL_GPIO_WritePin(GPIOD, GPIO_PIN_14,0);
-				HAL_GPIO_WritePin(GPIOD, GPIO_PIN_15,0);
-				}else{
-					if(VelocidadActual<192){
-						HAL_GPIO_WritePin(GPIOD, GPIO_PIN_12,0);
-				HAL_GPIO_WritePin(GPIOD, GPIO_PIN_13,0);
-				HAL_GPIO_WritePin(GPIOD, GPIO_PIN_14,1);
-				HAL_GPIO_WritePin(GPIOD, GPIO_PIN_15,0);
-					}else{
-						HAL_GPIO_WritePin(GPIOD, GPIO_PIN_12,0);
-				HAL_GPIO_WritePin(GPIOD, GPIO_PIN_13,0);
-				HAL_GPIO_WritePin(GPIOD, GPIO_PIN_14,0);
-				HAL_GPIO_WritePin(GPIOD, GPIO_PIN_15,1);
-					}
-				}
-			}*/
 
 void myTask03(void const * argument)
 {
 	HAL_GPIO_WritePin(GPIOD, GPIO_PIN_12, GPIO_PIN_RESET);
-	HAL_GPIO_WritePin(GPIOD, GPIO_PIN_13, GPIO_PIN_SET);
+	HAL_GPIO_WritePin(GPIOD, GPIO_PIN_13, GPIO_PIN_RESET);
 	HAL_GPIO_WritePin(GPIOD, GPIO_PIN_14, GPIO_PIN_RESET);
-	HAL_GPIO_WritePin(GPIOD, GPIO_PIN_15, GPIO_PIN_SET);
+	HAL_GPIO_WritePin(GPIOD, GPIO_PIN_15, GPIO_PIN_RESET);
+	
+	
 	
   /* Infinite loop */
   for(;;)
@@ -173,10 +151,12 @@ void myTask03(void const * argument)
 		HAL_ADC_Start(&hadc1); // comenzamos la conversón AD
 		if(HAL_ADC_PollForConversion(&hadc1, 5) == HAL_OK){
 			actual = map(HAL_ADC_GetValue(&hadc1),0,255,0,200); // leemos el valor
-			VelocidadActual = actual; // actualizamos una variable global
+			HAL_GPIO_WritePin(GPIOD, GPIO_PIN_15,!ILOCK_write(VelocidadActual, actual)); // actualizamos una variable global
 		
+			ILOCK_read(VelocidadActual,&valorSemaforo);
+			
 		}
-	osDelay(T_TAREA1);
+	osDelay(T_TAREAVELOCIDAD);
 	}
   
 }
@@ -208,7 +188,8 @@ int main(void)
   /* definition and creation of mutex1 */
   osMutexDef(mutex1);
   mutex1Handle = osMutexCreate(osMutex(mutex1));
-
+	VelocidadActual = LOCK_create();
+	
   /* Create the thread(s) */
   /* definition and creation of Tarea1 */
   //osThreadDef(Tarea1, StartTarea1, PR_TAREA1, 0, 128);

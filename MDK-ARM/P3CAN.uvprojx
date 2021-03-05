@@ -418,6 +418,26 @@
               <FileType>1</FileType>
               <FilePath>../Src/stm32f4xx_hal_timebase_tim.c</FilePath>
             </File>
+            <File>
+              <FileName>lock.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Src\lock.c</FilePath>
+            </File>
+            <File>
+              <FileName>locki.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Src\locki.c</FilePath>
+            </File>
+            <File>
+              <FileName>lock.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\Inc\lock.h</FilePath>
+            </File>
+            <File>
+              <FileName>locki.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\Inc\locki.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

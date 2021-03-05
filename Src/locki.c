@@ -20,16 +20,21 @@
 
 static int _value = 0;
 
-int ILOCK_read(void) {
-    LOCK_acquire();
-    int val = _value;
-    LOCK_release();
+SemaforoEntero ILOCK_create(int initial){
+	SemaphoreHandle_t lock = LOCK_create();
+	return (SemaforoEntero){initial,lock};
+}
+
+int ILOCK_read(SemaforoEntero sem) {
+    LOCK_acquire(sem.sem);
+    int val = sem.value;
+    LOCK_release(sem.sem);
     return val;
 }
 
-void ILOCK_write(int value) {
-    LOCK_acquire();
-    _value = value;
-    LOCK_release();
+void ILOCK_write(SemaforoEntero sem, int value) {
+    LOCK_acquire(sem.sem);
+    sem.value = value;
+    LOCK_release(sem.sem);
     // return LOCK_write(container, &value);
 }

@@ -22,8 +22,13 @@
 
 extern int _value;
 
+typedef struct {
+	int value;
+	SemaphoreHandle_t sem;
+}SemaforoEntero;
 
-int ILOCK_read(void);
-void ILOCK_write(int);
+SemaforoEntero ILOCK_create(int);
+int ILOCK_read(SemaforoEntero sem);
+void ILOCK_write(SemaforoEntero sem, int value);
 
 #endif /* LOCKI_H */

@@ -80,6 +80,7 @@ void StartTarea1(void const * argument);
 int ContTarea1 = 0;
 int valorSemaforo= 0;
 int valorSemaforoantes= 0;
+SemaforoEntero VelocidadActual;
 /*Prioridades de las Tareas Periodicas*/
 #define PR_TAREA1 2
 #define PR_TAREA2 3
@@ -90,7 +91,6 @@ int valorSemaforoantes= 0;
 
 #define TRUE 1
 #define FALSE 0
-pobject_t *VelocidadActual;
 //función auxiliar de estandarización de valores:
 int map(int x, int in_min, int in_max, int out_min, int out_max)
 {
@@ -146,7 +146,7 @@ void myTask03(void const * argument)
 		if(HAL_ADC_PollForConversion(&hadc1, 5) == HAL_OK){
 			actual = map(HAL_ADC_GetValue(&hadc1),0,255,0,200); // leemos el valor
 			valorSemaforoantes = actual;
-			HAL_GPIO_WritePin(GPIOD, GPIO_PIN_15,!ILOCK_write(VelocidadActual, actual)); // actualizamos una variable global
+			ILOCK_write(VelocidadActual,actual); // actualizamos una variable global
 		
 			valorSemaforo = ILOCK_read(VelocidadActual);
 			
@@ -183,7 +183,7 @@ int main(void)
   /* definition and creation of mutex1 */
   osMutexDef(mutex1);
   mutex1Handle = osMutexCreate(osMutex(mutex1));
-	VelocidadActual = LOCK_create();
+	VelocidadActual = ILOCK_create(0);
 	
   /* Create the thread(s) */
   /* definition and creation of Tarea1 */

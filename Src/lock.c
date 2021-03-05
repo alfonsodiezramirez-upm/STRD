@@ -22,31 +22,29 @@
 #include <stddef.h>
 #include <stdlib.h>
 
-static SemaphoreHandle_t _lock;
 
-char LOCK_create(void) {
+SemaphoreHandle_t LOCK_create(void) {
     SemaphoreHandle_t xSemaphore = xSemaphoreCreateMutex();
     if (xSemaphore != NULL) {
-        _lock = xSemaphore;
-        return 0;
+        return xSemaphore;
     }
-    return 1;
+    return NULL;
 }
 
-void LOCK_destroy(void) {
-    vSemaphoreDelete(_lock);
+void LOCK_destroy(SemaphoreHandle_t semaforo) {
+    vSemaphoreDelete(semaforo);
 }
 
-long LOCK_acquire(void) {
-    return xSemaphoreTake(_lock, portMAX_DELAY);
+long LOCK_acquire(SemaphoreHandle_t semaforo) {
+    return xSemaphoreTake(semaforo, portMAX_DELAY);
 }
 
-void LOCK_release(void) {
-    xSemaphoreGive(_lock);
+void LOCK_release(SemaphoreHandle_t semaforo) {
+    xSemaphoreGive(semaforo);
 }
 
 // void *LOCK_read(pobject_t *container) {
-    if (xSemaphoreTake(container->lock, portMAX_DELAY) == pdTRUE) {
+//    if (xSemaphoreTake(container->lock, portMAX_DELAY) == pdTRUE) {
 //         void *dest = container->data;
 //         xSemaphoreGive(container->lock);
 //         return dest;

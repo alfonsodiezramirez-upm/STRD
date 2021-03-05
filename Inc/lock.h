@@ -31,10 +31,10 @@
 extern SemaphoreHandle_t _lock;
 
 
-char LOCK_create(void);
-void LOCK_destroy(void);
-long LOCK_acquire(void);
-void LOCK_release(void);
+SemaphoreHandle_t LOCK_create(void);
+void LOCK_destroy(SemaphoreHandle_t);
+long LOCK_acquire(SemaphoreHandle_t);
+void LOCK_release(SemaphoreHandle_t);
 // void *LOCK_read();
 // char LOCK_write(pobject_t*, void*);
 

@@ -20,7 +20,7 @@
 
 
 int ILOCK_read(pobject_t *container) {
-    return *(int*) LOCK_read(container, dest);
+    return *(int*) LOCK_read(container);
 }
 
 char ILOCK_write(pobject_t *container, int value) {

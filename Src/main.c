@@ -79,6 +79,7 @@ void StartTarea1(void const * argument);
 /* Variables para depuracion */
 int ContTarea1 = 0;
 int valorSemaforo= 0;
+int valorSemaforoantes= 0;
 /*Prioridades de las Tareas Periodicas*/
 #define PR_TAREA1 2
 #define PR_TAREA2 3
@@ -130,14 +131,7 @@ void myTask02(void const * argument){
 
 void myTask03(void const * argument)
 {
-	HAL_GPIO_WritePin(GPIOD, GPIO_PIN_12, GPIO_PIN_RESET);
-	HAL_GPIO_WritePin(GPIOD, GPIO_PIN_13, GPIO_PIN_RESET);
-	HAL_GPIO_WritePin(GPIOD, GPIO_PIN_14, GPIO_PIN_RESET);
-	HAL_GPIO_WritePin(GPIOD, GPIO_PIN_15, GPIO_PIN_RESET);
-	
-	
-	
-  /* Infinite loop */
+	/* Infinite loop */
   for(;;)
   {
 
@@ -151,9 +145,10 @@ void myTask03(void const * argument)
 		HAL_ADC_Start(&hadc1); // comenzamos la conversón AD
 		if(HAL_ADC_PollForConversion(&hadc1, 5) == HAL_OK){
 			actual = map(HAL_ADC_GetValue(&hadc1),0,255,0,200); // leemos el valor
+			valorSemaforoantes = actual;
 			HAL_GPIO_WritePin(GPIOD, GPIO_PIN_15,!ILOCK_write(VelocidadActual, actual)); // actualizamos una variable global
 		
-			ILOCK_read(VelocidadActual,&valorSemaforo);
+			valorSemaforo = ILOCK_read(VelocidadActual);
 			
 		}
 	osDelay(T_TAREAVELOCIDAD);
@@ -194,12 +189,6 @@ int main(void)
   /* definition and creation of Tarea1 */
   //osThreadDef(Tarea1, StartTarea1, PR_TAREA1, 0, 128);
   //Tarea1Handle = osThreadCreate(osThread(Tarea1), NULL);
-	xTaskCreate( (TaskFunction_t)myTask01,
-		"led_blink",
-		configMINIMAL_STACK_SIZE,
-		0,
-		PR_TAREA1,
-		0);
 	xTaskCreate( (TaskFunction_t)myTask03,
 		"lectura potenciometro",
 		configMINIMAL_STACK_SIZE,
@@ -493,7 +482,7 @@ void StartTarea1(void const * argument)
 		HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_14); 		
 	  HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_15); 
 		
-    osDelay(T_TAREA1);
+
   }
 }
 

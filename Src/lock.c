@@ -22,40 +22,45 @@
 #include <stddef.h>
 #include <stdlib.h>
 
+static SemaphoreHandle_t _lock;
 
-
-pobject_t *LOCK_create(void) {
+char LOCK_create(void) {
     SemaphoreHandle_t xSemaphore = xSemaphoreCreateMutex();
     if (xSemaphore != NULL) {
-        pobject_t container = {
-            xSemaphore,
-            NULL
-        };
-        return &container;        
-    }
-    return NULL;
-}
-
-void LOCK_destroy(pobject_t *container) {
-    vSemaphoreDelete(container->lock);
-}
-
-void *LOCK_read(pobject_t *container) {
-    if (xSemaphoreTake(container->lock, portMAX_DELAY) == pdTRUE) {
-        void *dest = container->data;
-        xSemaphoreGive(container->lock);
-        return dest;
-    } else {
-        return NULL;
-    }
-}
-
-char LOCK_write(pobject_t *container, void *value) {
-    if (xSemaphoreTake(container->lock, portMAX_DELAY) == pdTRUE) {
-        container->data = value;
-        xSemaphoreGive(container->lock);
+        _lock = xSemaphore;
         return 0;
-    } else {
-        return 1;
     }
+    return 1;
 }
+
+void LOCK_destroy(void) {
+    vSemaphoreDelete(_lock);
+}
+
+long LOCK_acquire(void) {
+    return xSemaphoreTake(_lock, portMAX_DELAY);
+}
+
+void LOCK_release(void) {
+    xSemaphoreGive(_lock);
+}
+
+// void *LOCK_read(pobject_t *container) {
+    if (xSemaphoreTake(container->lock, portMAX_DELAY) == pdTRUE) {
+//         void *dest = container->data;
+//         xSemaphoreGive(container->lock);
+//         return dest;
+//     } else {
+//         return NULL;
+//     }
+// }
+
+// char LOCK_write(pobject_t *container, void *value) {
+//     if (xSemaphoreTake(container->lock, portMAX_DELAY) == pdTRUE) {
+//         container->data = value;
+//         xSemaphoreGive(container->lock);
+//         return 0;
+//     } else {
+//         return 1;
+//     }
+// }

@@ -20,8 +20,10 @@
 #define LOCKI_H
 #include <lock.h>
 
+extern int _value;
 
-int ILOCK_read(pobject_t*);
-char ILOCK_write(pobject_t*, int);
+
+int ILOCK_read(void);
+void ILOCK_write(int);
 
 #endif /* LOCKI_H */

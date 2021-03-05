@@ -18,11 +18,18 @@
  */
 #include "locki.h"
 
+static int _value = 0;
 
-int ILOCK_read(pobject_t *container) {
-    return *(int*) LOCK_read(container, dest);
+int ILOCK_read(void) {
+    LOCK_acquire();
+    int val = _value;
+    LOCK_release();
+    return val;
 }
 
-char ILOCK_write(pobject_t *container, int value) {
-    return LOCK_write(container, &value);
+void ILOCK_write(int value) {
+    LOCK_acquire();
+    _value = value;
+    LOCK_release();
+    // return LOCK_write(container, &value);
 }

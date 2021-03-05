@@ -23,16 +23,19 @@
 #include <stddef.h>
 #include <semphr.h>
 
-typedef struct
-{
-    SemaphoreHandle_t lock;
-    void *data;
-} pobject_t;
+// typedef struct
+// {
+    // SemaphoreHandle_t lock;
+    // void *data;
+// } pobject_t;
+extern SemaphoreHandle_t _lock;
 
 
-pobject_t *LOCK_create(void);
-void LOCK_destroy(pobject_t*);
-void *LOCK_read(pobject_t*);
-char LOCK_write(pobject_t*, void*);
+char LOCK_create(void);
+void LOCK_destroy(void);
+long LOCK_acquire(void);
+void LOCK_release(void);
+// void *LOCK_read();
+// char LOCK_write(pobject_t*, void*);
 
 #endif /* LOCK_H */

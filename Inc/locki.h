@@ -1,5 +1,5 @@
 /*
- * Copyright © 2021 - present | lock_h by Javinator9889
+ * Copyright © 2021 - present | locki_h by Javinator9889
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,23 +14,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see https://www.gnu.org/licenses/.
  *
- * Created by Javinator9889 on 05/03/21 - lock_h.
+ * Created by Javinator9889 on 05/03/21 - locki_h.
  */
-#ifndef LOCK_H
-#define LOCK_H
-#include <stddef.h>
-#include <semphr.h>
-
-typedef struct
-{
-    SemaphoreHandle_t lock;
-    void *data;
-} pobject_t;
+#ifndef LOCKI_H
+#define LOCKI_H
+#include <lock.h>
 
 
-pobject_t *LOCK_create(void);
-void LOCK_destroy(pobject_t*);
-char LOCK_read(pobject_t*, void*);
-char LOCK_write(pobject_t*, void*);
+char ILOCK_read(pobject_t*, int*);
+char ILOCK_write(pobject_t*, int*);
 
-#endif /* LOCK_H */
+#endif /* LOCKI_H */

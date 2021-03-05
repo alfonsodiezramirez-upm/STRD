@@ -20,7 +20,28 @@
 #include <portmacro.h>
 #include <projdefs.h>
 #include <stddef.h>
+#include <stdlib.h>
 #include "lock.h"
+
+
+pobject_t *LOCK_create(void) {
+    SemaphoreHandle_t xSemaphore = xSemaphoreCreateMutex();
+    if (xSemaphore != NULL) {
+        pobject_t *container = (pobject_t *) malloc(sizeof(pobject_t));
+        if (container != NULL)
+        {
+            container->lock = xSemaphore;
+            container->data = NULL;
+        }
+        return container;        
+    }
+    return NULL;
+}
+
+void LOCK_destroy(pobject_t *container) {
+    vSemaphoreDelete(container->lock);
+    free(container);
+}
 
 inline char LOCK_read(pobject_t *container, void *dest) {
     if (xSemaphoreTake(container->lock, portMAX_DELAY) == pdTRUE) {

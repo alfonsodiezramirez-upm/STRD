@@ -16,12 +16,12 @@
  *
  * Created by Javinator9889 on 05/03/21 - lock_c.
  */
-#include <semphr.h>
+#include "lock.h"
 #include <portmacro.h>
 #include <projdefs.h>
 #include <stddef.h>
 #include <stdlib.h>
-#include "lock.h"
+
 
 
 pobject_t *LOCK_create(void) {

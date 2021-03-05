@@ -22,6 +22,6 @@
 
 
 char ILOCK_read(pobject_t*, int*);
-char ILOCK_write(pobject_t*, int*);
+char ILOCK_write(pobject_t*, int);
 
 #endif /* LOCKI_H */

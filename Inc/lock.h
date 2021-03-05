@@ -16,8 +16,10 @@
  *
  * Created by Javinator9889 on 05/03/21 - lock_h.
  */
+ 
 #ifndef LOCK_H
 #define LOCK_H
+#include <FreeRTOS.h>
 #include <stddef.h>
 #include <semphr.h>
 

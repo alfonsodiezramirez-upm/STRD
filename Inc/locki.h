@@ -21,7 +21,7 @@
 #include <lock.h>
 
 
-char ILOCK_read(pobject_t*, int*);
+int ILOCK_read(pobject_t*);
 char ILOCK_write(pobject_t*, int);
 
 #endif /* LOCKI_H */

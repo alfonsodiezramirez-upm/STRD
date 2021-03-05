@@ -19,10 +19,10 @@
 #include "locki.h"
 
 
-inline char ILOCK_read(pobject_t *container, int *dest) {
-    return LOCK_read(container, dest);
+int ILOCK_read(pobject_t *container) {
+    return *(int*) LOCK_read(container, dest);
 }
 
-inline char ILOCK_write(pobject_t *container, int value) {
+char ILOCK_write(pobject_t *container, int value) {
     return LOCK_write(container, &value);
 }

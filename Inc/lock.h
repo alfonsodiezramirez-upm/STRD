@@ -29,6 +29,7 @@ typedef struct
 
 
 pobject_t *LOCK_create(void);
+void LOCK_destroy(pobject_t*);
 char LOCK_read(pobject_t*, void*);
 char LOCK_write(pobject_t*, void*);
 

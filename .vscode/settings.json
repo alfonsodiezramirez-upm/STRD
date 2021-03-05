@@ -1,0 +1,21 @@
+{
+    "C_Cpp.default.intelliSenseMode": "gcc-arm",
+    "C_Cpp.default.includePath": [
+        "/Inc/",
+        "/Drivers/STM32F4xx_HAL_Driver/Inc",
+        "/Drivers/CMSIS/Include",
+        "/Drivers/CMSIS/Device/ST/STM32F4xx",
+        "/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy",
+        "/Middlewares/Third_Party/FreeRTOS/Source/include",
+        "/Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS",
+        "/Src"
+    ],
+    "files.associations": {
+        ".env": "dotenv",
+        "main.h": "c",
+        "stm32f4xx_hal.h": "c",
+        "stm32f4xx_hal_conf.h": "c",
+        "dwt_stm32_delay.h": "c",
+        "math.h": "c"
+    }
+}

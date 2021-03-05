@@ -77,7 +77,7 @@ void StartTarea1(void const * argument);
 
 /* Variables para depuracion */
 int ContTarea1 = 0;
-int PosicionVolante = 0;
+int VelocidadActual = 0;
 /*Prioridades de las Tareas Periodicas*/
 #define PR_TAREA1 2
 #define PR_TAREA2 3
@@ -88,6 +88,11 @@ int PosicionVolante = 0;
 
 #define TRUE 1
 #define FALSE 0
+//función auxiliar de estandarización de valores:
+int map(int x, int in_min, int in_max, int out_min, int out_max)
+{
+  return (int)((x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min);
+}
 
 void myTask01(void const * argument){
 		// Actividad de la tarea …
@@ -119,6 +124,34 @@ void myTask02(void const * argument){
   }
 	
 }
+
+/**if (VelocidadActual<64){
+				
+				HAL_GPIO_WritePin(GPIOD, GPIO_PIN_12,1);
+				HAL_GPIO_WritePin(GPIOD, GPIO_PIN_13,0);
+				HAL_GPIO_WritePin(GPIOD, GPIO_PIN_14,0);
+				HAL_GPIO_WritePin(GPIOD, GPIO_PIN_15,0);
+			}else{
+				if(VelocidadActual<128){
+					HAL_GPIO_WritePin(GPIOD, GPIO_PIN_12,0);
+				HAL_GPIO_WritePin(GPIOD, GPIO_PIN_13,1);
+				HAL_GPIO_WritePin(GPIOD, GPIO_PIN_14,0);
+				HAL_GPIO_WritePin(GPIOD, GPIO_PIN_15,0);
+				}else{
+					if(VelocidadActual<192){
+						HAL_GPIO_WritePin(GPIOD, GPIO_PIN_12,0);
+				HAL_GPIO_WritePin(GPIOD, GPIO_PIN_13,0);
+				HAL_GPIO_WritePin(GPIOD, GPIO_PIN_14,1);
+				HAL_GPIO_WritePin(GPIOD, GPIO_PIN_15,0);
+					}else{
+						HAL_GPIO_WritePin(GPIOD, GPIO_PIN_12,0);
+				HAL_GPIO_WritePin(GPIOD, GPIO_PIN_13,0);
+				HAL_GPIO_WritePin(GPIOD, GPIO_PIN_14,0);
+				HAL_GPIO_WritePin(GPIOD, GPIO_PIN_15,1);
+					}
+				}
+			}*/
+
 void myTask03(void const * argument)
 {
 	HAL_GPIO_WritePin(GPIOD, GPIO_PIN_12, GPIO_PIN_RESET);
@@ -129,18 +162,6 @@ void myTask03(void const * argument)
   /* Infinite loop */
   for(;;)
   {
-		ContTarea1 ++;
-		
-	  HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_12); 		
-	  HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_13); 
-		HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_14); 		
-	  HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_15); 
-		
-    osDelay(T_TAREA1);
-
-  /* Infinite loop */
-  for(;;)
-  {
 
 		int actual = 0; //Valor actual
 		/* Lectura del canal ADC0 */
@@ -151,51 +172,15 @@ void myTask03(void const * argument)
 		HAL_ADC_ConfigChannel(&hadc1, &sConfig);
 		HAL_ADC_Start(&hadc1); // comenzamos la conversón AD
 		if(HAL_ADC_PollForConversion(&hadc1, 5) == HAL_OK){
-			actual = HAL_ADC_GetValue(&hadc1); // leemos el valor
-			PosicionVolante = actual; // actualizamos una variable global
-			if (PosicionVolante<256){
-				
-			}else{
-				if(PosicionVolante<256){
-					
-				}else{
-					if(){
-						
-					}else{
-						if (){
-							
-						}
-					}
-				}
-			}
+			actual = map(HAL_ADC_GetValue(&hadc1),0,255,0,200); // leemos el valor
+			VelocidadActual = actual; // actualizamos una variable global
+		
 		}
-
-
-  }
+	osDelay(T_TAREA1);
+	}
+  
 }
-void myTask04(void const * argument)
-{
 
-  /* Infinite loop */
-  for(;;)
-  {
-
-		int actual = 0; //Valor actual
-		/* Lectura del canal ADC0 */
-		ADC_ChannelConfTypeDef sConfig = {0};
-		sConfig.Channel = ADC_CHANNEL_0; // seleccionamos el canal 0
-		sConfig.Rank = 1;
-		sConfig.SamplingTime = ADC_SAMPLETIME_28CYCLES;
-		HAL_ADC_ConfigChannel(&hadc1, &sConfig);
-		HAL_ADC_Start(&hadc1); // comenzamos la conversón AD
-		if(HAL_ADC_PollForConversion(&hadc1, 5) == HAL_OK){
-			actual = HAL_ADC_GetValue(&hadc1); // leemos el valor
-			PosicionVolante = actual; // actualizamos una variable global
-		}
-
-
-  }
-}
 
 
 /**
@@ -234,8 +219,8 @@ int main(void)
 		0,
 		PR_TAREA1,
 		0);
-	xTaskCreate( (TaskFunction_t)myTask02,
-		"led_blink800",
+	xTaskCreate( (TaskFunction_t)myTask03,
+		"lectura potenciometro",
 		configMINIMAL_STACK_SIZE,
 		0,
 		PR_TAREA2,

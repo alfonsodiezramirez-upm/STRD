@@ -23,19 +23,9 @@
 #include <stddef.h>
 #include <semphr.h>
 
-// typedef struct
-// {
-    // SemaphoreHandle_t lock;
-    // void *data;
-// } pobject_t;
-extern SemaphoreHandle_t _lock;
-
-
-SemaphoreHandle_t LOCK_create(void);
+SemaphoreHandle_t LOCK_create(StaticSemaphore_t*);
 void LOCK_destroy(SemaphoreHandle_t);
 long LOCK_acquire(SemaphoreHandle_t);
 void LOCK_release(SemaphoreHandle_t);
-// void *LOCK_read();
-// char LOCK_write(pobject_t*, void*);
 
 #endif /* LOCK_H */

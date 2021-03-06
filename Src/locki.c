@@ -20,21 +20,24 @@
 
 static int _value = 0;
 
-SemaforoEntero ILOCK_create(int initial){
-	SemaphoreHandle_t lock = LOCK_create();
-	return (SemaforoEntero){initial,lock};
+pint_t ILOCK_create(int initial)
+{
+    // If the semaphore cannot be created then it blocks here forever
+    SemaphoreHandle_t lock = LOCK_create(NULL);
+    pint_t pobject = {initial, lock};
+    return pobject;
 }
 
-int ILOCK_read(SemaforoEntero sem) {
-    LOCK_acquire(sem.sem);
-    int val = sem.value;
-    LOCK_release(sem.sem);
-    return val;
+inline int ILOCK_read(pint_t obj)
+{
+    // Reads of basic data (i.e.: standard types with at most
+    // the length of the word size) are read atomically
+    return obj.value;
 }
 
-void ILOCK_write(SemaforoEntero sem, int value) {
-    LOCK_acquire(sem.sem);
-    sem.value = value;
-    LOCK_release(sem.sem);
-    // return LOCK_write(container, &value);
+void ILOCK_write(pint_t obj, int value)
+{
+    LOCK_acquire(obj.lock);
+    obj.value = value;
+    LOCK_release(obj.lock);
 }

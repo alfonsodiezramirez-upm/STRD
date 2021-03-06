@@ -80,7 +80,7 @@ void StartTarea1(void const * argument);
 int ContTarea1 = 0;
 int valorSemaforo= 0;
 int valorSemaforoantes= 0;
-SemaforoEntero VelocidadActual;
+pint_t VelocidadActual;
 /*Prioridades de las Tareas Periodicas*/
 #define PR_TAREA1 2
 #define PR_TAREA2 3
@@ -91,14 +91,14 @@ SemaforoEntero VelocidadActual;
 
 #define TRUE 1
 #define FALSE 0
-//función auxiliar de estandarización de valores:
+//funciï¿½n auxiliar de estandarizaciï¿½n de valores:
 int map(int x, int in_min, int in_max, int out_min, int out_max)
 {
   return (int)((x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min);
 }
 
 void myTask01(void const * argument){
-		// Actividad de la tarea …
+		// Actividad de la tarea ï¿½
 	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8, GPIO_PIN_RESET);
 	
   /* Infinite loop */
@@ -113,7 +113,7 @@ void myTask01(void const * argument){
 	
 }
 void myTask02(void const * argument){
-		// Actividad de la tarea …
+		// Actividad de la tarea ï¿½
 	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_9, GPIO_PIN_RESET);
 	
   /* Infinite loop */
@@ -142,7 +142,7 @@ void myTask03(void const * argument)
 		sConfig.Rank = 1;
 		sConfig.SamplingTime = ADC_SAMPLETIME_28CYCLES;
 		HAL_ADC_ConfigChannel(&hadc1, &sConfig);
-		HAL_ADC_Start(&hadc1); // comenzamos la conversón AD
+		HAL_ADC_Start(&hadc1); // comenzamos la conversï¿½n AD
 		if(HAL_ADC_PollForConversion(&hadc1, 5) == HAL_OK){
 			actual = map(HAL_ADC_GetValue(&hadc1),0,255,0,200); // leemos el valor
 			valorSemaforoantes = actual;

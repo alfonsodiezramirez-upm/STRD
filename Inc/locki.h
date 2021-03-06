@@ -20,15 +20,13 @@
 #define LOCKI_H
 #include <lock.h>
 
-extern int _value;
-
 typedef struct {
-	int value;
-	SemaphoreHandle_t sem;
-}SemaforoEntero;
+	volatile int value;
+	volatile SemaphoreHandle_t lock;
+} pint_t;
 
-SemaforoEntero ILOCK_create(int);
-int ILOCK_read(SemaforoEntero sem);
-void ILOCK_write(SemaforoEntero sem, int value);
+pint_t ILOCK_create(int);
+int ILOCK_read(pint_t);
+void ILOCK_write(pint_t, int);
 
 #endif /* LOCKI_H */

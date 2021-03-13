@@ -58,6 +58,7 @@
 #include <math.h>
 #include "dwt_stm32_delay.h"
 #include "locki.h"
+#include "speed.h"
 /* Private variables ---------------------------------------------------------*/
 ADC_HandleTypeDef hadc1;
 CAN_HandleTypeDef hcan1;
@@ -146,9 +147,11 @@ void myTask03(void const * argument)
 		if(HAL_ADC_PollForConversion(&hadc1, 5) == HAL_OK){
 			actual = map(HAL_ADC_GetValue(&hadc1),0,255,0,200); // leemos el valor
 			valorSemaforoantes = actual;
+      SPEED_set(actual);
 			//ILOCK_write(VelocidadActual,actual); // actualizamos una variable global
 		
 			//valorSemaforo = ILOCK_read(VelocidadActual);
+      valorSemaforo = SPEED_get();
 			
 		}
 	osDelay(T_TAREAVELOCIDAD);
@@ -183,8 +186,9 @@ int main(void)
   /* definition and creation of mutex1 */
   osMutexDef(mutex1);
   mutex1Handle = osMutexCreate(osMutex(mutex1));
-	pint_t vel = ILOCK_new(0);
-	VelocidadActual = vel;
+  SPEED_init();
+	// pint_t vel = ILOCK_new(0);
+	// VelocidadActual = vel;
 	
   /* Create the thread(s) */
   /* definition and creation of Tarea1 */

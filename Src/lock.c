@@ -142,14 +142,15 @@ SemaphoreHandle_t LOCK_create(StaticSemaphore_t *mutexBuffer)
         /* The semaphore handle should equal the static semaphore structure
 		passed into the xSemaphoreCreateMutexStatic() function. */
         configASSERT(xSemaphore != NULL);    
+		configASSERT(xSemaphoreGive(xSemaphore) != pdTRUE);
     
-    xReturned = xSemaphoreTake(xSemaphore, staticDONT_BLOCK);
+   /* xReturned = xSemaphoreTake(xSemaphore, staticDONT_BLOCK);
     if (xReturned != pdPASS)
     {
         xErrorOccurred = pdTRUE;
     }
     prvSanityCheckCreatedSemaphore(xSemaphore, staticBINARY_SEMAPHORE_MAX_COUNT);
-    configASSERT(xErrorOccurred == pdTRUE);
+    configASSERT(xErrorOccurred == pdTRUE);*/
     xErrorOccurred = pdFALSE;
     //LOCK_lock_release();
     return xSemaphore;
@@ -160,12 +161,12 @@ void LOCK_destroy(SemaphoreHandle_t sem)
     vSemaphoreDelete(sem);
 }
 
-inline long LOCK_acquire(SemaphoreHandle_t sem)
+long LOCK_acquire(SemaphoreHandle_t sem)
 {
     return xSemaphoreTake(sem, portMAX_DELAY);
 }
 
-inline void LOCK_release(SemaphoreHandle_t sem)
+void LOCK_release(SemaphoreHandle_t sem)
 {
     xSemaphoreGive(sem);
 }

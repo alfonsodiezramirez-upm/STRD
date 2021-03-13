@@ -80,7 +80,7 @@ void StartTarea1(void const * argument);
 int ContTarea1 = 0;
 int valorSemaforo= 0;
 int valorSemaforoantes= 0;
-pint_t VelocidadActual;
+pint_t VelocidadActual = NULL;
 /*Prioridades de las Tareas Periodicas*/
 #define PR_TAREA1 2
 #define PR_TAREA2 3
@@ -146,9 +146,9 @@ void myTask03(void const * argument)
 		if(HAL_ADC_PollForConversion(&hadc1, 5) == HAL_OK){
 			actual = map(HAL_ADC_GetValue(&hadc1),0,255,0,200); // leemos el valor
 			valorSemaforoantes = actual;
-			ILOCK_write(VelocidadActual,actual); // actualizamos una variable global
+			//ILOCK_write(VelocidadActual,actual); // actualizamos una variable global
 		
-			valorSemaforo = ILOCK_read(VelocidadActual);
+			//valorSemaforo = ILOCK_read(VelocidadActual);
 			
 		}
 	osDelay(T_TAREAVELOCIDAD);
@@ -183,7 +183,8 @@ int main(void)
   /* definition and creation of mutex1 */
   osMutexDef(mutex1);
   mutex1Handle = osMutexCreate(osMutex(mutex1));
-	VelocidadActual = ILOCK_new(0);
+	pint_t vel = ILOCK_new(0);
+	VelocidadActual = vel;
 	
   /* Create the thread(s) */
   /* definition and creation of Tarea1 */

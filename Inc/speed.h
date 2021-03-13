@@ -16,23 +16,14 @@
  *
  * Created by Javinator9889 on 05/03/21 - locki_h.
  */
-#ifndef LOCKI_H
-#define LOCKI_H
-#include <lock.h>
+#ifndef SPEED_H
+#define SPEED_H
+#include <FreeRTOS.h>
+#include <stddef.h>
+#include <semphr.h>
 
-#if !defined(oint) || !defined(pint_t)
-typedef struct {
-	volatile int value;
-	volatile SemaphoreHandle_t lock;
-} oint, *pint_t;
-#define oint oint
-#define pint_t pint_t
-#endif
+void SPEED_init(void);
+void SPEED_set(int);
+int SPEED_get(void);
 
-#define ILOCK_new(i) ILOCK_create(&(oint){0, NULL}, 0)
-
-pint_t ILOCK_create(pint_t, int);
-int ILOCK_read(pint_t);
-void ILOCK_write(pint_t, int);
-
-#endif /* LOCKI_H */
+#endif /* SPEED_H */

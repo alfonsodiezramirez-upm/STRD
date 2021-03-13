@@ -16,23 +16,26 @@
  *
  * Created by Javinator9889 on 05/03/21 - locki_h.
  */
-#ifndef LOCKI_H
-#define LOCKI_H
-#include <lock.h>
+#include "speed.h"
 
-#if !defined(oint) || !defined(pint_t)
-typedef struct {
-	volatile int value;
-	volatile SemaphoreHandle_t lock;
-} oint, *pint_t;
-#define oint oint
-#define pint_t pint_t
-#endif
+static SemaphoreHandle_t SPEED_sem = NULL;
+static int SPEED_speed = 0;
 
-#define ILOCK_new(i) ILOCK_create(&(oint){0, NULL}, 0)
+void SPEED_init(void) {
+    SemaphoreHandle_t xSemaphore = xSemaphoreCreateMutex();
+    configASSERT(xSemaphore != NULL);
+    configASSERT(xSemaphoreGive(xSemaphore) != pdTRUE);
+    SPEED_sem = xSemaphore;
+}
 
-pint_t ILOCK_create(pint_t, int);
-int ILOCK_read(pint_t);
-void ILOCK_write(pint_t, int);
+void SPEED_set(int speed) {
+    configASSERT(SPEED_sem != NULL);
+    if (xSemaphoreTake(SPEED_sem, portMAX_DELAY) == pdTRUE) {
+        SPEED_speed = speed;
+        xSemaphoreGive(SPEED_sem);
+    }
+}
 
-#endif /* LOCKI_H */
+int SPEED_get(void) {
+    return SPEED_speed;
+}

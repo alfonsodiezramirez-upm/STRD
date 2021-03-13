@@ -29,6 +29,26 @@ static volatile BaseType_t xErrorOccurred = pdFALSE;
 static volatile SemaphoreHandle_t _lock = NULL;
 static volatile StaticSemaphore_t _buff;
 
+static void LOCK_lock_acquire(void)
+{
+    if (_lock == NULL)
+    {
+        taskDISABLE_INTERRUPTS();
+        _lock = xSemaphoreCreateMutexStatic(&_buff);
+        taskENABLE_INTERRUPTS();
+    }
+    BaseType_t xResult = xSemaphoreTake(_lock, portMAX_DELAY);
+    configASSERT(xResult == pdPASS);
+}
+
+static void LOCK_lock_release(void)
+{
+    if (_lock != NULL)
+    {
+        xSemaphoreGive(_lock);
+    }
+}
+
 /**
  * @brief Based on: https://sourceforge.net/p/freertos/code/HEAD/tree/trunk/FreeRTOS/Demo/Common/Minimal/StaticAllocation.c#l893
  * 
@@ -155,26 +175,6 @@ inline long LOCK_acquire(SemaphoreHandle_t sem)
 inline void LOCK_release(SemaphoreHandle_t sem)
 {
     xSemaphoreGive(sem);
-}
-
-static void LOCK_lock_acquire(void)
-{
-    if (_lock == NULL)
-    {
-        taskDISABLE_INTERRUPTS();
-        _lock = xSemaphoreCreateMutexStatic(&_buff);
-        taskENABLE_INTERRUPTS();
-    }
-    BaseType_t xResult = xSemaphoreTake(_lock, portMAX_DELAY);
-    configASSERT(xResult == pdPASS);
-}
-
-static void LOCK_lock_release(void)
-{
-    if (_lock != NULL)
-    {
-        xSemaphoreGive(_lock);
-    }
 }
 
 // void *LOCK_read(pobject_t *container) {

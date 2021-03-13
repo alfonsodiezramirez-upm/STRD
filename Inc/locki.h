@@ -25,7 +25,7 @@ typedef struct {
 	volatile SemaphoreHandle_t lock;
 } oint, *pint_t;
 
-#define ILOCK_new(i) ILOCK_create(&(oint){0, NULL}, 0)
+#define ILOCK_new(i) ILOCK_create(&(oint){.value=0, .lock=0}, 0)
 
 pint_t ILOCK_create(pint_t, int);
 int ILOCK_read(pint_t);

@@ -18,14 +18,17 @@
  */
 #include "locki.h"
 
+SemaphoreHandle_t lck = NULL;
+
 pint_t ILOCK_create(pint_t obj, int initial)
 {
     if (obj)
     {
         // If the semaphore cannot be created then it blocks here forever
-        SemaphoreHandle_t lock = LOCK_create(NULL);
-        obj->lock = lock;
-        obj->value = initial;
+        lck = LOCK_create(NULL);
+        obj->lock = lck;
+        obj->value = 0;
+			
     }
     return obj;
 }
@@ -39,7 +42,8 @@ inline int ILOCK_read(pint_t obj)
 
 void ILOCK_write(pint_t obj, int value)
 {
-    LOCK_acquire(obj->lock);
-    obj->value = value;
-    LOCK_release(obj->lock);
+    //LOCK_acquire(obj->lock);
+  xSemaphoreTake(obj->lock, portMAX_DELAY);  
+	obj->value = value;
+  xSemaphoreGive(obj->lock); 
 }

@@ -159,6 +159,12 @@ void myTask03(void const * argument)
   
 }
 
+void distanceTask(const void *args) {
+  while (1) {
+    
+  }
+}
+
 
 
 /**

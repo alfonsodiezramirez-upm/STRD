@@ -24,5 +24,6 @@
         "cstdlib": "c",
         "*.tcc": "c",
         "random": "c"
-    }
+    },
+    "cmake.configureOnOpen": false
 }

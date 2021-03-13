@@ -18,26 +18,28 @@
  */
 #include "locki.h"
 
-static int _value = 0;
-
-pint_t ILOCK_create(int initial)
+pint_t ILOCK_create(pint_t obj, int initial)
 {
-    // If the semaphore cannot be created then it blocks here forever
-    SemaphoreHandle_t lock = LOCK_create(NULL);
-    pint_t pobject = {initial, lock};
-    return pobject;
+    if (obj)
+    {
+        // If the semaphore cannot be created then it blocks here forever
+        SemaphoreHandle_t lock = LOCK_create(NULL);
+        obj->lock = lock;
+        obj->value = initial;
+    }
+    return obj;
 }
 
 inline int ILOCK_read(pint_t obj)
 {
     // Reads of basic data (i.e.: standard types with at most
     // the length of the word size) are read atomically
-    return obj.value;
+    return obj->value;
 }
 
 void ILOCK_write(pint_t obj, int value)
 {
-    LOCK_acquire(obj.lock);
-    obj.value = value;
-    LOCK_release(obj.lock);
+    LOCK_acquire(obj->lock);
+    obj->value = value;
+    LOCK_release(obj->lock);
 }

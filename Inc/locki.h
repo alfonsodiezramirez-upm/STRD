@@ -23,9 +23,11 @@
 typedef struct {
 	volatile int value;
 	volatile SemaphoreHandle_t lock;
-} pint_t;
+} oint, *pint_t;
 
-pint_t ILOCK_create(int);
+#define ILOCK_new(i) ILOCK_create(&(oint){0, NULL}, 0)
+
+pint_t ILOCK_create(pint_t, int);
 int ILOCK_read(pint_t);
 void ILOCK_write(pint_t, int);
 

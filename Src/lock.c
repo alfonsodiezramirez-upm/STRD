@@ -21,6 +21,7 @@
 #include <FreeRTOSConfig.h>
 #include <portmacro.h>
 #include <projdefs.h>
+#include "task.h"
 
 #define staticDONT_BLOCK ((TickType_t)0)
 #define staticBINARY_SEMAPHORE_MAX_COUNT (1)
@@ -29,7 +30,7 @@ static volatile BaseType_t xErrorOccurred = pdFALSE;
 static volatile SemaphoreHandle_t _lock = NULL;
 static volatile StaticSemaphore_t _buff;
 
-static void LOCK_lock_acquire(void)
+/*static void LOCK_lock_acquire(void)
 {
     if (_lock == NULL)
     {
@@ -47,7 +48,7 @@ static void LOCK_lock_release(void)
     {
         xSemaphoreGive(_lock);
     }
-}
+}*/
 
 /**
  * @brief Based on: https://sourceforge.net/p/freertos/code/HEAD/tree/trunk/FreeRTOS/Demo/Common/Minimal/StaticAllocation.c#l893
@@ -133,23 +134,15 @@ static void prvSanityCheckCreatedSemaphore(SemaphoreHandle_t xSemaphore, UBaseTy
 
 SemaphoreHandle_t LOCK_create(StaticSemaphore_t *mutexBuffer)
 {
-    LOCK_lock_acquire();
+    //LOCK_lock_acquire();
     SemaphoreHandle_t xSemaphore = NULL;
     BaseType_t xReturned;
-    if ((mutexBuffer != NULL) && (configSUPPORT_STATIC_ALLOCATION == 1))
-    {
-        xSemaphore = xSemaphoreCreateMutexStatic(mutexBuffer);
-        /* The semaphore handle should equal the static semaphore structure passed
-	    into the xSemaphoreCreateMutexStatic() function. */
-        configASSERT(xSemaphore == (SemaphoreHandle_t)mutexBuffer);
-    }
-    else
-    {
+    
         xSemaphore = xSemaphoreCreateMutex();
         /* The semaphore handle should equal the static semaphore structure
 		passed into the xSemaphoreCreateMutexStatic() function. */
         configASSERT(xSemaphore != NULL);    
-    }
+    
     xReturned = xSemaphoreTake(xSemaphore, staticDONT_BLOCK);
     if (xReturned != pdPASS)
     {
@@ -158,7 +151,7 @@ SemaphoreHandle_t LOCK_create(StaticSemaphore_t *mutexBuffer)
     prvSanityCheckCreatedSemaphore(xSemaphore, staticBINARY_SEMAPHORE_MAX_COUNT);
     configASSERT(xErrorOccurred == pdTRUE);
     xErrorOccurred = pdFALSE;
-    LOCK_lock_release();
+    //LOCK_lock_release();
     return xSemaphore;
 }
 

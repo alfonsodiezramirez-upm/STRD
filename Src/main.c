@@ -183,7 +183,7 @@ int main(void)
   /* definition and creation of mutex1 */
   osMutexDef(mutex1);
   mutex1Handle = osMutexCreate(osMutex(mutex1));
-	VelocidadActual = ILOCK_create(0);
+	VelocidadActual = ILOCK_new(0);
 	
   /* Create the thread(s) */
   /* definition and creation of Tarea1 */

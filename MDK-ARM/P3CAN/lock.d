@@ -11,4 +11,5 @@ p3can\lock.o: ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F/
 p3can\lock.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h
 p3can\lock.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/semphr.h
 p3can\lock.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h
-p3can\lock.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
+p3can\lock.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/task.h
+p3can\lock.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/list.h

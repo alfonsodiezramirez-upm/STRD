@@ -21,6 +21,7 @@
 #include <FreeRTOS.h>
 #include <stddef.h>
 #include <semphr.h>
+#include "task.h"
 
 void SPEED_init(void);
 void SPEED_set(int);

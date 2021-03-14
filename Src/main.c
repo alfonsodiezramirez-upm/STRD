@@ -67,8 +67,6 @@ SPI_HandleTypeDef hspi1;
 osThreadId Tarea1Handle;
 osMutexId mutex1Handle;
 
-int luminosidad = 0;
-float distancia = 0.0;
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
@@ -78,15 +76,19 @@ static void MX_CAN1_Init(void);
 
 /* Tareas perodicas */
 void StartTarea1(void const * argument);
+
+/* Variables para depuracion */
+int ContTarea1 = 0;
+int valorSemaforo= 0;
+int valorSemaforoantes= 0;
+pint_t VelocidadActual = NULL;
 /*Prioridades de las Tareas Periodicas*/
-#define PR_TAREALUCESCRUCE 2
+#define PR_TAREA1 2
 #define PR_TAREA2 3
-#define PR_DISTANCIA 4
 
 /*Periodos de las tareas*/
 #define T_TAREAVELOCIDAD 250
-#define T_TAREALUCESCRUCE 1000
-#define T_DISTANCIA 300
+#define T_TAREA2 800
 
 #define TRUE 1
 #define FALSE 0
@@ -96,55 +98,39 @@ int map(int x, int in_min, int in_max, int out_min, int out_max)
   return (int)((x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min);
 }
 
-uint32_t DWT_Delay_Init(void) {
-  /* Disable TRC */
-  CoreDebug->DEMCR &= ~CoreDebug_DEMCR_TRCENA_Msk; // ~0x01000000;
-  /* Enable TRC */
-  CoreDebug->DEMCR |=  CoreDebug_DEMCR_TRCENA_Msk; // 0x01000000;
-
-  /* Disable clock cycle counter */
-  DWT->CTRL &= ~DWT_CTRL_CYCCNTENA_Msk; //~0x00000001;
-  /* Enable  clock cycle counter */
-  DWT->CTRL |=  DWT_CTRL_CYCCNTENA_Msk; //0x00000001;
-
-  /* Reset the clock cycle counter value */
-  DWT->CYCCNT = 0;
-
-     /* 3 NO OPERATION instructions */
-     __ASM volatile ("NOP");
-     __ASM volatile ("NOP");
-  __ASM volatile ("NOP");
-
-  /* Check if clock cycle counter has started */
-     if(DWT->CYCCNT)
-     {
-       return 0; /*clock cycle counter started*/
-     }
-     else
+void myTask01(void const * argument){
+		// Actividad de la tarea �
+	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8, GPIO_PIN_RESET);
+	
+  /* Infinite loop */
+  for(;;)
   {
-    return 1; /*clock cycle counter not started*/
+		ContTarea1 ++;
+		
+	  HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_8); 
+		
+    osDelay(T_TAREAVELOCIDAD);
   }
+	
+}
+void myTask02(void const * argument){
+		// Actividad de la tarea �
+	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_9, GPIO_PIN_RESET);
+	
+  /* Infinite loop */
+  for(;;)
+  {
+		ContTarea1 ++;
+		
+	  HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_9); 
+		
+    osDelay(T_TAREA2);
+  }
+	
 }
 
-uint32_t readDistance(void)
-{
-	__IO uint8_t flag=0;
-	__IO uint32_t disTime=0;
-	
-	HAL_GPIO_WritePin(GPIOD, GPIO_PIN_10, GPIO_PIN_SET);
-	DWT_Delay_us(10);
-	HAL_GPIO_WritePin(GPIOD, GPIO_PIN_10, GPIO_PIN_RESET);
-	
-	while(flag == 0){
-		while(HAL_GPIO_ReadPin(GPIOD,GPIO_PIN_11) == GPIO_PIN_SET){
-			disTime++;
-			flag = 1;
-		}
-	}
-	return disTime;
-}
 
-void acelerador(void const * argument)
+void myTask03(void const * argument)
 {
 	/* Infinite loop */
   for(;;)
@@ -160,36 +146,12 @@ void acelerador(void const * argument)
 		HAL_ADC_Start(&hadc1); // comenzamos la convers�n AD
 		if(HAL_ADC_PollForConversion(&hadc1, 5) == HAL_OK){
 			actual = map(HAL_ADC_GetValue(&hadc1),0,255,0,200); // leemos el valor
-      SPEED_set(actual);			
-		}
-	osDelay(T_TAREAVELOCIDAD);
-	}
-  
-}
-
-void lucesCruce(void const * argument)
-{
-	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8, GPIO_PIN_RESET);
-	/* Infinite loop */
-  for(;;)
-  {
-
-		int actual = 0; //Valor actual
-		/* Lectura del canal ADC0 */
-		ADC_ChannelConfTypeDef sConfig = {0};
-		sConfig.Channel = ADC_CHANNEL_1; // seleccionamos el canal 1
-		sConfig.Rank = 1;
-		sConfig.SamplingTime = ADC_SAMPLETIME_28CYCLES;
-		HAL_ADC_ConfigChannel(&hadc1, &sConfig);
-		HAL_ADC_Start(&hadc1); // comenzamos la convers�n AD
-		if(HAL_ADC_PollForConversion(&hadc1, 5) == HAL_OK){
-			actual = map(HAL_ADC_GetValue(&hadc1),0,255,0,200); // leemos el valor
-			luminosidad = actual;
-      if(actual <100){
-					HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8, 0);
-			}else{
-				HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8,1);
-			}
+			valorSemaforoantes = actual;
+      SPEED_set(actual);
+			//ILOCK_write(VelocidadActual,actual); // actualizamos una variable global
+		
+			//valorSemaforo = ILOCK_read(VelocidadActual);
+      valorSemaforo = SPEED_get();
 			
 		}
 	osDelay(T_TAREAVELOCIDAD);
@@ -197,21 +159,12 @@ void lucesCruce(void const * argument)
   
 }
 
-void calculoDistancia(void const * argument)
-{
-	float currentDistance  = 0.0;
-	/* Infinite loop */
-  for(;;)
-  {
-
-		currentDistance = (float)readDistance() * 0.00171821;
-		if (currentDistance == 500000) 
-			currentDistance = 1;
-		distancia = currentDistance;
-		osDelay(T_TAREAVELOCIDAD);
-	}
-  
+void distanceTask(const void *args) {
+  while (1) {
+    
+  }
 }
+
 
 
 /**
@@ -247,24 +200,13 @@ int main(void)
   /* definition and creation of Tarea1 */
   //osThreadDef(Tarea1, StartTarea1, PR_TAREA1, 0, 128);
   //Tarea1Handle = osThreadCreate(osThread(Tarea1), NULL);
-	xTaskCreate( (TaskFunction_t)acelerador,
+	xTaskCreate( (TaskFunction_t)myTask03,
 		"lectura potenciometro",
 		configMINIMAL_STACK_SIZE,
 		0,
 		PR_TAREA2,
 		0);
-		xTaskCreate( (TaskFunction_t)lucesCruce,
-		"lectura luces",
-		configMINIMAL_STACK_SIZE,
-		0,
-		PR_TAREA2,
-		0);
-		xTaskCreate( (TaskFunction_t)calculoDistancia,
-		"lectura distancia",
-		configMINIMAL_STACK_SIZE,
-		0,
-		PR_DISTANCIA,
-		0);
+
 
   /* Start scheduler */
   //osKernelStart();
@@ -544,7 +486,7 @@ void StartTarea1(void const * argument)
   /* Infinite loop */
   for(;;)
   {
-		//ContTarea1 ++;
+		ContTarea1 ++;
 		
 	  HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_12); 		
 	  HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_13); 

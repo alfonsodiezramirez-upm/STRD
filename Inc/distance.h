@@ -1,5 +1,5 @@
 /*
- * Copyright © 2021 - present | locki_h by Javinator9889
+ * Copyright © 2021 - present | distance.h by Javinator9889
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,25 +14,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see https://www.gnu.org/licenses/.
  *
- * Created by Javinator9889 on 05/03/21 - locki_h.
+ * Created by Javinator9889 on 13/03/21 - distance.h.
  */
-#ifndef LOCKI_H
-#define LOCKI_H
-#include <lock.h>
+#ifndef DISTANCE_H
+#define DISTANCE_H
 
-#if !defined(oint) || !defined(pint_t)
-typedef struct {
-	volatile int value;
-	volatile SemaphoreHandle_t lock;
-} oint, *pint_t;
-#define oint oint
-#define pint_t pint_t
-#endif
+void DISTANCE_init(void);
+void DISTANCE_set(int);
+int DISTANCE_get(void);
+void DISTANCE_delete(void);
 
-#define ILOCK_new(i) ILOCK_create(&(oint){.value=0, .lock=0}, 0)
-
-pint_t ILOCK_create(pint_t, int);
-int ILOCK_read(pint_t);
-void ILOCK_write(pint_t, int);
-
-#endif /* LOCKI_H */
+#endif /* DISTANCE_H */

@@ -1,5 +1,5 @@
 /*
- * Copyright © 2021 - present | locki_h by Javinator9889
+ * Copyright © 2021 - present | speed.h by Javinator9889
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,18 +14,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see https://www.gnu.org/licenses/.
  *
- * Created by Javinator9889 on 05/03/21 - locki_h.
+ * Created by Javinator9889 on 13/03/21 - speed.h.
  */
 #include "speed.h"
+#include <lock.h>
 
 static SemaphoreHandle_t SPEED_sem = NULL;
 static int SPEED_speed = 0;
 
 void SPEED_init(void) {
-    SemaphoreHandle_t xSemaphore = xSemaphoreCreateMutex();
-    configASSERT(xSemaphore != NULL);
-    configASSERT(xSemaphoreGive(xSemaphore) != pdTRUE);
-    SPEED_sem = xSemaphore;
+    SPEED_sem = LOCK_create();
 }
 
 void SPEED_set(int speed) {
@@ -37,5 +35,17 @@ void SPEED_set(int speed) {
 }
 
 int SPEED_get(void) {
-    return SPEED_speed;
+    int speed = -1;
+    configASSERT(SPEED_sem != NULL);
+    if (xSemaphoreTake(SPEED_sem, portMAX_DELAY) == pdTRUE) {
+        speed = SPEED_speed;
+        xSemaphoreGive(SPEED_sem);
+    }
+    return speed;
+}
+
+void SPEED_delete(void) {
+    LOCK_destroy(SPEED_sem);
+    SPEED_sem = NULL;
+    SPEED_speed = 0;
 }

@@ -438,16 +438,6 @@
               <FileType>5</FileType>
               <FilePath>..\Inc\locki.h</FilePath>
             </File>
-            <File>
-              <FileName>speed.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\Inc\speed.h</FilePath>
-            </File>
-            <File>
-              <FileName>speed.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Src\speed.c</FilePath>
-            </File>
           </Files>
         </Group>
         <Group>

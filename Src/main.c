@@ -160,6 +160,7 @@ void myTask03(void const * argument)
   
 }
 
+<<<<<<< HEAD
 void distanceTask(const void *args) {
   const uint16_t T_DISTANCE_TASK = 300U;
   uint32_t wake_time = osKernelSysTick();
@@ -180,6 +181,8 @@ void distanceTask(const void *args) {
     osDelayUntil(&wake_time, T_DISTANCE_TASK);
   }
 }
+=======
+>>>>>>> parent of c3b42d8 (lectura distancia)
 
 
 

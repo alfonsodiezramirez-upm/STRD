@@ -50,4 +50,9 @@ p3can\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/semphr.h
 p3can\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/event_groups.h
 p3can\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\math.h
 p3can\main.o: ../Src/dwt_stm32_delay.h
+<<<<<<< HEAD
 p3can\main.o: ../Inc/speed.h
+=======
+p3can\main.o: ../Inc/locki.h
+p3can\main.o: ../Inc/lock.h
+>>>>>>> parent of c3b42d8 (lectura distancia)

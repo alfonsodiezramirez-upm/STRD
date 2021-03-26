@@ -130,6 +130,34 @@ void volanteAgarrado(const void *argument)
     osDelayUntil(&wake_time, T_TAREAAGARRADO);
   }
 }
+void cabeza(const void *argument)
+{
+  /* Infinite loop */
+  int x;
+	int y;
+	uint32_t wake_time = osKernelSysTick();
+  for (;;)
+  {
+    /* Lectura del canal ADC1 */
+    ADC_ChannelConfTypeDef sConfig = {0};
+    sConfig.Channel = ADC_CHANNEL_1; // seleccionamos el canal 1
+    sConfig.Rank = 1;
+    sConfig.SamplingTime = ADC_SAMPLETIME_28CYCLES;
+    HAL_ADC_ConfigChannel(&hadc1, &sConfig);
+    HAL_ADC_Start(&hadc1); // comenzamos la convers�n AD
+    x = HAL_ADC_GetValue(&hadc1); // leemos el valor
+		DWT_Delay_us(10);
+    sConfig.Channel = ADC_CHANNEL_2; // seleccionamos el canal 2
+    sConfig.Rank = 1;
+    sConfig.SamplingTime = ADC_SAMPLETIME_28CYCLES;
+    HAL_ADC_ConfigChannel(&hadc1, &sConfig);
+    HAL_ADC_Start(&hadc1); // comenzamos la convers�n AD
+    y = HAL_ADC_GetValue(&hadc1); // leemos el valor
+    GIROSCOPE_set(x,y,0);
+    
+    osDelayUntil(&wake_time, T_CABEZA);
+  }
+}
 /**
   * @brief  The application entry point.
   * @retval int
@@ -166,6 +194,12 @@ int main(void)
               configMINIMAL_STACK_SIZE,
               0,
               PR_TAREAAGARRADO,
+              0);
+		xTaskCreate((TaskFunction_t)cabeza,
+              "lectura sensor agarrado",
+              configMINIMAL_STACK_SIZE,
+              0,
+              PR_CABEZA,
               0);
   /* Start scheduler */
   //osKernelStart();

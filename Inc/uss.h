@@ -1,5 +1,5 @@
 /*
- * Copyright © 2021 - present | distance.h by Javinator9889
+ * Copyright © 2021 - present | uss.h by Javinator9889
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,14 +14,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see https://www.gnu.org/licenses/.
  *
- * Created by Javinator9889 on 13/03/21 - distance.h.
+ * Created by Javinator9889 on 26/03/21 - uss.h.
  */
-#ifndef DISTANCE_H
-#define DISTANCE_H
+#ifndef USS_H
+#define USS_H
+#include <stdint.h>
 
-void DISTANCE_init(void);
-void DISTANCE_set(float);
-float DISTANCE_get(void);
-void DISTANCE_delete(void);
+uint32_t USS_read_distance(void);
 
-#endif /* DISTANCE_H */
+#endif

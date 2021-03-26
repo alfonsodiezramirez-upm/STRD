@@ -23,7 +23,9 @@
         "stddef.h": "c",
         "cstdlib": "c",
         "*.tcc": "c",
-        "random": "c"
+        "random": "c",
+        "core_cminstr.h": "c",
+        "cmsis_os.h": "c"
     },
     "cmake.configureOnOpen": false
 }

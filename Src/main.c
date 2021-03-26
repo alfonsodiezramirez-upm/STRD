@@ -59,6 +59,7 @@
 #include "dwt_stm32_delay.h"
 #include "speed.h"
 #include "distance.h"
+#include "uss.h"
 /* Private variables ---------------------------------------------------------*/
 ADC_HandleTypeDef hadc1;
 CAN_HandleTypeDef hcan1;
@@ -162,7 +163,19 @@ void myTask03(void const * argument)
 void distanceTask(const void *args) {
   const uint16_t T_DISTANCE_TASK = 300U;
   uint32_t wake_time = osKernelSysTick();
+  float distance;
+  float speed;
+  float secure_dist;
   while (1) {
+    distance = (float) USS_read_distance() * 0.00171821;
+    if (distance == 500000) distance = 1;
+    DISTANCE_set(distance);
+    
+    speed = SPEED_get();
+    secure_dist = (float) pow((speed / 10), 2);
+
+    if (distance < secure_dist) HAL_GPIO_WritePin(GPIOB, GPIO_PIN_8, GPIO_PIN_SET);
+    else HAL_GPIO_WritePin(GPIOB, GPIO_PIN_8, GPIO_PIN_RESET);
     
     osDelayUntil(&wake_time, T_DISTANCE_TASK);
   }
@@ -190,6 +203,8 @@ int main(void)
   MX_ADC1_Init();
   MX_SPI1_Init();
   MX_CAN1_Init();
+
+  DWT_Delay_Init();
 	
   /* Create the mutex(es) */
   /* definition and creation of mutex1 */

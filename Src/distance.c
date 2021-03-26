@@ -24,13 +24,13 @@
 #include <task.h>
 
 static SemaphoreHandle_t DISTANCE_sem = NULL;
-static int DISTANCE_distance = 0;
+static float DISTANCE_distance = 0;
 
 void DISTANCE_init(void) {
     DISTANCE_sem = LOCK_create();
 }
 
-void DISTANCE_set(int distance) {
+void DISTANCE_set(float distance) {
     configASSERT(DISTANCE_sem != NULL);
     if (xSemaphoreTake(DISTANCE_sem, portMAX_DELAY) == pdTRUE) {
         DISTANCE_distance = distance;
@@ -38,8 +38,8 @@ void DISTANCE_set(int distance) {
     }
 }
 
-int DISTANCE_get(void) {
-    int distance = -1;
+float DISTANCE_get(void) {
+    float distance = -1;
     configASSERT(DISTANCE_sem != NULL);
     if (xSemaphoreTake(DISTANCE_sem, portMAX_DELAY) == pdTRUE) {
         distance = DISTANCE_distance;

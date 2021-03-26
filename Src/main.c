@@ -78,7 +78,7 @@ static void MX_SPI1_Init(void);
 static void MX_CAN1_Init(void);
 
 /* Tareas perodicas */
-void StartTarea1(void const * argument);
+void StartTarea1(void const *argument);
 /*Prioridades de las Tareas Periodicas*/
 #define PR_TAREALUCESCRUCE 2
 #define PR_TAREA2 3
@@ -97,86 +97,85 @@ int map(int x, int in_min, int in_max, int out_min, int out_max)
   return (int)((x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min);
 }
 
-void acelerador(void const * argument)
+void acelerador(void const *argument)
 {
-	/* Infinite loop */
-  for(;;)
+  /* Infinite loop */
+  int actual;
+  uint32_t wake_time = osKernelSysTick();
+  for (;;)
   {
-
-		int actual = 0; //Valor actual
-		/* Lectura del canal ADC0 */
-		ADC_ChannelConfTypeDef sConfig = {0};
-		sConfig.Channel = ADC_CHANNEL_0; // seleccionamos el canal 0
-		sConfig.Rank = 1;
-		sConfig.SamplingTime = ADC_SAMPLETIME_28CYCLES;
-		HAL_ADC_ConfigChannel(&hadc1, &sConfig);
-		HAL_ADC_Start(&hadc1); // comenzamos la convers�n AD
-		if(HAL_ADC_PollForConversion(&hadc1, 5) == HAL_OK){
-			actual = map(HAL_ADC_GetValue(&hadc1),0,255,0,200); // leemos el valor
-      SPEED_set(actual);			
-		}
-	osDelay(T_TAREAVELOCIDAD);
-	}
-  
+    /* Lectura del canal ADC0 */
+    ADC_ChannelConfTypeDef sConfig = {0};
+    sConfig.Channel = ADC_CHANNEL_0; // seleccionamos el canal 0
+    sConfig.Rank = 1;
+    sConfig.SamplingTime = ADC_SAMPLETIME_28CYCLES;
+    HAL_ADC_ConfigChannel(&hadc1, &sConfig);
+    HAL_ADC_Start(&hadc1); // comenzamos la convers�n AD
+    if (HAL_ADC_PollForConversion(&hadc1, 5) == HAL_OK)
+    {
+      actual = map(HAL_ADC_GetValue(&hadc1), 0, 255, 0, 200); // leemos el valor
+      SPEED_set(actual);
+    }
+    osDelayUntil(&wake_time, T_TAREAVELOCIDAD);
+  }
 }
 
-void distanceTask(const void *args) {
+void distanceTask(const void *args)
+{
   const uint16_t T_DISTANCE_TASK = 300U;
   uint32_t wake_time = osKernelSysTick();
   float distance;
   float speed;
   float secure_dist;
-	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_9, GPIO_PIN_RESET);
-  while (1) {
-    distance = (float) USS_read_distance() * 0.00171821;
-    if (distance == 500000) distance = 1;
+  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_9, GPIO_PIN_RESET);
+  while (1)
+  {
+    distance = (float)USS_read_distance() * 0.00171821;
+    if (distance == 500000)
+      distance = 1;
     DISTANCE_set(distance);
-    
-    speed = SPEED_get();
-    secure_dist = (float) pow((speed / 10), 2);
 
-    if (distance < secure_dist) 
-				HAL_GPIO_WritePin(GPIOA, GPIO_PIN_9, GPIO_PIN_SET);
-    else 
-				HAL_GPIO_WritePin(GPIOA, GPIO_PIN_9, GPIO_PIN_RESET);
-    
-		//osDelay(T_DISTANCIA);
+    speed = SPEED_get();
+    secure_dist = (float)pow((speed / 10), 2);
+
+    if (distance < secure_dist) HAL_GPIO_WritePin(GPIOA, GPIO_PIN_9, GPIO_PIN_SET);
+    else HAL_GPIO_WritePin(GPIOA, GPIO_PIN_9, GPIO_PIN_RESET);
+
     osDelayUntil(&wake_time, T_DISTANCE_TASK);
   }
 }
 
-void lucesCruce(void const * argument)
+void lucesCruce(void const *argument)
 {
-	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8, GPIO_PIN_RESET);
-	/* Infinite loop */
-  for(;;)
+  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8, GPIO_PIN_RESET);
+  int actual;
+  uint32_t wake_time = osKernelSysTick();
+  /* Infinite loop */
+  for (;;)
   {
-
-		int actual = 0; //Valor actual
-		/* Lectura del canal ADC0 */
-		ADC_ChannelConfTypeDef sConfig = {0};
-		sConfig.Channel = ADC_CHANNEL_1; // seleccionamos el canal 1
-		sConfig.Rank = 1;
-		sConfig.SamplingTime = ADC_SAMPLETIME_28CYCLES;
-		HAL_ADC_ConfigChannel(&hadc1, &sConfig);
-		HAL_ADC_Start(&hadc1); // comenzamos la convers�n AD
-		if(HAL_ADC_PollForConversion(&hadc1, 5) == HAL_OK){
-			actual = map(HAL_ADC_GetValue(&hadc1),0,255,0,200); // leemos el valor
-			luminosidad = actual;
-      if(actual <100){
-					HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8, 0);
-			}else{
-				HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8,1);
-			}
-			
-		}
-	osDelay(T_TAREAVELOCIDAD);
-	}
-  
+    /* Lectura del canal ADC0 */
+    ADC_ChannelConfTypeDef sConfig = {0};
+    sConfig.Channel = ADC_CHANNEL_1; // seleccionamos el canal 1
+    sConfig.Rank = 1;
+    sConfig.SamplingTime = ADC_SAMPLETIME_28CYCLES;
+    HAL_ADC_ConfigChannel(&hadc1, &sConfig);
+    HAL_ADC_Start(&hadc1); // comenzamos la convers�n AD
+    if (HAL_ADC_PollForConversion(&hadc1, 5) == HAL_OK)
+    {
+      actual = map(HAL_ADC_GetValue(&hadc1), 0, 255, 0, 200); // leemos el valor
+      luminosidad = actual;
+      if (actual < 100)
+      {
+        HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8, 0);
+      }
+      else
+      {
+        HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8, 1);
+      }
+    }
+    osDelayUntil(&wake_time, T_TAREALUCESCRUCE);
+  }
 }
-
-
-
 
 /**
   * @brief  The application entry point.
@@ -198,38 +197,38 @@ int main(void)
   MX_ADC1_Init();
   MX_SPI1_Init();
   MX_CAN1_Init();
-	
+
   /* Create the mutex(es) */
   /* definition and creation of mutex1 */
   osMutexDef(mutex1);
   mutex1Handle = osMutexCreate(osMutex(mutex1));
   SPEED_init();
   DISTANCE_init();
-	// pint_t vel = ILOCK_new(0);
-	// VelocidadActual = vel;
-	
+  // pint_t vel = ILOCK_new(0);
+  // VelocidadActual = vel;
+
   /* Create the thread(s) */
   /* definition and creation of Tarea1 */
   //osThreadDef(Tarea1, StartTarea1, PR_TAREA1, 0, 128);
   //Tarea1Handle = osThreadCreate(osThread(Tarea1), NULL);
-	xTaskCreate( (TaskFunction_t)acelerador,
-		"lectura potenciometro",
-		configMINIMAL_STACK_SIZE,
-		0,
-		PR_TAREA2,
-		0);
-		xTaskCreate( (TaskFunction_t)lucesCruce,
-		"lectura luces",
-		configMINIMAL_STACK_SIZE,
-		0,
-		PR_TAREA2,
-		0);
-		xTaskCreate( (TaskFunction_t)distanceTask,
-		"lectura distancia",
-		configMINIMAL_STACK_SIZE,
-		0,
-		PR_DISTANCIA,
-		0);
+  xTaskCreate((TaskFunction_t)acelerador,
+              "lectura potenciometro",
+              configMINIMAL_STACK_SIZE,
+              0,
+              PR_TAREA2,
+              0);
+  xTaskCreate((TaskFunction_t)lucesCruce,
+              "lectura luces",
+              configMINIMAL_STACK_SIZE,
+              0,
+              PR_TAREA2,
+              0);
+  xTaskCreate((TaskFunction_t)distanceTask,
+              "lectura distancia",
+              configMINIMAL_STACK_SIZE,
+              0,
+              PR_DISTANCIA,
+              0);
 
   /* Start scheduler */
   //osKernelStart();
@@ -276,8 +275,7 @@ void SystemClock_Config(void)
   }
   /**Initializes the CPU, AHB and APB busses clocks 
   */
-  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
-                              |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
+  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2;
   RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV4;
@@ -306,7 +304,7 @@ static void MX_ADC1_Init(void)
   /* USER CODE BEGIN ADC1_Init 1 */
 
   /* USER CODE END ADC1_Init 1 */
-	/* Lectura del canal ADC0 */
+  /* Lectura del canal ADC0 */
   /**Configure the global features of the ADC (Clock, Resolution, Data Alignment and number of conversion) 
   */
   hadc1.Instance = ADC1;
@@ -337,7 +335,6 @@ static void MX_ADC1_Init(void)
   /* USER CODE BEGIN ADC1_Init 2 */
 
   /* USER CODE END ADC1_Init 2 */
-
 }
 
 /**
@@ -374,7 +371,6 @@ static void MX_CAN1_Init(void)
   /* USER CODE BEGIN CAN1_Init 2 */
 
   /* USER CODE END CAN1_Init 2 */
-
 }
 
 /**
@@ -412,7 +408,6 @@ static void MX_SPI1_Init(void)
   /* USER CODE BEGIN SPI1_Init 2 */
 
   /* USER CODE END SPI1_Init 2 */
-
 }
 
 /**
@@ -435,11 +430,10 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOD, GPIO_PIN_10|GPIO_PIN_12|GPIO_PIN_13|GPIO_PIN_14 
-                          |GPIO_PIN_15, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOD, GPIO_PIN_10 | GPIO_PIN_12 | GPIO_PIN_13 | GPIO_PIN_14 | GPIO_PIN_15, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8|GPIO_PIN_9, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8 | GPIO_PIN_9, GPIO_PIN_RESET);
 
   /*Configure GPIO pin : PE3 */
   GPIO_InitStruct.Pin = GPIO_PIN_3;
@@ -448,21 +442,21 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
 
-/*Configure GPIO pins : PB0 PB3: Interrupcion botones externos */
-  GPIO_InitStruct.Pin = GPIO_PIN_0|GPIO_PIN_3;
+  /*Configure GPIO pins : PB0 PB3: Interrupcion botones externos */
+  GPIO_InitStruct.Pin = GPIO_PIN_0 | GPIO_PIN_3;
   GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
   /*Configure GPIO pins : PB1 PB2 */
-  GPIO_InitStruct.Pin = GPIO_PIN_1|GPIO_PIN_2;
+  GPIO_InitStruct.Pin = GPIO_PIN_1 | GPIO_PIN_2;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
   /*Configure GPIO pins : PD10 PD12 PD13 PD14 PD15 */
-  GPIO_InitStruct.Pin = GPIO_PIN_10|
-	                      GPIO_PIN_12|GPIO_PIN_13|GPIO_PIN_14 |GPIO_PIN_15;
+  GPIO_InitStruct.Pin = GPIO_PIN_10 |
+                        GPIO_PIN_12 | GPIO_PIN_13 | GPIO_PIN_14 | GPIO_PIN_15;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
@@ -475,7 +469,7 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
 
   /*Configure GPIO pins : PA8 PA9 */
-  GPIO_InitStruct.Pin = GPIO_PIN_8|GPIO_PIN_9;
+  GPIO_InitStruct.Pin = GPIO_PIN_8 | GPIO_PIN_9;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
@@ -487,10 +481,7 @@ static void MX_GPIO_Init(void)
 
   HAL_NVIC_SetPriority(EXTI3_IRQn, configMAX_SYSCALL_INTERRUPT_PRIORITY - 1, 0);
   HAL_NVIC_EnableIRQ(EXTI3_IRQn);
-
 }
-
-
 
 /* USER CODE BEGIN Header_StartTarea1 */
 /**
@@ -499,24 +490,22 @@ static void MX_GPIO_Init(void)
   * @retval None
   */
 /* USER CODE END Header_StartTarea1 */
-void StartTarea1(void const * argument)
+void StartTarea1(void const *argument)
 {
-	HAL_GPIO_WritePin(GPIOD, GPIO_PIN_12, GPIO_PIN_RESET);
-	HAL_GPIO_WritePin(GPIOD, GPIO_PIN_13, GPIO_PIN_SET);
-	HAL_GPIO_WritePin(GPIOD, GPIO_PIN_14, GPIO_PIN_RESET);
-	HAL_GPIO_WritePin(GPIOD, GPIO_PIN_15, GPIO_PIN_SET);
-	
-  /* Infinite loop */
-  for(;;)
-  {
-		//ContTarea1 ++;
-		
-	  HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_12); 		
-	  HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_13); 
-		HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_14); 		
-	  HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_15); 
-		
+  HAL_GPIO_WritePin(GPIOD, GPIO_PIN_12, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOD, GPIO_PIN_13, GPIO_PIN_SET);
+  HAL_GPIO_WritePin(GPIOD, GPIO_PIN_14, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOD, GPIO_PIN_15, GPIO_PIN_SET);
 
+  /* Infinite loop */
+  for (;;)
+  {
+    //ContTarea1 ++;
+
+    HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_12);
+    HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_13);
+    HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_14);
+    HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_15);
   }
 }
 
@@ -525,7 +514,7 @@ void StartTarea1(void const * argument)
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
   long yield = pdFALSE;
-//  /* Prevent unused argument(s) compilation warning */
+  //  /* Prevent unused argument(s) compilation warning */
   UNUSED(GPIO_Pin);
   portYIELD_FROM_ISR(yield);
 }
@@ -543,7 +532,8 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
   /* USER CODE BEGIN Callback 0 */
 
   /* USER CODE END Callback 0 */
-  if (htim->Instance == TIM1) {
+  if (htim->Instance == TIM1)
+  {
     HAL_IncTick();
   }
   /* USER CODE BEGIN Callback 1 */
@@ -563,7 +553,7 @@ void Error_Handler(void)
   /* USER CODE END Error_Handler_Debug */
 }
 
-#ifdef  USE_FULL_ASSERT
+#ifdef USE_FULL_ASSERT
 /**
   * @brief  Reports the name of the source file and the source line number
   *         where the assert_param error has occurred.
@@ -572,7 +562,7 @@ void Error_Handler(void)
   * @retval None
   */
 void assert_failed(uint8_t *file, uint32_t line)
-{ 
+{
   /* USER CODE BEGIN 6 */
   /* User can add his own implementation to report the file name and line number,
      tex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */

@@ -26,8 +26,8 @@
 /////////////////////////////////////////////////////////////////////
 uint32_t USS_read_distance(void)
 {
-	__IO uint8_t flag=0;
-	__IO uint32_t disTime=0;
+	__IO uint8_t flag = 0;
+	__IO uint32_t disTime = 0;
 	
 	HAL_GPIO_WritePin(GPIOD, GPIO_PIN_10, GPIO_PIN_SET);
 	DWT_Delay_us(10);

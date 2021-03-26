@@ -25,7 +25,8 @@
         "*.tcc": "c",
         "random": "c",
         "core_cminstr.h": "c",
-        "cmsis_os.h": "c"
+        "cmsis_os.h": "c",
+        "speed.h": "c"
     },
     "cmake.configureOnOpen": false
 }

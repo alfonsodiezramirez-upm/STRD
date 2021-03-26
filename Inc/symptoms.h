@@ -16,11 +16,11 @@
  *
  * Created by Javinator9889 on 26/03/21 - symptoms.h.
  */
-#ifndef SYMPTOMPS_H
-#define SYMPTOMPS_H
+#ifndef SYMPTOMS_H
+#define SYMPTOMS_H
 #include <stdbool.h>
 
-void SYMPTOMPS_init(void);
+void SYMPTOMS_init(void);
 
 void GIROSCOPE_set(float, float, float);
 float GIROSCOPE_get_X(void);

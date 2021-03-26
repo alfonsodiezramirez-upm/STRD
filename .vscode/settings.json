@@ -26,7 +26,8 @@
         "random": "c",
         "core_cminstr.h": "c",
         "cmsis_os.h": "c",
-        "speed.h": "c"
+        "speed.h": "c",
+        "symptoms.h": "c"
     },
     "cmake.configureOnOpen": false
 }

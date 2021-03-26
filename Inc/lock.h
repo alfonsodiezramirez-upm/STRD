@@ -1,5 +1,5 @@
 /*
- * Copyright © 2021 - present | lock.h by Javinator9889
+ * Copyright © 2021 - present | lock_h by Javinator9889
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,15 +14,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see https://www.gnu.org/licenses/.
  *
- * Created by Javinator9889 on 13/03/21 - lock.h.
+ * Created by Javinator9889 on 05/03/21 - lock_h.
  */
+ 
 #ifndef LOCK_H
 #define LOCK_H
 #include <FreeRTOS.h>
 #include <stddef.h>
 #include <semphr.h>
 
-SemaphoreHandle_t LOCK_create(void);
+SemaphoreHandle_t LOCK_create(StaticSemaphore_t*);
 void LOCK_destroy(SemaphoreHandle_t);
+long LOCK_acquire(SemaphoreHandle_t);
+void LOCK_release(SemaphoreHandle_t);
 
 #endif /* LOCK_H */

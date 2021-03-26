@@ -1,5 +1,5 @@
 /*
- * Copyright © 2021 - present | speed.h by Javinator9889
+ * Copyright © 2021 - present | locki_h by Javinator9889
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see https://www.gnu.org/licenses/.
  *
- * Created by Javinator9889 on 13/03/21 - speed.h.
+ * Created by Javinator9889 on 05/03/21 - locki_h.
  */
 #ifndef SPEED_H
 #define SPEED_H

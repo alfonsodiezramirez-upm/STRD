@@ -57,8 +57,6 @@
 /* USER CODE BEGIN Includes */
 #include <math.h>
 #include "dwt_stm32_delay.h"
-#include "speed.h"
-#include "distance.h"
 #include "uss.h"
 /* Private variables ---------------------------------------------------------*/
 ADC_HandleTypeDef hadc1;
@@ -97,86 +95,6 @@ int map(int x, int in_min, int in_max, int out_min, int out_max)
   return (int)((x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min);
 }
 
-void acelerador(void const *argument)
-{
-  /* Infinite loop */
-  int actual;
-  uint32_t wake_time = osKernelSysTick();
-  for (;;)
-  {
-    /* Lectura del canal ADC0 */
-    ADC_ChannelConfTypeDef sConfig = {0};
-    sConfig.Channel = ADC_CHANNEL_0; // seleccionamos el canal 0
-    sConfig.Rank = 1;
-    sConfig.SamplingTime = ADC_SAMPLETIME_28CYCLES;
-    HAL_ADC_ConfigChannel(&hadc1, &sConfig);
-    HAL_ADC_Start(&hadc1); // comenzamos la convers�n AD
-    if (HAL_ADC_PollForConversion(&hadc1, 5) == HAL_OK)
-    {
-      actual = map(HAL_ADC_GetValue(&hadc1), 0, 255, 0, 200); // leemos el valor
-      SPEED_set(actual);
-    }
-    osDelayUntil(&wake_time, T_TAREAVELOCIDAD);
-  }
-}
-
-void distanceTask(const void *args)
-{
-  const uint16_t T_DISTANCE_TASK = 300U;
-  uint32_t wake_time = osKernelSysTick();
-  float distance;
-  float speed;
-  float secure_dist;
-  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_9, GPIO_PIN_RESET);
-  while (1)
-  {
-    distance = (float)USS_read_distance() * 0.00171821;
-    if (distance == 500000)
-      distance = 1;
-    DISTANCE_set(distance);
-
-    speed = SPEED_get();
-    secure_dist = (float)pow((speed / 10), 2);
-
-    if (distance < secure_dist) HAL_GPIO_WritePin(GPIOA, GPIO_PIN_9, GPIO_PIN_SET);
-    else HAL_GPIO_WritePin(GPIOA, GPIO_PIN_9, GPIO_PIN_RESET);
-
-    osDelayUntil(&wake_time, T_DISTANCE_TASK);
-  }
-}
-
-void lucesCruce(void const *argument)
-{
-  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8, GPIO_PIN_RESET);
-  int actual;
-  uint32_t wake_time = osKernelSysTick();
-  /* Infinite loop */
-  for (;;)
-  {
-    /* Lectura del canal ADC0 */
-    ADC_ChannelConfTypeDef sConfig = {0};
-    sConfig.Channel = ADC_CHANNEL_1; // seleccionamos el canal 1
-    sConfig.Rank = 1;
-    sConfig.SamplingTime = ADC_SAMPLETIME_28CYCLES;
-    HAL_ADC_ConfigChannel(&hadc1, &sConfig);
-    HAL_ADC_Start(&hadc1); // comenzamos la convers�n AD
-    if (HAL_ADC_PollForConversion(&hadc1, 5) == HAL_OK)
-    {
-      actual = map(HAL_ADC_GetValue(&hadc1), 0, 255, 0, 200); // leemos el valor
-      luminosidad = actual;
-      if (actual < 100)
-      {
-        HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8, 0);
-      }
-      else
-      {
-        HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8, 1);
-      }
-    }
-    osDelayUntil(&wake_time, T_TAREALUCESCRUCE);
-  }
-}
-
 /**
   * @brief  The application entry point.
   * @retval int
@@ -202,33 +120,6 @@ int main(void)
   /* definition and creation of mutex1 */
   osMutexDef(mutex1);
   mutex1Handle = osMutexCreate(osMutex(mutex1));
-  SPEED_init();
-  DISTANCE_init();
-  // pint_t vel = ILOCK_new(0);
-  // VelocidadActual = vel;
-
-  /* Create the thread(s) */
-  /* definition and creation of Tarea1 */
-  //osThreadDef(Tarea1, StartTarea1, PR_TAREA1, 0, 128);
-  //Tarea1Handle = osThreadCreate(osThread(Tarea1), NULL);
-  xTaskCreate((TaskFunction_t)acelerador,
-              "lectura potenciometro",
-              configMINIMAL_STACK_SIZE,
-              0,
-              PR_TAREA2,
-              0);
-  xTaskCreate((TaskFunction_t)lucesCruce,
-              "lectura luces",
-              configMINIMAL_STACK_SIZE,
-              0,
-              PR_TAREA2,
-              0);
-  xTaskCreate((TaskFunction_t)distanceTask,
-              "lectura distancia",
-              configMINIMAL_STACK_SIZE,
-              0,
-              PR_DISTANCIA,
-              0);
 
   /* Start scheduler */
   //osKernelStart();

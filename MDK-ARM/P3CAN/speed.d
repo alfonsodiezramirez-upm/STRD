@@ -13,3 +13,4 @@ p3can\speed.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/semphr.h
 p3can\speed.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h
 p3can\speed.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/task.h
 p3can\speed.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/list.h
+p3can\speed.o: ../Inc/lock.h

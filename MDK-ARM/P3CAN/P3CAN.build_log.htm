@@ -27,6 +27,20 @@ Project File Date:  03/13/2021
 <h2>Output:</h2>
 *** Using Compiler 'V5.06 update 7 (build 960)', folder: 'C:\Keil_v5\ARM\ARMCC\Bin'
 Build target 'P3CAN'
+compiling locki.c...
+../Inc/lock.h(31): warning:  #1-D: last line of file ends without a newline
+  #endif /* LOCK_H */
+../Inc/locki.h(38): warning:  #1-D: last line of file ends without a newline
+  #endif /* LOCKI_H */
+..\Src\locki.c: 2 warnings, 0 errors
+compiling lock.c...
+../Inc/lock.h(31): warning:  #1-D: last line of file ends without a newline
+  #endif /* LOCK_H */
+..\Src\lock.c(139): warning:  #177-D: variable "xReturned"  was declared but never referenced
+      BaseType_t xReturned;
+..\Src\lock.c(59): warning:  #177-D: function "prvSanityCheckCreatedSemaphore"  was declared but never referenced
+  static void prvSanityCheckCreatedSemaphore(SemaphoreHandle_t xSemaphore, UBaseType_t uxMaxCount)
+..\Src\lock.c: 3 warnings, 0 errors
 compiling main.c...
 ../Inc/lock.h(31): warning:  #1-D: last line of file ends without a newline
   #endif /* LOCK_H */
@@ -44,7 +58,7 @@ compiling main.c...
 linking...
 Program Size: Code=12292 RO-data=448 RW-data=132 ZI-data=16884  
 FromELF: creating hex file...
-"P3CAN\P3CAN.axf" - 0 Error(s), 6 Warning(s).
+"P3CAN\P3CAN.axf" - 0 Error(s), 11 Warning(s).
 
 <h2>Software Packages used:</h2>
 

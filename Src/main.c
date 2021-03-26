@@ -97,54 +97,6 @@ int map(int x, int in_min, int in_max, int out_min, int out_max)
   return (int)((x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min);
 }
 
-uint32_t DWT_Delay_Init(void) {
-  /* Disable TRC */
-  CoreDebug->DEMCR &= ~CoreDebug_DEMCR_TRCENA_Msk; // ~0x01000000;
-  /* Enable TRC */
-  CoreDebug->DEMCR |=  CoreDebug_DEMCR_TRCENA_Msk; // 0x01000000;
-
-  /* Disable clock cycle counter */
-  DWT->CTRL &= ~DWT_CTRL_CYCCNTENA_Msk; //~0x00000001;
-  /* Enable  clock cycle counter */
-  DWT->CTRL |=  DWT_CTRL_CYCCNTENA_Msk; //0x00000001;
-
-  /* Reset the clock cycle counter value */
-  DWT->CYCCNT = 0;
-
-     /* 3 NO OPERATION instructions */
-     __ASM volatile ("NOP");
-     __ASM volatile ("NOP");
-  __ASM volatile ("NOP");
-
-  /* Check if clock cycle counter has started */
-     if(DWT->CYCCNT)
-     {
-       return 0; /*clock cycle counter started*/
-     }
-     else
-  {
-    return 1; /*clock cycle counter not started*/
-  }
-}
-
-uint32_t readDistance(void)
-{
-	__IO uint8_t flag=0;
-	__IO uint32_t disTime=0;
-	
-	HAL_GPIO_WritePin(GPIOD, GPIO_PIN_10, GPIO_PIN_SET);
-	DWT_Delay_us(10);
-	HAL_GPIO_WritePin(GPIOD, GPIO_PIN_10, GPIO_PIN_RESET);
-	
-	while(flag == 0){
-		while(HAL_GPIO_ReadPin(GPIOD,GPIO_PIN_11) == GPIO_PIN_SET){
-			disTime++;
-			flag = 1;
-		}
-	}
-	return disTime;
-}
-
 void acelerador(void const * argument)
 {
 	/* Infinite loop */
@@ -284,7 +236,7 @@ int main(void)
 		0,
 		PR_TAREA2,
 		0);
-		xTaskCreate( (TaskFunction_t)calculoDistancia,
+		xTaskCreate( (TaskFunction_t)distanceTask,
 		"lectura distancia",
 		configMINIMAL_STACK_SIZE,
 		0,

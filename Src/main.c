@@ -59,6 +59,7 @@
 #include "dwt_stm32_delay.h"
 #include "locki.h"
 #include "speed.h"
+#include "distance.h"
 /* Private variables ---------------------------------------------------------*/
 ADC_HandleTypeDef hadc1;
 CAN_HandleTypeDef hcan1;
@@ -160,8 +161,11 @@ void myTask03(void const * argument)
 }
 
 void distanceTask(const void *args) {
+  const uint16_t T_DISTANCE_TASK = 300U;
+  uint32_t wake_time = osKernelSysTick();
   while (1) {
     
+    osDelayUntil(&wake_time, T_DISTANCE_TASK);
   }
 }
 
@@ -193,6 +197,7 @@ int main(void)
   osMutexDef(mutex1);
   mutex1Handle = osMutexCreate(osMutex(mutex1));
   SPEED_init();
+  DISTANCE_init();
 	// pint_t vel = ILOCK_new(0);
 	// VelocidadActual = vel;
 	

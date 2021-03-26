@@ -57,7 +57,6 @@
 /* USER CODE BEGIN Includes */
 #include <math.h>
 #include "dwt_stm32_delay.h"
-#include "locki.h"
 #include "speed.h"
 /* Private variables ---------------------------------------------------------*/
 ADC_HandleTypeDef hadc1;

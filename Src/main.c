@@ -58,6 +58,7 @@
 #include <math.h>
 #include "dwt_stm32_delay.h"
 #include "uss.h"
+#include "symptoms.h"
 /* Private variables ---------------------------------------------------------*/
 ADC_HandleTypeDef hadc1;
 CAN_HandleTypeDef hcan1;
@@ -78,14 +79,16 @@ static void MX_CAN1_Init(void);
 /* Tareas perodicas */
 void StartTarea1(void const *argument);
 /*Prioridades de las Tareas Periodicas*/
-#define PR_TAREALUCESCRUCE 2
-#define PR_TAREA2 3
-#define PR_DISTANCIA 4
+#define PR_RIESGOS 5
+#define PR_TAREAGIRO 4
+#define PR_TAREAAGARRADO 3
+#define PR_CABEZA 2
 
 /*Periodos de las tareas*/
-#define T_TAREAVELOCIDAD 250
-#define T_TAREALUCESCRUCE 1000
-#define T_DISTANCIA 300
+#define T_TAREAGIRO 400
+#define T_TAREAAGARRADO 500
+#define T_CABEZA 600
+#define T_RIESGOS 300
 
 #define TRUE 1
 #define FALSE 0
@@ -95,6 +98,41 @@ int map(int x, int in_min, int in_max, int out_min, int out_max)
   return (int)((x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min);
 }
 
+void giroVolante(void const *argument)
+{
+  /* Infinite loop */
+  int actual;
+  uint32_t wake_time = osKernelSysTick();
+  for (;;)
+  {
+    /* Lectura del canal ADC0 */
+    ADC_ChannelConfTypeDef sConfig = {0};
+    sConfig.Channel = ADC_CHANNEL_0; // seleccionamos el canal 0
+    sConfig.Rank = 1;
+    sConfig.SamplingTime = ADC_SAMPLETIME_28CYCLES;
+    HAL_ADC_ConfigChannel(&hadc1, &sConfig);
+    HAL_ADC_Start(&hadc1); // comenzamos la convers�n AD
+    if (HAL_ADC_PollForConversion(&hadc1, 5) == HAL_OK)
+    {
+      actual = map(HAL_ADC_GetValue(&hadc1), 0, 255, 0, 200); // leemos el valor
+      WHEEL_set(actual);
+    }
+    osDelayUntil(&wake_time, T_TAREAGIRO);
+  }
+}
+void volanteAgarrado(void const *argument)
+{
+  /* Infinite loop */
+  int actual;
+	uint32_t wake_time = osKernelSysTick();
+  for (;;)
+  {
+    /* Lectura del canal ADC0 */
+    actual = HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_8);
+    WHEEL_grab(actual);
+    osDelayUntil(&wake_time, T_TAREAAGARRADO);
+  }
+}
 /**
   * @brief  The application entry point.
   * @retval int
@@ -125,7 +163,18 @@ int main(void)
   //osKernelStart();
   vTaskStartScheduler();
   /* We should never get here as control is now taken by the scheduler */
-
+	xTaskCreate((TaskFunction_t)giroVolante,
+              "lectura potenciometro Giro Volante",
+              configMINIMAL_STACK_SIZE,
+              0,
+              PR_TAREAGIRO,
+              0);
+	xTaskCreate((TaskFunction_t)volanteAgarrado,
+              "lectura sensor agarrado",
+              configMINIMAL_STACK_SIZE,
+              0,
+              PR_TAREAAGARRADO,
+              0);
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)

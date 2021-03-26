@@ -27,7 +27,7 @@ static SemaphoreHandle_t DISTANCE_sem = NULL;
 static float DISTANCE_distance = 0;
 
 void DISTANCE_init(void) {
-    DISTANCE_sem = LOCK_create();
+    DISTANCE_sem = LOCK_create(NULL);
 }
 
 void DISTANCE_set(float distance) {

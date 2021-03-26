@@ -17,6 +17,11 @@
  * Created by Javinator9889 on 05/03/21 - locki_h.
  */
 #include "speed.h"
+#include <lock.h>
+#include <semphr.h>
+#include <FreeRTOS.h>
+#include <FreeRTOSConfig.h>
+#include <task.h>
 
 static SemaphoreHandle_t SPEED_sem = NULL;
 static int SPEED_speed = 0;

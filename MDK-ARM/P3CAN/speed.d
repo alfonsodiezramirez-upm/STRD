@@ -11,6 +11,6 @@ p3can\speed.o: ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F
 p3can\speed.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h
 p3can\speed.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/semphr.h
 p3can\speed.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h
+p3can\speed.o: ../Inc/lock.h
 p3can\speed.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/task.h
 p3can\speed.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/list.h
-p3can\speed.o: ../Inc/lock.h

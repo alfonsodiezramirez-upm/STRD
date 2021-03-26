@@ -126,6 +126,7 @@ void distanceTask(const void *args) {
   float distance;
   float speed;
   float secure_dist;
+	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_9, GPIO_PIN_RESET);
   while (1) {
     distance = (float) USS_read_distance() * 0.00171821;
     if (distance == 500000) distance = 1;
@@ -134,9 +135,12 @@ void distanceTask(const void *args) {
     speed = SPEED_get();
     secure_dist = (float) pow((speed / 10), 2);
 
-    if (distance < secure_dist) HAL_GPIO_WritePin(GPIOB, GPIO_PIN_8, GPIO_PIN_SET);
-    else HAL_GPIO_WritePin(GPIOB, GPIO_PIN_8, GPIO_PIN_RESET);
+    if (distance < secure_dist) 
+				HAL_GPIO_WritePin(GPIOA, GPIO_PIN_9, GPIO_PIN_SET);
+    else 
+				HAL_GPIO_WritePin(GPIOA, GPIO_PIN_9, GPIO_PIN_RESET);
     
+		//osDelay(T_DISTANCIA);
     osDelayUntil(&wake_time, T_DISTANCE_TASK);
   }
 }
@@ -171,21 +175,7 @@ void lucesCruce(void const * argument)
   
 }
 
-void calculoDistancia(void const * argument)
-{
-	float currentDistance  = 0.0;
-	/* Infinite loop */
-  for(;;)
-  {
 
-		currentDistance = (float)readDistance() * 0.00171821;
-		if (currentDistance == 500000) 
-			currentDistance = 1;
-		distancia = currentDistance;
-		osDelay(T_TAREAVELOCIDAD);
-	}
-  
-}
 
 
 /**
@@ -208,8 +198,6 @@ int main(void)
   MX_ADC1_Init();
   MX_SPI1_Init();
   MX_CAN1_Init();
-
-  DWT_Delay_Init();
 	
   /* Create the mutex(es) */
   /* definition and creation of mutex1 */

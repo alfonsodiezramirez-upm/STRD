@@ -57,7 +57,6 @@
 /* USER CODE BEGIN Includes */
 #include <math.h>
 #include "dwt_stm32_delay.h"
-#include "uss.h"
 #include "symptoms.h"
 /* Private variables ---------------------------------------------------------*/
 ADC_HandleTypeDef hadc1;
@@ -67,8 +66,6 @@ SPI_HandleTypeDef hspi1;
 osThreadId Tarea1Handle;
 osMutexId mutex1Handle;
 
-int luminosidad = 0;
-float distancia = 0.0;
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
@@ -98,7 +95,7 @@ int map(int x, int in_min, int in_max, int out_min, int out_max)
   return (int)((x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min);
 }
 
-void giroVolante(void const *argument)
+void giroVolante(const void *argument)
 {
   /* Infinite loop */
   int actual;
@@ -120,7 +117,7 @@ void giroVolante(void const *argument)
     osDelayUntil(&wake_time, T_TAREAGIRO);
   }
 }
-void volanteAgarrado(void const *argument)
+void volanteAgarrado(const void *argument)
 {
   /* Infinite loop */
   int actual;
@@ -144,7 +141,7 @@ int main(void)
 
   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
   HAL_Init();
-
+	SYMPTOMS_init();
   /* Configure the system clock */
   SystemClock_Config();
 
@@ -156,13 +153,8 @@ int main(void)
 
   /* Create the mutex(es) */
   /* definition and creation of mutex1 */
-  osMutexDef(mutex1);
-  mutex1Handle = osMutexCreate(osMutex(mutex1));
-
-  /* Start scheduler */
-  //osKernelStart();
-  vTaskStartScheduler();
-  /* We should never get here as control is now taken by the scheduler */
+  //osMutexDef(mutex1);
+  //mutex1Handle = osMutexCreate(osMutex(mutex1));
 	xTaskCreate((TaskFunction_t)giroVolante,
               "lectura potenciometro Giro Volante",
               configMINIMAL_STACK_SIZE,
@@ -175,6 +167,11 @@ int main(void)
               0,
               PR_TAREAAGARRADO,
               0);
+  /* Start scheduler */
+  //osKernelStart();
+  vTaskStartScheduler();
+  /* We should never get here as control is now taken by the scheduler */
+
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)

@@ -439,29 +439,19 @@
               <FilePath>..\Inc\uss.h</FilePath>
             </File>
             <File>
-              <FileName>distance.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\Inc\distance.h</FilePath>
-            </File>
-            <File>
-              <FileName>speed.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\Inc\speed.h</FilePath>
-            </File>
-            <File>
-              <FileName>distance.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Src\distance.c</FilePath>
-            </File>
-            <File>
-              <FileName>speed.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Src\speed.c</FilePath>
-            </File>
-            <File>
               <FileName>dwt_stm32_delay.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\Src\dwt_stm32_delay.h</FilePath>
+            </File>
+            <File>
+              <FileName>symptoms.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\Inc\symptoms.h</FilePath>
+            </File>
+            <File>
+              <FileName>symptoms.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Src\symptoms.c</FilePath>
             </File>
           </Files>
         </Group>

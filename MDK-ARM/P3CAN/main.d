@@ -50,6 +50,5 @@ p3can\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/semphr.h
 p3can\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/event_groups.h
 p3can\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\math.h
 p3can\main.o: ../Src/dwt_stm32_delay.h
-p3can\main.o: ../Inc/speed.h
-p3can\main.o: ../Inc/distance.h
-p3can\main.o: ../Inc/uss.h
+p3can\main.o: ../Inc/symptoms.h
+p3can\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h

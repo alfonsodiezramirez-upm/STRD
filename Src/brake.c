@@ -36,20 +36,19 @@ bool BRAKE_lock(void) {
 
 void BRAKE_wait(void) {
     configASSERT(BRAKE_sem != NULL);
-    bool active = false;
-    while (!active) {
-        xSemaphoreTake(BRAKE_sem, portMAX_DELAY);
-        active = true;
-    }
-    BRAKE_active = true;
+    while (!BRAKE_active);
+
+    return xSemaphoreTake(BRAKE_sem, portMAX_DELAY) == pdTRUE;
 }
 
 bool BRAKE_set(void) {
     configASSERT(BRAKE_sem != NULL);
+    BRAKE_active = true;
     return xSemaphoreGive(BRAKE_sem) == pdTRUE;
 }
 
 bool BRAKE_free(void) {
+    configASSERT(BRAKE_sem != NULL);
     BRAKE_active = false;
-    return BRAKE_set();
+    return xSemaphoreGive(BRAKE_sem) == pdTRUE;
 }

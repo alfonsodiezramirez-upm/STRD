@@ -59,7 +59,9 @@
 #include "dwt_stm32_delay.h"
 #include "speed.h"
 #include "distance.h"
+#include "brake.h"
 #include "uss.h"
+#include "utils.h"
 /* Private variables ---------------------------------------------------------*/
 ADC_HandleTypeDef hadc1;
 CAN_HandleTypeDef hcan1;
@@ -142,6 +144,65 @@ void distanceTask(const void *args)
     else HAL_GPIO_WritePin(GPIOA, GPIO_PIN_9, GPIO_PIN_RESET);
 
     osDelayUntil(&wake_time, T_DISTANCE_TASK);
+  }
+}
+
+void brake_task(const void *args) {
+  int intensity;
+  uint16_t pin;
+  uint16_t turn_off_pins[3] = {0U};
+  const uint16_t led_pins = {GPIO_PIN_12, GPIO_PIN_13, GPIO_PIN_14, GPIO_PIN_15};
+  while (TRUE) {
+    BRAKE_wait();
+    int intensity = BRAKE_intensity_get();
+    uint16_t pin = 0U;
+    uint16_t turn_off_pins[3] = {0U};
+
+    switch (intensity) {
+    case 0:
+      pin = GPIO_PIN_12;
+      turn_off_pins[0] = GPIO_PIN_13;
+      turn_off_pins[1] = GPIO_PIN_14;
+      turn_off_pins[2] = GPIO_PIN_15;
+      break;
+    
+    case 1:
+      pin = GPIO_PIN_13;
+      turn_off_pins[0] = GPIO_PIN_12;
+      turn_off_pins[1] = GPIO_PIN_14;
+      turn_off_pins[2] = GPIO_PIN_15;
+      break;
+
+    case 2:
+      pin = GPIO_PIN_14;
+      turn_off_pins[0] = GPIO_PIN_12;
+      turn_off_pins[1] = GPIO_PIN_13;
+      turn_off_pins[2] = GPIO_PIN_15;
+      break;
+
+    case 3:
+      pin = GPIO_PIN_15;
+      turn_off_pins[0] = GPIO_PIN_12;
+      turn_off_pins[1] = GPIO_PIN_13;
+      turn_off_pins[2] = GPIO_PIN_14;
+      break;
+
+    default:
+      pin = 0U;
+      break;
+    }
+    if (pin != 0U) {
+      foreach(uint16_t, arr_pin, led_pins) {
+        HAL_GPIO_WritePin(GPIOD, arr_pin, GPIO_PIN_RESET);
+      }
+    } else {
+      HAL_GPIO_WritePin(GPIOD, pin, GPIO_PIN_SET);
+      foreach(uint16_t, turn_off_pin, turn_off_pins) {
+        HAL_GPIO_WritePin(GPIOD, turn_off_pin, GPIO_PIN_RESET);
+      }
+    }
+
+    BRAKE_free();
   }
 }
 

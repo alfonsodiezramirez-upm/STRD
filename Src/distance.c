@@ -24,8 +24,8 @@
 #include <task.h>
 
 static SemaphoreHandle_t INSTANCE_sem = NULL;
-static float DISTANCE_distance = 0;
-static int BRAKE_intensity = 0;
+static volatile float DISTANCE_distance = 0;
+static volatile int BRAKE_intensity = 0;
 
 void DISTANCE_init(void) {
     INSTANCE_sem = LOCK_create(NULL);

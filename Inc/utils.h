@@ -19,6 +19,9 @@
 #ifndef UTILS_H
 #define UTILS_H
 
+// Gets the size of an array
+#define arrsize(array) (sizeof (array) / sizeof *(array))
+
 // Iterates through an array
 #define foreach(idxtype, item, array) \
     idxtype* item; \

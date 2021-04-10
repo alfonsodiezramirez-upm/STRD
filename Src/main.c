@@ -85,6 +85,7 @@ void StartTarea1(void const *argument);
 #define PR_TAREALUCESCRUCE 2
 #define PR_TAREA2 3
 #define PR_DISTANCIA 4
+#define PR_BRAKE  5
 
 /*Periodos de las tareas*/
 #define T_TAREAVELOCIDAD 250
@@ -314,7 +315,7 @@ int main(void)
               "tarea freno",
               configMINIMAL_STACK_SIZE,
               0,
-              PR_DISTANCIA,
+              PR_BRAKE,
               0);
 
   /* Start scheduler */

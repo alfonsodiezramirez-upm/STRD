@@ -19,14 +19,13 @@
 #ifndef CAN_H
 #define CAN_H
 #include <FreeRTOSConfig.h>
-#include <stm32f4xx_hal_can.h>
 #include <stdint.h>
 
 
 extern const uint32_t STD_ID;
 
 void CAN_init(void);
-HAL_StatusTypeDef CAN_send(uint8_t);
+void CAN_send(uint8_t);
 uint8_t CAN_recv(void);
 void CAN1_RX0_IRQHandler(void);
 

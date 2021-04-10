@@ -38,7 +38,7 @@ bool BRAKE_lock(void) {
     return xSemaphoreTake(BRAKE_sem, 0) == pdTRUE;
 }
 
-void BRAKE_wait(void) {
+bool BRAKE_wait(void) {
     configASSERT(BRAKE_sem != NULL);
     while (!BRAKE_active);
 

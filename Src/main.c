@@ -171,7 +171,7 @@ void brake_task(const void *args) {
   uint16_t pin;
   uint16_t turn_off_pins[3] = {0U};
   uint32_t wake_time = osKernelSysTick();
-  const uint16_t led_pins[] = {GPIO_PIN_12, GPIO_PIN_13, GPIO_PIN_14, GPIO_PIN_15};
+  uint16_t led_pins[] = {GPIO_PIN_12, GPIO_PIN_13, GPIO_PIN_14, GPIO_PIN_15};
   const uint32_t T_BRAKE_TASK = 150U;
   while (TRUE) {
     BRAKE_wait();
@@ -213,7 +213,7 @@ void brake_task(const void *args) {
       break;
     }
     if (pin != 0U) {
-      foreach(uint16_t, *arr_pin, led_pins) {
+      foreach(uint16_t, arr_pin, led_pins) {
         HAL_GPIO_WritePin(GPIOD, *arr_pin, GPIO_PIN_RESET);
       }
     } else {

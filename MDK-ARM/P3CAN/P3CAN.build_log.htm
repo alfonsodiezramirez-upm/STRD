@@ -26,79 +26,78 @@ Project File Date:  04/10/2021
 
 <h2>Output:</h2>
 *** Using Compiler 'V5.06 update 7 (build 960)', folder: 'C:\Keil_v5\ARM\ARMCC\Bin'
-Build target 'P3CAN'
+Rebuild target 'P3CAN'
+assembling startup_stm32f407xx.s...
+compiling lock.c...
+../Inc/lock.h(31): warning:  #1-D: last line of file ends without a newline
+  #endif /* LOCK_H */
+..\Src\lock.c(139): warning:  #177-D: variable "xReturned"  was declared but never referenced
+      BaseType_t xReturned;
+..\Src\lock.c(59): warning:  #177-D: function "prvSanityCheckCreatedSemaphore"  was declared but never referenced
+  static void prvSanityCheckCreatedSemaphore(SemaphoreHandle_t xSemaphore, UBaseType_t uxMaxCount)
+..\Src\lock.c: 3 warnings, 0 errors
 compiling brake.c...
 ../Inc/brake.h(29): warning:  #1-D: last line of file ends without a newline
   #endif /* BRAKE_H */
 ../Inc/lock.h(31): warning:  #1-D: last line of file ends without a newline
   #endif /* LOCK_H */
-..\Src\brake.c(45): error:  #118: a void function may not return a value
-      return xSemaphoreTake(BRAKE_sem, portMAX_DELAY) == pdTRUE;
-..\Src\brake.c: 2 warnings, 1 error
+..\Src\brake.c: 2 warnings, 0 errors
+compiling distance.c...
+../Inc/distance.h(29): warning:  #1-D: last line of file ends without a newline
+  #endif /* DISTANCE_H */
+../Inc/lock.h(31): warning:  #1-D: last line of file ends without a newline
+  #endif /* LOCK_H */
+..\Src\distance.c(74): warning:  #1-D: last line of file ends without a newline
+  }
+..\Src\distance.c: 3 warnings, 0 errors
+compiling uss.c...
+../Inc/uss.h(25): warning:  #1-D: last line of file ends without a newline
+  #endif
+..\Src\uss.c(43): warning:  #1-D: last line of file ends without a newline
+  }
+..\Src\uss.c: 2 warnings, 0 errors
+compiling speed.c...
+../Inc/speed.h(29): warning:  #1-D: last line of file ends without a newline
+  #endif /* SPEED_H */
+../Inc/lock.h(31): warning:  #1-D: last line of file ends without a newline
+  #endif /* LOCK_H */
+..\Src\speed.c: 2 warnings, 0 errors
+compiling stm32f4xx_it.c...
 compiling can.c...
-../Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h(1097): warning:  #47-D: incompatible redefinition of macro "CAN1"  (declared at line 173 of "../Inc/FreeRTOSConfig.h")
-  #define CAN1                ((CAN_TypeDef *) CAN1_BASE)
-../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h(6727): error:  #20: identifier "HAL_StatusTypeDef" is undefined
-  HAL_StatusTypeDef HAL_RCCEx_PeriphCLKConfig(RCC_PeriphCLKInitTypeDef  *PeriphClkInit);
-../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h(6739): error:  #20: identifier "HAL_StatusTypeDef" is undefined
-  HAL_StatusTypeDef HAL_RCCEx_EnablePLLI2S(RCC_PLLI2SInitTypeDef  *PLLI2SInit);
-../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h(6740): error:  #20: identifier "HAL_StatusTypeDef" is undefined
-  HAL_StatusTypeDef HAL_RCCEx_DisablePLLI2S(void);
-../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h(1265): error:  #20: identifier "HAL_StatusTypeDef" is undefined
-  HAL_StatusTypeDef HAL_RCC_DeInit(void);
-../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h(1266): error:  #20: identifier "HAL_StatusTypeDef" is undefined
-  HAL_StatusTypeDef HAL_RCC_OscConfig(RCC_OscInitTypeDef *RCC_OscInitStruct);
-../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h(1267): error:  #20: identifier "HAL_StatusTypeDef" is undefined
-  HAL_StatusTypeDef HAL_RCC_ClockConfig(RCC_ClkInitTypeDef *RCC_ClkInitStruct, uint32_t FLatency);
-../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h(254): error:  #20: identifier "HAL_StatusTypeDef" is undefined
-  HAL_StatusTypeDef HAL_GPIO_LockPin(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin);
-../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h(161): error:  #20: identifier "HAL_LockTypeDef" is undefined
-    HAL_LockTypeDef            Lock;                                                             /*!< DMA locking object                     */  
-../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h(86): error:  #20: identifier "HAL_StatusTypeDef" is undefined
-  HAL_StatusTypeDef HAL_DMAEx_MultiBufferStart(DMA_HandleTypeDef *hdma, uint32_t SrcAddress, uint32_t DstAddress, uint32_t SecondMemAddress, uint32_t DataLength);
-../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h(87): error:  #20: identifier "HAL_StatusTypeDef" is undefined
-  HAL_StatusTypeDef HAL_DMAEx_MultiBufferStart_IT(DMA_HandleTypeDef *hdma, uint32_t SrcAddress, uint32_t DstAddress, uint32_t SecondMemAddress, uint32_t DataLength);
-../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h(88): error:  #20: identifier "HAL_StatusTypeDef" is undefined
-  HAL_StatusTypeDef HAL_DMAEx_ChangeMemory(DMA_HandleTypeDef *hdma, uint32_t Address, HAL_DMA_MemoryTypeDef memory);
-../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h(669): error:  #20: identifier "HAL_StatusTypeDef" is undefined
-  HAL_StatusTypeDef HAL_DMA_Init(DMA_HandleTypeDef *hdma); 
-../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h(670): error:  #20: identifier "HAL_StatusTypeDef" is undefined
-  HAL_StatusTypeDef HAL_DMA_DeInit(DMA_HandleTypeDef *hdma);
-../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h(679): error:  #20: identifier "HAL_StatusTypeDef" is undefined
-  HAL_StatusTypeDef HAL_DMA_Start (DMA_HandleTypeDef *hdma, uint32_t SrcAddress, uint32_t DstAddress, uint32_t DataLength);
-../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h(680): error:  #20: identifier "HAL_StatusTypeDef" is undefined
-  HAL_StatusTypeDef HAL_DMA_Start_IT(DMA_HandleTypeDef *hdma, uint32_t SrcAddress, uint32_t DstAddress, uint32_t DataLength);
-../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h(681): error:  #20: identifier "HAL_StatusTypeDef" is undefined
-  HAL_StatusTypeDef HAL_DMA_Abort(DMA_HandleTypeDef *hdma);
-../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h(682): error:  #20: identifier "HAL_StatusTypeDef" is undefined
-  HAL_StatusTypeDef HAL_DMA_Abort_IT(DMA_HandleTypeDef *hdma);
-../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h(683): error:  #20: identifier "HAL_StatusTypeDef" is undefined
-  HAL_StatusTypeDef HAL_DMA_PollForTransfer(DMA_HandleTypeDef *hdma, HAL_DMA_LevelCompleteTypeDef CompleteLevel, uint32_t Timeout);
-../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h(685): error:  #20: identifier "HAL_StatusTypeDef" is undefined
-  HAL_StatusTypeDef HAL_DMA_CleanCallbacks(DMA_HandleTypeDef *hdma);
-../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h(686): error:  #20: identifier "HAL_StatusTypeDef" is undefined
-  HAL_StatusTypeDef HAL_DMA_RegisterCallback(DMA_HandleTypeDef *hdma, HAL_DMA_CallbackIDTypeDef CallbackID, void (* pCallback)(DMA_HandleTypeDef *_hdma));
-../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h(687): error:  #20: identifier "HAL_StatusTypeDef" is undefined
-  HAL_StatusTypeDef HAL_DMA_UnRegisterCallback(DMA_HandleTypeDef *hdma, HAL_DMA_CallbackIDTypeDef CallbackID);
-../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h(216): error:  #20: identifier "HAL_LockTypeDef" is undefined
-    HAL_LockTypeDef               Lock;                        /*!< ADC locking object */
-../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h(288): error:  #20: identifier "HAL_StatusTypeDef" is undefined
-  HAL_StatusTypeDef HAL_ADCEx_InjectedStart(ADC_HandleTypeDef* hadc);
-../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h(289): error:  #20: identifier "HAL_StatusTypeDef" is undefined
-  HAL_StatusTypeDef HAL_ADCEx_InjectedStop(ADC_HandleTypeDef* hadc);
-../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h(290): error:  #20: identifier "HAL_StatusTypeDef" is undefined
-  HAL_StatusTypeDef HAL_ADCEx_InjectedPollForConversion(ADC_HandleTypeDef* hadc, uint32_t Timeout);
-../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h(291): error:  #20: identifier "HAL_StatusTypeDef" is undefined
-  HAL_StatusTypeDef HAL_ADCEx_InjectedStart_IT(ADC_HandleTypeDef* hadc);
-../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h(292): error:  #20: identifier "HAL_StatusTypeDef" is undefined
-  HAL_StatusTypeDef HAL_ADCEx_InjectedStop_IT(ADC_HandleTypeDef* hadc);
-../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h(294): error:  #20: identifier "HAL_StatusTypeDef" is undefined
-  HAL_StatusTypeDef HAL_ADCEx_MultiModeStart_DMA(ADC_HandleTypeDef* hadc, uint32_t* pData, uint32_t Length);
-../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h(295): error:  #20: identifier "HAL_StatusTypeDef" is undefined
-  HAL_StatusTypeDef HAL_ADCEx_MultiModeStop_DMA(ADC_HandleTypeDef* hadc);
-../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h(300): error:  #20: identifier "HAL_StatusTypeDef" is undefined
-  HAL_StatusTypeDef HAL_ADCEx_InjectedConfigChannel(ADC_HandleTypeDef* hadc,ADC_InjectionConfTypeDef* sConfigInjected);
-..\Src\can.c: 1 warning, 30 errors
+../Inc/can.h(32): warning:  #1-D: last line of file ends without a newline
+  #endif /* CAN_H */
+..\Src\can.c(55): warning:  #167-D: argument of type "volatile CAN_HandleTypeDef *" is incompatible with parameter of type "CAN_HandleTypeDef *"
+      configASSERT(HAL_CAN_Init(&hcan1) == HAL_OK);
+..\Src\can.c(55): warning:  #223-D: function "taskDISABLE_INTERRUPTS" declared implicitly
+      configASSERT(HAL_CAN_Init(&hcan1) == HAL_OK);
+..\Src\can.c(82): warning:  #167-D: argument of type "volatile CAN_HandleTypeDef *" is incompatible with parameter of type "CAN_HandleTypeDef *"
+      HAL_CAN_ConfigFilter(&hcan1, &filter_config);
+..\Src\can.c(82): warning:  #167-D: argument of type "volatile CAN_FilterTypeDef *" is incompatible with parameter of type "CAN_FilterTypeDef *"
+      HAL_CAN_ConfigFilter(&hcan1, &filter_config);
+..\Src\can.c(83): warning:  #167-D: argument of type "volatile CAN_HandleTypeDef *" is incompatible with parameter of type "CAN_HandleTypeDef *"
+      HAL_CAN_Start(&hcan1);
+..\Src\can.c(84): warning:  #167-D: argument of type "volatile CAN_HandleTypeDef *" is incompatible with parameter of type "CAN_HandleTypeDef *"
+      HAL_CAN_ActivateNotification(&hcan1, CAN_IT_RX_FIFO0_MSG_PENDING);
+..\Src\can.c(89): warning:  #167-D: argument of type "volatile CAN_HandleTypeDef *" is incompatible with parameter of type "CAN_HandleTypeDef *"
+      HAL_CAN_AddTxMessage(&hcan1, &tx_header, &byte_sent, &tx_mailbox);
+..\Src\can.c(89): warning:  #167-D: argument of type "volatile CAN_TxHeaderTypeDef *" is incompatible with parameter of type "CAN_TxHeaderTypeDef *"
+      HAL_CAN_AddTxMessage(&hcan1, &tx_header, &byte_sent, &tx_mailbox);
+..\Src\can.c(89): warning:  #167-D: argument of type "volatile uint8_t *" is incompatible with parameter of type "uint8_t *"
+      HAL_CAN_AddTxMessage(&hcan1, &tx_header, &byte_sent, &tx_mailbox);
+..\Src\can.c(89): warning:  #167-D: argument of type "volatile uint32_t *" is incompatible with parameter of type "uint32_t *"
+      HAL_CAN_AddTxMessage(&hcan1, &tx_header, &byte_sent, &tx_mailbox);
+..\Src\can.c(97): warning:  #167-D: argument of type "volatile CAN_HandleTypeDef *" is incompatible with parameter of type "CAN_HandleTypeDef *"
+      HAL_CAN_IRQHandler(&hcan1);
+..\Src\can.c(98): warning:  #167-D: argument of type "volatile CAN_HandleTypeDef *" is incompatible with parameter of type "CAN_HandleTypeDef *"
+      HAL_CAN_GetRxMessage(&hcan1, CAN_RX_FIFO0, &rx_header, &byte_recv);
+..\Src\can.c(98): warning:  #167-D: argument of type "volatile CAN_RxHeaderTypeDef *" is incompatible with parameter of type "CAN_RxHeaderTypeDef *"
+      HAL_CAN_GetRxMessage(&hcan1, CAN_RX_FIFO0, &rx_header, &byte_recv);
+..\Src\can.c(98): warning:  #167-D: argument of type "volatile uint8_t *" is incompatible with parameter of type "uint8_t *"
+      HAL_CAN_GetRxMessage(&hcan1, CAN_RX_FIFO0, &rx_header, &byte_recv);
+..\Src\can.c: 15 warnings, 0 errors
+compiling freertos.c...
+compiling stm32f4xx_hal_timebase_tim.c...
+compiling stm32f4xx_hal_msp.c...
 compiling main.c...
 ../Inc/speed.h(29): warning:  #1-D: last line of file ends without a newline
   #endif /* SPEED_H */
@@ -108,18 +107,12 @@ compiling main.c...
   #endif /* BRAKE_H */
 ../Inc/uss.h(25): warning:  #1-D: last line of file ends without a newline
   #endif
-../Inc/utils.h(28): warning:  #1-D: last line of file ends without a newline
+../Inc/utils.h(31): warning:  #1-D: last line of file ends without a newline
   #endif /* UTILS_H */
-../Inc/can.h(33): warning:  #1-D: last line of file ends without a newline
+../Inc/can.h(32): warning:  #1-D: last line of file ends without a newline
   #endif /* CAN_H */
 ../Src/main.c(137): warning:  #1035-D: single-precision operand implicitly converted to double-precision
       distance = (float)USS_read_distance() * 0.00171821;
-../Src/main.c(216): warning:  #223-D: function "arrsize" declared implicitly
-        foreach(uint16_t, arr_pin, led_pins) {
-../Src/main.c(216): error:  #513: a value of type "const uint16_t *" cannot be assigned to an entity of type "uint16_t *"
-        foreach(uint16_t, arr_pin, led_pins) {
-../Src/main.c(221): warning:  #223-D: function "arrsize" declared implicitly
-        foreach(uint16_t, turn_off_pin, turn_off_pins) {
 ../Src/main.c(170): warning:  #177-D: variable "intensity"  was declared but never referenced
     int intensity;
 ../Src/main.c(171): warning:  #177-D: variable "pin"  was declared but never referenced
@@ -130,8 +123,41 @@ compiling main.c...
           HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8, 0);
 ../Src/main.c(256): warning:  #188-D: enumerated type mixed with another type
           HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8, 1);
-../Src/main.c: 14 warnings, 1 error
-"P3CAN\P3CAN.axf" - 32 Error(s), 17 Warning(s).
+../Src/main.c: 12 warnings, 0 errors
+compiling stm32f4xx_hal_can.c...
+compiling stm32f4xx_hal_adc.c...
+compiling stm32f4xx_hal_adc_ex.c...
+compiling stm32f4xx_hal_rcc.c...
+compiling stm32f4xx_hal_tim_ex.c...
+compiling stm32f4xx_hal_spi.c...
+compiling stm32f4xx_hal_tim.c...
+compiling stm32f4xx_hal_flash_ramfunc.c...
+compiling stm32f4xx_hal_rcc_ex.c...
+compiling stm32f4xx_hal_gpio.c...
+compiling stm32f4xx_hal_dma.c...
+compiling stm32f4xx_hal_flash_ex.c...
+compiling stm32f4xx_hal_flash.c...
+compiling croutine.c...
+compiling stm32f4xx_hal_dma_ex.c...
+compiling event_groups.c...
+compiling list.c...
+compiling queue.c...
+compiling timers.c...
+compiling tasks.c...
+compiling heap_4.c...
+compiling cmsis_os.c...
+compiling port.c...
+compiling stm32f4xx_hal_pwr_ex.c...
+compiling stm32f4xx_hal.c...
+compiling stm32f4xx_hal_pwr.c...
+compiling system_stm32f4xx.c...
+compiling stm32f4xx_hal_cortex.c...
+linking...
+P3CAN\P3CAN.axf: Error: L6218E: Undefined symbol taskDISABLE_INTERRUPTS (referred from can.o).
+Not enough information to list image symbols.
+Not enough information to list load addresses in the image map.
+Finished: 2 information, 0 warning and 1 error messages.
+"P3CAN\P3CAN.axf" - 1 Error(s), 39 Warning(s).
 
 <h2>Software Packages used:</h2>
 
@@ -155,7 +181,7 @@ Package Vendor: Keil
 
    * Component: ARM::CMSIS:CORE:5.4.0
 Target not created.
-Build Time Elapsed:  00:00:02
+Build Time Elapsed:  00:00:14
 </pre>
 </body>
 </html>

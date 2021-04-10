@@ -17,8 +17,8 @@
  * Created by Javinator9889 on 10/04/21 - can.c.
  */
 #include "can.h"
+#include <stm32f4xx_hal.h>
 #include <FreeRTOSConfig.h>
-#include <stm32f4xx_hal_can.h>
 #include <stdint.h>
 
 const uint32_t STD_ID = 0x6FF;
@@ -84,9 +84,9 @@ void CAN_init(void) {
     HAL_CAN_ActivateNotification(&hcan1, CAN_IT_RX_FIFO0_MSG_PENDING);
 }
 
-HAL_StatusTypeDef CAN_send(uint8_t b) {
+void CAN_send(uint8_t b) {
     byte_sent = b;
-    return HAL_CAN_AddTxMessage(&hcan1, &tx_header, &byte_sent, &tx_mailbox);
+    HAL_CAN_AddTxMessage(&hcan1, &tx_header, &byte_sent, &tx_mailbox);
 }
 
 uint8_t CAN_recv(void) {

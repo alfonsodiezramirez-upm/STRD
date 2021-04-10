@@ -169,8 +169,8 @@ standard names. */
 /* Section where parameter definitions can be added (for instance, to override default ones in FreeRTOS.h) */
 /* USER CODE END Defines */ 
 // CAN Bus definitions for correct usage
-#ifndef CAN1
-#define CAN1
-#endif
+//#ifndef CAN1
+//#define CAN1
+//#endif
 
 #endif /* FREERTOS_CONFIG_H */

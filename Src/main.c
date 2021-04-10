@@ -90,7 +90,7 @@ void StartTarea1(void const *argument);
 /*Periodos de las tareas*/
 #define T_TAREAVELOCIDAD 250
 #define T_TAREALUCESCRUCE 1000
-#define T_DISTANCIA 300
+#define T_DISTANCIA   300
 
 #define TRUE 1
 #define FALSE 0
@@ -171,7 +171,9 @@ void brake_task(const void *args) {
   int intensity;
   uint16_t pin;
   uint16_t turn_off_pins[3] = {0U};
+  uint32_t wake_time = osKernelSysTick();
   const uint16_t led_pins = {GPIO_PIN_12, GPIO_PIN_13, GPIO_PIN_14, GPIO_PIN_15};
+  const uint32_t T_BRAKE_TASK = 150U;
   while (TRUE) {
     BRAKE_wait();
     int intensity = BRAKE_intensity_get();
@@ -223,6 +225,7 @@ void brake_task(const void *args) {
     }
 
     BRAKE_free();
+    osDelayUntil(&wake_time, T_BRAKE_TASK);
   }
 }
 

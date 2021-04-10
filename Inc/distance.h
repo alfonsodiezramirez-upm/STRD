@@ -23,5 +23,7 @@ void DISTANCE_init(void);
 void DISTANCE_set(float);
 float DISTANCE_get(void);
 void DISTANCE_delete(void);
+void BRAKE_intensity_set(int);
+int BRAKE_intensity_get(void);
 
 #endif /* DISTANCE_H */

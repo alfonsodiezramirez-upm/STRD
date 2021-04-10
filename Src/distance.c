@@ -23,33 +23,52 @@
 #include <FreeRTOSConfig.h>
 #include <task.h>
 
-static SemaphoreHandle_t DISTANCE_sem = NULL;
+static SemaphoreHandle_t INSTANCE_sem = NULL;
 static float DISTANCE_distance = 0;
+static int BRAKE_intensity = 0;
 
 void DISTANCE_init(void) {
-    DISTANCE_sem = LOCK_create(NULL);
+    INSTANCE_sem = LOCK_create(NULL);
 }
 
 void DISTANCE_set(float distance) {
-    configASSERT(DISTANCE_sem != NULL);
-    if (xSemaphoreTake(DISTANCE_sem, portMAX_DELAY) == pdTRUE) {
+    configASSERT(INSTANCE_sem != NULL);
+    if (xSemaphoreTake(INSTANCE_sem, portMAX_DELAY) == pdTRUE) {
         DISTANCE_distance = distance;
-        xSemaphoreGive(DISTANCE_sem);
+        xSemaphoreGive(INSTANCE_sem);
     }
 }
 
 float DISTANCE_get(void) {
     float distance = -1;
-    configASSERT(DISTANCE_sem != NULL);
-    if (xSemaphoreTake(DISTANCE_sem, portMAX_DELAY) == pdTRUE) {
+    configASSERT(INSTANCE_sem != NULL);
+    if (xSemaphoreTake(INSTANCE_sem, portMAX_DELAY) == pdTRUE) {
         distance = DISTANCE_distance;
-        xSemaphoreGive(DISTANCE_sem);
+        xSemaphoreGive(INSTANCE_sem);
     }
     return distance;
 }
 
 void DISTANCE_delete(void) {
-    LOCK_destroy(DISTANCE_sem);
-    DISTANCE_sem = NULL;
+    LOCK_destroy(INSTANCE_sem);
+    INSTANCE_sem = NULL;
     DISTANCE_distance = 0;
+}
+
+void BRAKE_intensity_set(int intensity) {
+    configASSERT(INSTANCE_sem != NULL);
+    if (xSemaphoreTake(INSTANCE_sem, portMAX_DELAY) == pdTRUE) {
+        BRAKE_intensity = intensity;
+        xSemaphoreGive(INSTANCE_sem);
+    }
+}
+
+int BRAKE_intensity_get(void) {
+    int intensity = -1;
+    configASSERT(INSTANCE_sem != NULL);
+    if (xSemaphoreTake(INSTANCE_sem, portMAX_DELAY) == pdTRUE) {
+        intensity = BRAKE_intensity;
+        xSemaphoreGive(INSTANCE_sem);
+    }
+    return intensity;
 }

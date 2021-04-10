@@ -439,14 +439,29 @@
               <FilePath>..\Inc\uss.h</FilePath>
             </File>
             <File>
+              <FileName>dwt_stm32_delay.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\Src\dwt_stm32_delay.h</FilePath>
+            </File>
+            <File>
+              <FileName>utils.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\Inc\utils.h</FilePath>
+            </File>
+            <File>
+              <FileName>brake.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\Inc\brake.h</FilePath>
+            </File>
+            <File>
               <FileName>distance.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\Inc\distance.h</FilePath>
             </File>
             <File>
-              <FileName>speed.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\Inc\speed.h</FilePath>
+              <FileName>brake.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Src\brake.c</FilePath>
             </File>
             <File>
               <FileName>distance.c</FileName>
@@ -454,14 +469,24 @@
               <FilePath>..\Src\distance.c</FilePath>
             </File>
             <File>
+              <FileName>can.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Src\can.c</FilePath>
+            </File>
+            <File>
+              <FileName>can.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\Inc\can.h</FilePath>
+            </File>
+            <File>
+              <FileName>speed.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\Inc\speed.h</FilePath>
+            </File>
+            <File>
               <FileName>speed.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Src\speed.c</FilePath>
-            </File>
-            <File>
-              <FileName>dwt_stm32_delay.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\Src\dwt_stm32_delay.h</FilePath>
             </File>
           </Files>
         </Group>

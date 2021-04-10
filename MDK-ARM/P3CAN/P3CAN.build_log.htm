@@ -22,29 +22,116 @@ Dialog DLL:      TCM.DLL V1.48.0.0
  
 <h2>Project:</h2>
 C:\Users\alfon\Documents\STRDLab\STM32\Pinicio\MDK-ARM\P3CAN.uvprojx
-Project File Date:  03/26/2021
+Project File Date:  04/10/2021
 
 <h2>Output:</h2>
 *** Using Compiler 'V5.06 update 7 (build 960)', folder: 'C:\Keil_v5\ARM\ARMCC\Bin'
 Build target 'P3CAN'
+compiling brake.c...
+../Inc/brake.h(29): warning:  #1-D: last line of file ends without a newline
+  #endif /* BRAKE_H */
+../Inc/lock.h(31): warning:  #1-D: last line of file ends without a newline
+  #endif /* LOCK_H */
+..\Src\brake.c(45): error:  #118: a void function may not return a value
+      return xSemaphoreTake(BRAKE_sem, portMAX_DELAY) == pdTRUE;
+..\Src\brake.c: 2 warnings, 1 error
+compiling can.c...
+../Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h(1097): warning:  #47-D: incompatible redefinition of macro "CAN1"  (declared at line 173 of "../Inc/FreeRTOSConfig.h")
+  #define CAN1                ((CAN_TypeDef *) CAN1_BASE)
+../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h(6727): error:  #20: identifier "HAL_StatusTypeDef" is undefined
+  HAL_StatusTypeDef HAL_RCCEx_PeriphCLKConfig(RCC_PeriphCLKInitTypeDef  *PeriphClkInit);
+../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h(6739): error:  #20: identifier "HAL_StatusTypeDef" is undefined
+  HAL_StatusTypeDef HAL_RCCEx_EnablePLLI2S(RCC_PLLI2SInitTypeDef  *PLLI2SInit);
+../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h(6740): error:  #20: identifier "HAL_StatusTypeDef" is undefined
+  HAL_StatusTypeDef HAL_RCCEx_DisablePLLI2S(void);
+../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h(1265): error:  #20: identifier "HAL_StatusTypeDef" is undefined
+  HAL_StatusTypeDef HAL_RCC_DeInit(void);
+../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h(1266): error:  #20: identifier "HAL_StatusTypeDef" is undefined
+  HAL_StatusTypeDef HAL_RCC_OscConfig(RCC_OscInitTypeDef *RCC_OscInitStruct);
+../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h(1267): error:  #20: identifier "HAL_StatusTypeDef" is undefined
+  HAL_StatusTypeDef HAL_RCC_ClockConfig(RCC_ClkInitTypeDef *RCC_ClkInitStruct, uint32_t FLatency);
+../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h(254): error:  #20: identifier "HAL_StatusTypeDef" is undefined
+  HAL_StatusTypeDef HAL_GPIO_LockPin(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin);
+../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h(161): error:  #20: identifier "HAL_LockTypeDef" is undefined
+    HAL_LockTypeDef            Lock;                                                             /*!< DMA locking object                     */  
+../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h(86): error:  #20: identifier "HAL_StatusTypeDef" is undefined
+  HAL_StatusTypeDef HAL_DMAEx_MultiBufferStart(DMA_HandleTypeDef *hdma, uint32_t SrcAddress, uint32_t DstAddress, uint32_t SecondMemAddress, uint32_t DataLength);
+../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h(87): error:  #20: identifier "HAL_StatusTypeDef" is undefined
+  HAL_StatusTypeDef HAL_DMAEx_MultiBufferStart_IT(DMA_HandleTypeDef *hdma, uint32_t SrcAddress, uint32_t DstAddress, uint32_t SecondMemAddress, uint32_t DataLength);
+../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h(88): error:  #20: identifier "HAL_StatusTypeDef" is undefined
+  HAL_StatusTypeDef HAL_DMAEx_ChangeMemory(DMA_HandleTypeDef *hdma, uint32_t Address, HAL_DMA_MemoryTypeDef memory);
+../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h(669): error:  #20: identifier "HAL_StatusTypeDef" is undefined
+  HAL_StatusTypeDef HAL_DMA_Init(DMA_HandleTypeDef *hdma); 
+../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h(670): error:  #20: identifier "HAL_StatusTypeDef" is undefined
+  HAL_StatusTypeDef HAL_DMA_DeInit(DMA_HandleTypeDef *hdma);
+../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h(679): error:  #20: identifier "HAL_StatusTypeDef" is undefined
+  HAL_StatusTypeDef HAL_DMA_Start (DMA_HandleTypeDef *hdma, uint32_t SrcAddress, uint32_t DstAddress, uint32_t DataLength);
+../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h(680): error:  #20: identifier "HAL_StatusTypeDef" is undefined
+  HAL_StatusTypeDef HAL_DMA_Start_IT(DMA_HandleTypeDef *hdma, uint32_t SrcAddress, uint32_t DstAddress, uint32_t DataLength);
+../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h(681): error:  #20: identifier "HAL_StatusTypeDef" is undefined
+  HAL_StatusTypeDef HAL_DMA_Abort(DMA_HandleTypeDef *hdma);
+../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h(682): error:  #20: identifier "HAL_StatusTypeDef" is undefined
+  HAL_StatusTypeDef HAL_DMA_Abort_IT(DMA_HandleTypeDef *hdma);
+../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h(683): error:  #20: identifier "HAL_StatusTypeDef" is undefined
+  HAL_StatusTypeDef HAL_DMA_PollForTransfer(DMA_HandleTypeDef *hdma, HAL_DMA_LevelCompleteTypeDef CompleteLevel, uint32_t Timeout);
+../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h(685): error:  #20: identifier "HAL_StatusTypeDef" is undefined
+  HAL_StatusTypeDef HAL_DMA_CleanCallbacks(DMA_HandleTypeDef *hdma);
+../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h(686): error:  #20: identifier "HAL_StatusTypeDef" is undefined
+  HAL_StatusTypeDef HAL_DMA_RegisterCallback(DMA_HandleTypeDef *hdma, HAL_DMA_CallbackIDTypeDef CallbackID, void (* pCallback)(DMA_HandleTypeDef *_hdma));
+../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h(687): error:  #20: identifier "HAL_StatusTypeDef" is undefined
+  HAL_StatusTypeDef HAL_DMA_UnRegisterCallback(DMA_HandleTypeDef *hdma, HAL_DMA_CallbackIDTypeDef CallbackID);
+../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h(216): error:  #20: identifier "HAL_LockTypeDef" is undefined
+    HAL_LockTypeDef               Lock;                        /*!< ADC locking object */
+../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h(288): error:  #20: identifier "HAL_StatusTypeDef" is undefined
+  HAL_StatusTypeDef HAL_ADCEx_InjectedStart(ADC_HandleTypeDef* hadc);
+../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h(289): error:  #20: identifier "HAL_StatusTypeDef" is undefined
+  HAL_StatusTypeDef HAL_ADCEx_InjectedStop(ADC_HandleTypeDef* hadc);
+../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h(290): error:  #20: identifier "HAL_StatusTypeDef" is undefined
+  HAL_StatusTypeDef HAL_ADCEx_InjectedPollForConversion(ADC_HandleTypeDef* hadc, uint32_t Timeout);
+../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h(291): error:  #20: identifier "HAL_StatusTypeDef" is undefined
+  HAL_StatusTypeDef HAL_ADCEx_InjectedStart_IT(ADC_HandleTypeDef* hadc);
+../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h(292): error:  #20: identifier "HAL_StatusTypeDef" is undefined
+  HAL_StatusTypeDef HAL_ADCEx_InjectedStop_IT(ADC_HandleTypeDef* hadc);
+../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h(294): error:  #20: identifier "HAL_StatusTypeDef" is undefined
+  HAL_StatusTypeDef HAL_ADCEx_MultiModeStart_DMA(ADC_HandleTypeDef* hadc, uint32_t* pData, uint32_t Length);
+../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h(295): error:  #20: identifier "HAL_StatusTypeDef" is undefined
+  HAL_StatusTypeDef HAL_ADCEx_MultiModeStop_DMA(ADC_HandleTypeDef* hadc);
+../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h(300): error:  #20: identifier "HAL_StatusTypeDef" is undefined
+  HAL_StatusTypeDef HAL_ADCEx_InjectedConfigChannel(ADC_HandleTypeDef* hadc,ADC_InjectionConfTypeDef* sConfigInjected);
+..\Src\can.c: 1 warning, 30 errors
 compiling main.c...
 ../Inc/speed.h(29): warning:  #1-D: last line of file ends without a newline
   #endif /* SPEED_H */
-../Inc/distance.h(27): warning:  #1-D: last line of file ends without a newline
+../Inc/distance.h(29): warning:  #1-D: last line of file ends without a newline
   #endif /* DISTANCE_H */
+../Inc/brake.h(29): warning:  #1-D: last line of file ends without a newline
+  #endif /* BRAKE_H */
 ../Inc/uss.h(25): warning:  #1-D: last line of file ends without a newline
   #endif
-../Src/main.c(131): warning:  #1035-D: single-precision operand implicitly converted to double-precision
-      distance = (float) USS_read_distance() * 0.00171821;
-../Src/main.c(167): warning:  #188-D: enumerated type mixed with another type
-  					HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8, 0);
-../Src/main.c(169): warning:  #188-D: enumerated type mixed with another type
-  				HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8,1);
-../Src/main.c: 6 warnings, 0 errors
-linking...
-Program Size: Code=17564 RO-data=596 RW-data=144 ZI-data=16888  
-FromELF: creating hex file...
-"P3CAN\P3CAN.axf" - 0 Error(s), 6 Warning(s).
+../Inc/utils.h(28): warning:  #1-D: last line of file ends without a newline
+  #endif /* UTILS_H */
+../Inc/can.h(33): warning:  #1-D: last line of file ends without a newline
+  #endif /* CAN_H */
+../Src/main.c(137): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+      distance = (float)USS_read_distance() * 0.00171821;
+../Src/main.c(216): warning:  #223-D: function "arrsize" declared implicitly
+        foreach(uint16_t, arr_pin, led_pins) {
+../Src/main.c(216): error:  #513: a value of type "const uint16_t *" cannot be assigned to an entity of type "uint16_t *"
+        foreach(uint16_t, arr_pin, led_pins) {
+../Src/main.c(221): warning:  #223-D: function "arrsize" declared implicitly
+        foreach(uint16_t, turn_off_pin, turn_off_pins) {
+../Src/main.c(170): warning:  #177-D: variable "intensity"  was declared but never referenced
+    int intensity;
+../Src/main.c(171): warning:  #177-D: variable "pin"  was declared but never referenced
+    uint16_t pin;
+../Src/main.c(172): warning:  #177-D: variable "turn_off_pins"  was declared but never referenced
+    uint16_t turn_off_pins[3] = {0U};
+../Src/main.c(252): warning:  #188-D: enumerated type mixed with another type
+          HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8, 0);
+../Src/main.c(256): warning:  #188-D: enumerated type mixed with another type
+          HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8, 1);
+../Src/main.c: 14 warnings, 1 error
+"P3CAN\P3CAN.axf" - 32 Error(s), 17 Warning(s).
 
 <h2>Software Packages used:</h2>
 
@@ -67,6 +154,7 @@ Package Vendor: Keil
 <h2>Collection of Component Files used:</h2>
 
    * Component: ARM::CMSIS:CORE:5.4.0
+Target not created.
 Build Time Elapsed:  00:00:02
 </pre>
 </body>

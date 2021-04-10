@@ -1,7 +1,7 @@
 Dependencies for Project 'P3CAN', Target 'P3CAN': (DO NOT MODIFY !)
 CompilerVersion: 5060960::V5.06 update 7 (build 960)::.\ARMCC
 F (startup_stm32f407xx.s)(0x605E1FB9)(--cpu Cortex-M4.fp.sp --pd "__EVAL SETA 1" -g --apcs=interwork --pd "__MICROLIB SETA 1" -I ..\\Inc-I.\RTE\_P3CAN-IC:\Users\alfon\AppData\Local\Arm\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include-IC:\Users\alfon\AppData\Local\Arm\Packs\Keil\STM32F4xx_DFP\2.15.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include--pd "__UVISION_VERSION SETA 533" --pd "_RTE_ SETA 1" --pd "STM32F407xx SETA 1" --pd "_RTE_ SETA 1"--list startup_stm32f407xx.lst --xref -o p3can\startup_stm32f407xx.o --depend p3can\startup_stm32f407xx.d)
-F (../Src/main.c)(0x605E3BC4)(--c99 -c --cpu Cortex-M4.fp.sp -D__EVAL -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_P3CAN-IC:\Users\alfon\AppData\Local\Arm\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include-IC:\Users\alfon\AppData\Local\Arm\Packs\Keil\STM32F4xx_DFP\2.15.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="533" -D_RTE_ -DSTM32F407xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F407xx-o p3can\main.o --omf_browse p3can\main.crf --depend p3can\main.d)
+F (../Src/main.c)(0x60718D0B)(--c99 -c --cpu Cortex-M4.fp.sp -D__EVAL -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_P3CAN-IC:\Users\alfon\AppData\Local\Arm\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include-IC:\Users\alfon\AppData\Local\Arm\Packs\Keil\STM32F4xx_DFP\2.15.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="533" -D_RTE_ -DSTM32F407xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F407xx-o p3can\main.o --omf_browse p3can\main.crf --depend p3can\main.d)
 I (../Inc/main.h)(0x605E1FB9)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h)(0x605E1FB9)
 I (../Inc/stm32f4xx_hal_conf.h)(0x605E1FB9)
@@ -54,6 +54,8 @@ I (C:\Keil_v5\ARM\ARMCC\include\math.h)(0x5E8E9122)
 I (../Src/dwt_stm32_delay.h)(0x605E1FB9)
 I (../Inc/symptoms.h)(0x605E34D9)
 I (C:\Keil_v5\ARM\ARMCC\include\stdbool.h)(0x5E8E9122)
+I (../Inc/modes.h)(0x60718868)
+I (../Inc/lock.h)(0x605E22D9)
 F (../Src/freertos.c)(0x605E1FB9)(--c99 -c --cpu Cortex-M4.fp.sp -D__EVAL -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_P3CAN-IC:\Users\alfon\AppData\Local\Arm\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include-IC:\Users\alfon\AppData\Local\Arm\Packs\Keil\STM32F4xx_DFP\2.15.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="533" -D_RTE_ -DSTM32F407xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F407xx-o p3can\freertos.o --omf_browse p3can\freertos.crf --depend p3can\freertos.d)
 I (../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h)(0x605E1FB9)
 I (C:\Keil_v5\ARM\ARMCC\include\stddef.h)(0x5E8E9122)
@@ -296,6 +298,24 @@ I (../Middlewares/Third_Party/FreeRTOS/Source/include/semphr.h)(0x605E1FB9)
 I (../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h)(0x605E1FB9)
 I (../Middlewares/Third_Party/FreeRTOS/Source/include/task.h)(0x605E1FB9)
 I (../Middlewares/Third_Party/FreeRTOS/Source/include/list.h)(0x605E1FB9)
+F (..\Src\modes.c)(0x60718D03)(--c99 -c --cpu Cortex-M4.fp.sp -D__EVAL -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_P3CAN-IC:\Users\alfon\AppData\Local\Arm\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include-IC:\Users\alfon\AppData\Local\Arm\Packs\Keil\STM32F4xx_DFP\2.15.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="533" -D_RTE_ -DSTM32F407xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F407xx-o p3can\modes_1.o --omf_browse p3can\modes_1.crf --depend p3can\modes_1.d)
+I (../Inc/modes.h)(0x60718868)
+I (../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h)(0x605E1FB9)
+I (C:\Keil_v5\ARM\ARMCC\include\stddef.h)(0x5E8E9122)
+I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5E8E9122)
+I (../Inc/FreeRTOSConfig.h)(0x605E1FB9)
+I (../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h)(0x605E1FB9)
+I (../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h)(0x605E1FB9)
+I (../Middlewares/Third_Party/FreeRTOS/Source/include/deprecated_definitions.h)(0x605E1FB9)
+I (../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F/portmacro.h)(0x605E1FB9)
+I (../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h)(0x605E1FB9)
+I (../Middlewares/Third_Party/FreeRTOS/Source/include/semphr.h)(0x605E1FB9)
+I (../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h)(0x605E1FB9)
+I (../Inc/lock.h)(0x605E22D9)
+I (../Middlewares/Third_Party/FreeRTOS/Source/include/task.h)(0x605E1FB9)
+I (../Middlewares/Third_Party/FreeRTOS/Source/include/list.h)(0x605E1FB9)
+I (C:\Keil_v5\ARM\ARMCC\include\stdbool.h)(0x5E8E9122)
+F (..\Inc\modes.h)(0x60718868)()
 F (../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_adc.c)(0x605E1FB9)(--c99 -c --cpu Cortex-M4.fp.sp -D__EVAL -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_P3CAN-IC:\Users\alfon\AppData\Local\Arm\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include-IC:\Users\alfon\AppData\Local\Arm\Packs\Keil\STM32F4xx_DFP\2.15.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="533" -D_RTE_ -DSTM32F407xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F407xx-o p3can\stm32f4xx_hal_adc.o --omf_browse p3can\stm32f4xx_hal_adc.crf --depend p3can\stm32f4xx_hal_adc.d)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h)(0x605E1FB9)
 I (../Inc/stm32f4xx_hal_conf.h)(0x605E1FB9)

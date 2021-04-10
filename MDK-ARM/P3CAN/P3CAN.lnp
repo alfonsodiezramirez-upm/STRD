@@ -8,6 +8,7 @@
 "p3can\lock.o"
 "p3can\uss.o"
 "p3can\symptoms.o"
+"p3can\modes_1.o"
 "p3can\stm32f4xx_hal_adc.o"
 "p3can\stm32f4xx_hal_adc_ex.o"
 "p3can\stm32f4xx_hal_can.o"

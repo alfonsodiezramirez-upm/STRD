@@ -62,15 +62,14 @@
 
 #include "symptoms.h"
 
+#include "mode.h"
+
 #include "lock.h"
 
 /* Private variables ---------------------------------------------------------*/
 ADC_HandleTypeDef hadc1;
 CAN_HandleTypeDef hcan1;
 SPI_HandleTypeDef hspi1;
-
-//osThreadId Tarea1Handle;
-//osMutexId mutex1Handle;
 
 SemaphoreHandle_t interrupcion;
 
@@ -81,9 +80,6 @@ static void MX_ADC1_Init(void);
 static void MX_SPI1_Init(void);
 static void MX_CAN1_Init(void);
 
-/* Tareas perodicas */
-void StartTarea1(void
-  const * argument);
 /*Prioridades de las Tareas Periodicas*/
 #define PR_RIESGOS 5
 #define PR_TAREAGIRO 4
@@ -109,7 +105,7 @@ uint8_t Iy1, Iy2;
 uint8_t Iz1, Iz2;
 double X, Y, Z;
 double rotX, rotY;
-int numpuls=0;
+int modo=0;
 
 /*funcion para las lecturas de los registros del acelerometro */
 uint8_t spiTxBuf[2], spiRxBuf[2];
@@ -122,9 +118,12 @@ int map(int x, int in_min, int in_max, int out_min, int out_max) {
 
 void deteccionPulsador(const void * argument) {
 	uint32_t wake_time = osKernelSysTick();
+	MODE_init();
 	for(;;){
 		if( xSemaphoreTake( interrupcion, LONG_TIME ) == pdTRUE ){
-			numpuls++;
+			modo++;
+			modo=modo%3;
+			MODE_set(modo);
 		}
 	}
 }

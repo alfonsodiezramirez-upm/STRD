@@ -52,3 +52,4 @@ p3can\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\math.h
 p3can\main.o: ../Src/dwt_stm32_delay.h
 p3can\main.o: ../Inc/symptoms.h
 p3can\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h
+p3can\main.o: ../Inc/lock.h

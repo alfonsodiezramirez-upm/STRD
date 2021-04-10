@@ -27,7 +27,10 @@
         "core_cminstr.h": "c",
         "cmsis_os.h": "c",
         "speed.h": "c",
-        "freertosconfig.h": "c"
+        "freertosconfig.h": "c",
+        "can.h": "c",
+        "stm32f4xx_hal_can.h": "c",
+        "freertos.h": "c"
     },
     "cmake.configureOnOpen": false
 }

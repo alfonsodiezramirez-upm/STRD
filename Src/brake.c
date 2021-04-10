@@ -27,6 +27,10 @@
 static SemaphoreHandle_t BRAKE_sem = NULL;
 static volatile bool BRAKE_active = false;
 
+void BRAKE_init(void) {
+    BRAKE_sem = LOCK_create(NULL);
+}
+
 bool BRAKE_lock(void) {
     configASSERT(BRAKE_sem != NULL);
     while (BRAKE_active);

@@ -129,6 +129,8 @@ void distanceTask(const void *args)
   float distance;
   float speed;
   float secure_dist;
+  int old_intensity = 0;
+  int intensity = 0;
   HAL_GPIO_WritePin(GPIOA, GPIO_PIN_9, GPIO_PIN_RESET);
   while (1)
   {
@@ -142,6 +144,23 @@ void distanceTask(const void *args)
 
     if (distance < secure_dist) HAL_GPIO_WritePin(GPIOA, GPIO_PIN_9, GPIO_PIN_SET);
     else HAL_GPIO_WritePin(GPIOA, GPIO_PIN_9, GPIO_PIN_RESET);
+
+    old_intensity = BRAKE_intensity_get();
+    if (distance <= secure_dist)
+      intensity = 1;
+    else if (distance <= 2 * secure_dist)
+      intensity = 2;
+    else if (distance <= 3 * secure_dist)
+      intensity = 3;
+    else if (distance <= 4 * secure_dist)
+      intensity = 4;
+    else
+      intensity = 0;
+    
+    if (intensity != old_intensity) {
+      BRAKE_intensity_set(intensity);
+      BRAKE_set();
+    } else BRAKE_lock();
 
     osDelayUntil(&wake_time, T_DISTANCE_TASK);
   }
@@ -265,6 +284,7 @@ int main(void)
   mutex1Handle = osMutexCreate(osMutex(mutex1));
   SPEED_init();
   DISTANCE_init();
+  BRAKE_init();
   // pint_t vel = ILOCK_new(0);
   // VelocidadActual = vel;
 
@@ -272,20 +292,26 @@ int main(void)
   /* definition and creation of Tarea1 */
   //osThreadDef(Tarea1, StartTarea1, PR_TAREA1, 0, 128);
   //Tarea1Handle = osThreadCreate(osThread(Tarea1), NULL);
-  xTaskCreate((TaskFunction_t)acelerador,
+  xTaskCreate((TaskFunction_t) acelerador,
               "lectura potenciometro",
               configMINIMAL_STACK_SIZE,
               0,
               PR_TAREA2,
               0);
-  xTaskCreate((TaskFunction_t)lucesCruce,
+  xTaskCreate((TaskFunction_t) lucesCruce,
               "lectura luces",
               configMINIMAL_STACK_SIZE,
               0,
               PR_TAREA2,
               0);
-  xTaskCreate((TaskFunction_t)distanceTask,
+  xTaskCreate((TaskFunction_t) distanceTask,
               "lectura distancia",
+              configMINIMAL_STACK_SIZE,
+              0,
+              PR_DISTANCIA,
+              0);
+  xTaskCreate((TaskFunction_t) brake_task,
+              "tarea freno",
               configMINIMAL_STACK_SIZE,
               0,
               PR_DISTANCIA,

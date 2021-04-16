@@ -18,7 +18,9 @@
  */
 #include "can.h"
 #include <stm32f4xx_hal.h>
+#include <FreeRTOS.h>
 #include <FreeRTOSConfig.h>
+#include <task.h>
 #include <stdint.h>
 
 const uint32_t STD_ID = 0x6FF;

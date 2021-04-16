@@ -30,7 +30,8 @@
         "freertosconfig.h": "c",
         "can.h": "c",
         "stm32f4xx_hal_can.h": "c",
-        "freertos.h": "c"
+        "freertos.h": "c",
+        "event_groups.h": "c"
     },
     "cmake.configureOnOpen": false
 }

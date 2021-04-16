@@ -161,7 +161,7 @@ void distanceTask(const void *args)
 			
 			if (intensity != old_intensity) {
 				BRAKE_intensity_set(intensity);
-				BRAKE_set();
+				BRAKE_set_event();
 			}
     osDelayUntil(&wake_time, T_DISTANCE_TASK);
   }
@@ -177,6 +177,7 @@ void brake_task(const void *args) {
 	//BRAKE_wait();
   while (TRUE) {
     //BRAKE_wait();
+    BRAKE_wait_event();
     int intensity = BRAKE_intensity_get();
     uint16_t pin = 0U;
     uint16_t turn_off_pins[3] = {0U};

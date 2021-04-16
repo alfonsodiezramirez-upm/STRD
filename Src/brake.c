@@ -23,12 +23,25 @@
 #include <FreeRTOSConfig.h>
 #include <task.h>
 #include <stdbool.h>
+#include <event_groups.h>
 
 static SemaphoreHandle_t BRAKE_sem = NULL;
+static EventGroupHandle_t BRAKE_event = NULL;
 bool BRAKE_active = false;
 
 void BRAKE_init(void) {
     BRAKE_sem = LOCK_create(NULL);
+    BRAKE_event = xEventGroupCreate();
+}
+
+void BRAKE_wait_event(void) {
+    configASSERT(BRAKE_event != NULL);
+    xEventGroupWaitBits(BRAKE_event, BIT_SET, pdTRUE, pdFALSE, portMAX_DELAY);
+}
+
+void BRAKE_set_event(void) {
+    configASSERT(BRAKE_event != NULL);
+    xEventGroupSetBits(BRAKE_event, BIT_SET);
 }
 
 bool BRAKE_lock(void) {

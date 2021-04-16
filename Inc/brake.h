@@ -19,9 +19,12 @@
 #ifndef BRAKE_H
 #define BRAKE_H
 #include <stdbool.h>
+#define BIT_SET (0x02UL)
 
 extern bool BRAKE_active;
 void BRAKE_init(void);
+void BRAKE_wait_event(void);
+void BRAKE_set_event(void);
 bool BRAKE_lock(void);
 bool BRAKE_wait(void);
 bool BRAKE_set(void);

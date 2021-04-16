@@ -20,6 +20,7 @@
 #define BRAKE_H
 #include <stdbool.h>
 
+extern bool BRAKE_active;
 void BRAKE_init(void);
 bool BRAKE_lock(void);
 bool BRAKE_wait(void);

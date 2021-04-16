@@ -62,7 +62,7 @@
 #include "brake.h"
 #include "uss.h"
 #include "utils.h"
-#include "can.h"
+//#include "can.h"
 /* Private variables ---------------------------------------------------------*/
 ADC_HandleTypeDef hadc1;
 SPI_HandleTypeDef hspi1;
@@ -134,34 +134,35 @@ void distanceTask(const void *args)
   HAL_GPIO_WritePin(GPIOA, GPIO_PIN_9, GPIO_PIN_RESET);
   while (1)
   {
-    distance = (float)USS_read_distance() * 0.00171821;
-    if (distance == 500000)
-      distance = 1;
-    DISTANCE_set(distance);
+		
+		
+			distance = (float)USS_read_distance() * 0.00171821;
+			if (distance == 500000)
+				distance = 1;
+			DISTANCE_set(distance);
 
-    speed = SPEED_get();
-    secure_dist = (float)pow((speed / 10), 2);
+			speed = SPEED_get();
+			secure_dist = (float)pow((speed / 10), 2);
 
-    if (distance < secure_dist) HAL_GPIO_WritePin(GPIOA, GPIO_PIN_9, GPIO_PIN_SET);
-    else HAL_GPIO_WritePin(GPIOA, GPIO_PIN_9, GPIO_PIN_RESET);
+			if (distance < secure_dist) HAL_GPIO_WritePin(GPIOA, GPIO_PIN_9, GPIO_PIN_SET);
+			else HAL_GPIO_WritePin(GPIOA, GPIO_PIN_9, GPIO_PIN_RESET);
 
-    old_intensity = BRAKE_intensity_get();
-    if (distance <= secure_dist)
-      intensity = 1;
-    else if (distance <= 2 * secure_dist)
-      intensity = 2;
-    else if (distance <= 3 * secure_dist)
-      intensity = 3;
-    else if (distance <= 4 * secure_dist)
-      intensity = 4;
-    else
-      intensity = 0;
-    
-    if (intensity != old_intensity) {
-      BRAKE_intensity_set(intensity);
-      BRAKE_set();
-    } else BRAKE_lock();
-
+			old_intensity = BRAKE_intensity_get();
+			if (distance <= secure_dist)
+				intensity = 4;
+			else if (distance <= 2 * secure_dist)
+				intensity = 3;
+			else if (distance <= 3 * secure_dist)
+				intensity = 2;
+			else if (distance <= 4 * secure_dist)
+				intensity = 1;
+			else
+				intensity = 0;
+			
+			if (intensity != old_intensity) {
+				BRAKE_intensity_set(intensity);
+				BRAKE_set();
+			}
     osDelayUntil(&wake_time, T_DISTANCE_TASK);
   }
 }
@@ -173,8 +174,9 @@ void brake_task(const void *args) {
   uint32_t wake_time = osKernelSysTick();
   uint16_t led_pins[] = {GPIO_PIN_12, GPIO_PIN_13, GPIO_PIN_14, GPIO_PIN_15};
   const uint32_t T_BRAKE_TASK = 150U;
+	//BRAKE_wait();
   while (TRUE) {
-    BRAKE_wait();
+    //BRAKE_wait();
     int intensity = BRAKE_intensity_get();
     uint16_t pin = 0U;
     uint16_t turn_off_pins[3] = {0U};
@@ -188,6 +190,7 @@ void brake_task(const void *args) {
       break;
     
     case 1:
+			//HAL_GPIO_WritePin(GPIOD, *turn_off_pin, GPIO_PIN_RESET);
       pin = GPIO_PIN_13;
       turn_off_pins[0] = GPIO_PIN_12;
       turn_off_pins[1] = GPIO_PIN_14;
@@ -212,7 +215,7 @@ void brake_task(const void *args) {
       pin = 0U;
       break;
     }
-    if (pin != 0U) {
+    if (pin == 0U) {
       foreach(uint16_t, arr_pin, led_pins) {
         HAL_GPIO_WritePin(GPIOD, *arr_pin, GPIO_PIN_RESET);
       }
@@ -223,7 +226,6 @@ void brake_task(const void *args) {
       }
     }
 
-    BRAKE_free();
     osDelayUntil(&wake_time, T_BRAKE_TASK);
   }
 }
@@ -279,7 +281,7 @@ int main(void)
   MX_GPIO_Init();
   MX_ADC1_Init();
   MX_SPI1_Init();
-  CAN_init();
+  //CAN_init();
 
   /* Create the mutex(es) */
   /* definition and creation of mutex1 */

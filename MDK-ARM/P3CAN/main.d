@@ -56,4 +56,3 @@ p3can\main.o: ../Inc/brake.h
 p3can\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h
 p3can\main.o: ../Inc/uss.h
 p3can\main.o: ../Inc/utils.h
-p3can\main.o: ../Inc/can.h

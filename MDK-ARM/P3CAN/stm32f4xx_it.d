@@ -49,3 +49,4 @@ p3can\stm32f4xx_it.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/timers.
 p3can\stm32f4xx_it.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h
 p3can\stm32f4xx_it.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/semphr.h
 p3can\stm32f4xx_it.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/event_groups.h
+p3can\stm32f4xx_it.o: ../Inc/can.h

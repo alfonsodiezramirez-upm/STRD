@@ -25,34 +25,33 @@
 #include <stdbool.h>
 
 static SemaphoreHandle_t BRAKE_sem = NULL;
-static volatile bool BRAKE_active = false;
+bool BRAKE_active = false;
 
 void BRAKE_init(void) {
     BRAKE_sem = LOCK_create(NULL);
 }
 
 bool BRAKE_lock(void) {
-    configASSERT(BRAKE_sem != NULL);
+    /*configASSERT(BRAKE_sem != NULL);
     while (BRAKE_active);
     
-    return xSemaphoreTake(BRAKE_sem, 0) == pdTRUE;
+    return xSemaphoreTake(BRAKE_sem, 0) == pdTRUE;*/
+	BRAKE_active = 0;
+	return true;
 }
 
 bool BRAKE_wait(void) {
     configASSERT(BRAKE_sem != NULL);
-    while (!BRAKE_active);
+    //while (!BRAKE_active);
 
     return xSemaphoreTake(BRAKE_sem, portMAX_DELAY) == pdTRUE;
 }
 
 bool BRAKE_set(void) {
-    configASSERT(BRAKE_sem != NULL);
-    BRAKE_active = true;
-    return xSemaphoreGive(BRAKE_sem) == pdTRUE;
+		configASSERT(BRAKE_sem != NULL);
+    return true;//xSemaphoreGive(BRAKE_sem) == pdTRUE;
 }
 
 bool BRAKE_free(void) {
-    configASSERT(BRAKE_sem != NULL);
-    BRAKE_active = false;
-    return xSemaphoreGive(BRAKE_sem) == pdTRUE;
+    return true;
 }

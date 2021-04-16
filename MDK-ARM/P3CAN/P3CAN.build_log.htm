@@ -26,138 +26,17 @@ Project File Date:  04/10/2021
 
 <h2>Output:</h2>
 *** Using Compiler 'V5.06 update 7 (build 960)', folder: 'C:\Keil_v5\ARM\ARMCC\Bin'
-Rebuild target 'P3CAN'
-assembling startup_stm32f407xx.s...
-compiling lock.c...
-../Inc/lock.h(31): warning:  #1-D: last line of file ends without a newline
-  #endif /* LOCK_H */
-..\Src\lock.c(139): warning:  #177-D: variable "xReturned"  was declared but never referenced
-      BaseType_t xReturned;
-..\Src\lock.c(59): warning:  #177-D: function "prvSanityCheckCreatedSemaphore"  was declared but never referenced
-  static void prvSanityCheckCreatedSemaphore(SemaphoreHandle_t xSemaphore, UBaseType_t uxMaxCount)
-..\Src\lock.c: 3 warnings, 0 errors
+Build target 'P3CAN'
 compiling brake.c...
-../Inc/brake.h(29): warning:  #1-D: last line of file ends without a newline
+../Inc/brake.h(30): warning:  #1-D: last line of file ends without a newline
   #endif /* BRAKE_H */
 ../Inc/lock.h(31): warning:  #1-D: last line of file ends without a newline
   #endif /* LOCK_H */
 ..\Src\brake.c: 2 warnings, 0 errors
-compiling distance.c...
-../Inc/distance.h(29): warning:  #1-D: last line of file ends without a newline
-  #endif /* DISTANCE_H */
-../Inc/lock.h(31): warning:  #1-D: last line of file ends without a newline
-  #endif /* LOCK_H */
-..\Src\distance.c(74): warning:  #1-D: last line of file ends without a newline
-  }
-..\Src\distance.c: 3 warnings, 0 errors
-compiling uss.c...
-../Inc/uss.h(25): warning:  #1-D: last line of file ends without a newline
-  #endif
-..\Src\uss.c(43): warning:  #1-D: last line of file ends without a newline
-  }
-..\Src\uss.c: 2 warnings, 0 errors
-compiling speed.c...
-../Inc/speed.h(29): warning:  #1-D: last line of file ends without a newline
-  #endif /* SPEED_H */
-../Inc/lock.h(31): warning:  #1-D: last line of file ends without a newline
-  #endif /* LOCK_H */
-..\Src\speed.c: 2 warnings, 0 errors
-compiling stm32f4xx_it.c...
-compiling can.c...
-../Inc/can.h(32): warning:  #1-D: last line of file ends without a newline
-  #endif /* CAN_H */
-..\Src\can.c(55): warning:  #167-D: argument of type "volatile CAN_HandleTypeDef *" is incompatible with parameter of type "CAN_HandleTypeDef *"
-      configASSERT(HAL_CAN_Init(&hcan1) == HAL_OK);
-..\Src\can.c(55): warning:  #223-D: function "taskDISABLE_INTERRUPTS" declared implicitly
-      configASSERT(HAL_CAN_Init(&hcan1) == HAL_OK);
-..\Src\can.c(82): warning:  #167-D: argument of type "volatile CAN_HandleTypeDef *" is incompatible with parameter of type "CAN_HandleTypeDef *"
-      HAL_CAN_ConfigFilter(&hcan1, &filter_config);
-..\Src\can.c(82): warning:  #167-D: argument of type "volatile CAN_FilterTypeDef *" is incompatible with parameter of type "CAN_FilterTypeDef *"
-      HAL_CAN_ConfigFilter(&hcan1, &filter_config);
-..\Src\can.c(83): warning:  #167-D: argument of type "volatile CAN_HandleTypeDef *" is incompatible with parameter of type "CAN_HandleTypeDef *"
-      HAL_CAN_Start(&hcan1);
-..\Src\can.c(84): warning:  #167-D: argument of type "volatile CAN_HandleTypeDef *" is incompatible with parameter of type "CAN_HandleTypeDef *"
-      HAL_CAN_ActivateNotification(&hcan1, CAN_IT_RX_FIFO0_MSG_PENDING);
-..\Src\can.c(89): warning:  #167-D: argument of type "volatile CAN_HandleTypeDef *" is incompatible with parameter of type "CAN_HandleTypeDef *"
-      HAL_CAN_AddTxMessage(&hcan1, &tx_header, &byte_sent, &tx_mailbox);
-..\Src\can.c(89): warning:  #167-D: argument of type "volatile CAN_TxHeaderTypeDef *" is incompatible with parameter of type "CAN_TxHeaderTypeDef *"
-      HAL_CAN_AddTxMessage(&hcan1, &tx_header, &byte_sent, &tx_mailbox);
-..\Src\can.c(89): warning:  #167-D: argument of type "volatile uint8_t *" is incompatible with parameter of type "uint8_t *"
-      HAL_CAN_AddTxMessage(&hcan1, &tx_header, &byte_sent, &tx_mailbox);
-..\Src\can.c(89): warning:  #167-D: argument of type "volatile uint32_t *" is incompatible with parameter of type "uint32_t *"
-      HAL_CAN_AddTxMessage(&hcan1, &tx_header, &byte_sent, &tx_mailbox);
-..\Src\can.c(97): warning:  #167-D: argument of type "volatile CAN_HandleTypeDef *" is incompatible with parameter of type "CAN_HandleTypeDef *"
-      HAL_CAN_IRQHandler(&hcan1);
-..\Src\can.c(98): warning:  #167-D: argument of type "volatile CAN_HandleTypeDef *" is incompatible with parameter of type "CAN_HandleTypeDef *"
-      HAL_CAN_GetRxMessage(&hcan1, CAN_RX_FIFO0, &rx_header, &byte_recv);
-..\Src\can.c(98): warning:  #167-D: argument of type "volatile CAN_RxHeaderTypeDef *" is incompatible with parameter of type "CAN_RxHeaderTypeDef *"
-      HAL_CAN_GetRxMessage(&hcan1, CAN_RX_FIFO0, &rx_header, &byte_recv);
-..\Src\can.c(98): warning:  #167-D: argument of type "volatile uint8_t *" is incompatible with parameter of type "uint8_t *"
-      HAL_CAN_GetRxMessage(&hcan1, CAN_RX_FIFO0, &rx_header, &byte_recv);
-..\Src\can.c: 15 warnings, 0 errors
-compiling freertos.c...
-compiling stm32f4xx_hal_timebase_tim.c...
-compiling stm32f4xx_hal_msp.c...
-compiling main.c...
-../Inc/speed.h(29): warning:  #1-D: last line of file ends without a newline
-  #endif /* SPEED_H */
-../Inc/distance.h(29): warning:  #1-D: last line of file ends without a newline
-  #endif /* DISTANCE_H */
-../Inc/brake.h(29): warning:  #1-D: last line of file ends without a newline
-  #endif /* BRAKE_H */
-../Inc/uss.h(25): warning:  #1-D: last line of file ends without a newline
-  #endif
-../Inc/utils.h(31): warning:  #1-D: last line of file ends without a newline
-  #endif /* UTILS_H */
-../Inc/can.h(32): warning:  #1-D: last line of file ends without a newline
-  #endif /* CAN_H */
-../Src/main.c(137): warning:  #1035-D: single-precision operand implicitly converted to double-precision
-      distance = (float)USS_read_distance() * 0.00171821;
-../Src/main.c(170): warning:  #177-D: variable "intensity"  was declared but never referenced
-    int intensity;
-../Src/main.c(171): warning:  #177-D: variable "pin"  was declared but never referenced
-    uint16_t pin;
-../Src/main.c(172): warning:  #177-D: variable "turn_off_pins"  was declared but never referenced
-    uint16_t turn_off_pins[3] = {0U};
-../Src/main.c(252): warning:  #188-D: enumerated type mixed with another type
-          HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8, 0);
-../Src/main.c(256): warning:  #188-D: enumerated type mixed with another type
-          HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8, 1);
-../Src/main.c: 12 warnings, 0 errors
-compiling stm32f4xx_hal_can.c...
-compiling stm32f4xx_hal_adc.c...
-compiling stm32f4xx_hal_adc_ex.c...
-compiling stm32f4xx_hal_rcc.c...
-compiling stm32f4xx_hal_tim_ex.c...
-compiling stm32f4xx_hal_spi.c...
-compiling stm32f4xx_hal_tim.c...
-compiling stm32f4xx_hal_flash_ramfunc.c...
-compiling stm32f4xx_hal_rcc_ex.c...
-compiling stm32f4xx_hal_gpio.c...
-compiling stm32f4xx_hal_dma.c...
-compiling stm32f4xx_hal_flash_ex.c...
-compiling stm32f4xx_hal_flash.c...
-compiling croutine.c...
-compiling stm32f4xx_hal_dma_ex.c...
-compiling event_groups.c...
-compiling list.c...
-compiling queue.c...
-compiling timers.c...
-compiling tasks.c...
-compiling heap_4.c...
-compiling cmsis_os.c...
-compiling port.c...
-compiling stm32f4xx_hal_pwr_ex.c...
-compiling stm32f4xx_hal.c...
-compiling stm32f4xx_hal_pwr.c...
-compiling system_stm32f4xx.c...
-compiling stm32f4xx_hal_cortex.c...
 linking...
-P3CAN\P3CAN.axf: Error: L6218E: Undefined symbol taskDISABLE_INTERRUPTS (referred from can.o).
-Not enough information to list image symbols.
-Not enough information to list load addresses in the image map.
-Finished: 2 information, 0 warning and 1 error messages.
-"P3CAN\P3CAN.axf" - 1 Error(s), 39 Warning(s).
+Program Size: Code=17816 RO-data=600 RW-data=164 ZI-data=16980  
+FromELF: creating hex file...
+"P3CAN\P3CAN.axf" - 0 Error(s), 2 Warning(s).
 
 <h2>Software Packages used:</h2>
 
@@ -180,8 +59,7 @@ Package Vendor: Keil
 <h2>Collection of Component Files used:</h2>
 
    * Component: ARM::CMSIS:CORE:5.4.0
-Target not created.
-Build Time Elapsed:  00:00:14
+Build Time Elapsed:  00:00:00
 </pre>
 </body>
 </html>

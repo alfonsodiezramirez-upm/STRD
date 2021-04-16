@@ -17,15 +17,13 @@
  * Created by Javinator9889 on 13/03/21 - brake.c.
  */
 #include "brake.h"
-#include <lock.h>
 #include <FreeRTOS.h>
 #include <FreeRTOSConfig.h>
 #include <task.h>
-#include <stdbool.h>
 #include <event_groups.h>
 
 static EventGroupHandle_t BRAKE_event = NULL;
-bool BRAKE_active = false;
+
 
 void BRAKE_init(void) {
     BRAKE_event = xEventGroupCreate();

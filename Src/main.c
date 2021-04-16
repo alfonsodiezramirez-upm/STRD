@@ -184,39 +184,45 @@ void brake_task(const void *args) {
 
     switch (intensity) {
     case 0:
-      pin = GPIO_PIN_12;
-      turn_off_pins[0] = GPIO_PIN_13;
-      turn_off_pins[1] = GPIO_PIN_14;
-      turn_off_pins[2] = GPIO_PIN_15;
+      HAL_GPIO_WritePin(GPIOD, GPIO_PIN_12, GPIO_PIN_RESET);//pin = GPIO_PIN_12;
+      HAL_GPIO_WritePin(GPIOD, GPIO_PIN_13, GPIO_PIN_RESET);//turn_off_pins[0] = GPIO_PIN_13;
+      HAL_GPIO_WritePin(GPIOD, GPIO_PIN_14, GPIO_PIN_RESET);//turn_off_pins[1] = GPIO_PIN_14;
+      HAL_GPIO_WritePin(GPIOD, GPIO_PIN_15, GPIO_PIN_RESET);//turn_off_pins[2] = GPIO_PIN_15;
       break;
     
     case 1:
 			//HAL_GPIO_WritePin(GPIOD, *turn_off_pin, GPIO_PIN_RESET);
-      pin = GPIO_PIN_13;
-      turn_off_pins[0] = GPIO_PIN_12;
-      turn_off_pins[1] = GPIO_PIN_14;
-      turn_off_pins[2] = GPIO_PIN_15;
+      HAL_GPIO_WritePin(GPIOD, GPIO_PIN_12, GPIO_PIN_SET);//pin = GPIO_PIN_13;
+      HAL_GPIO_WritePin(GPIOD, GPIO_PIN_13, GPIO_PIN_RESET);//turn_off_pins[0] = GPIO_PIN_12;
+      HAL_GPIO_WritePin(GPIOD, GPIO_PIN_14, GPIO_PIN_RESET);//turn_off_pins[1] = GPIO_PIN_14;
+      HAL_GPIO_WritePin(GPIOD, GPIO_PIN_15, GPIO_PIN_RESET);//turn_off_pins[2] = GPIO_PIN_15;
       break;
 
     case 2:
-      pin = GPIO_PIN_14;
-      turn_off_pins[0] = GPIO_PIN_12;
-      turn_off_pins[1] = GPIO_PIN_13;
-      turn_off_pins[2] = GPIO_PIN_15;
+      HAL_GPIO_WritePin(GPIOD, GPIO_PIN_12, GPIO_PIN_SET);//pin = GPIO_PIN_13;
+      HAL_GPIO_WritePin(GPIOD, GPIO_PIN_13, GPIO_PIN_SET);//turn_off_pins[0] = GPIO_PIN_12;
+      HAL_GPIO_WritePin(GPIOD, GPIO_PIN_14, GPIO_PIN_RESET);//turn_off_pins[1] = GPIO_PIN_14;
+      HAL_GPIO_WritePin(GPIOD, GPIO_PIN_15, GPIO_PIN_RESET);//turn_off_pins[2] = GPIO_PIN_15;
       break;
 
     case 3:
-      pin = GPIO_PIN_15;
-      turn_off_pins[0] = GPIO_PIN_12;
-      turn_off_pins[1] = GPIO_PIN_13;
-      turn_off_pins[2] = GPIO_PIN_14;
+      HAL_GPIO_WritePin(GPIOD, GPIO_PIN_12, GPIO_PIN_SET);//pin = GPIO_PIN_13;
+      HAL_GPIO_WritePin(GPIOD, GPIO_PIN_13, GPIO_PIN_SET);//turn_off_pins[0] = GPIO_PIN_12;
+      HAL_GPIO_WritePin(GPIOD, GPIO_PIN_14, GPIO_PIN_SET);//turn_off_pins[1] = GPIO_PIN_14;
+      HAL_GPIO_WritePin(GPIOD, GPIO_PIN_15, GPIO_PIN_RESET);//turn_off_pins[2] = GPIO_PIN_15;
+      break;
+		case 4:
+      HAL_GPIO_WritePin(GPIOD, GPIO_PIN_12, GPIO_PIN_SET);//pin = GPIO_PIN_13;
+      HAL_GPIO_WritePin(GPIOD, GPIO_PIN_13, GPIO_PIN_SET);//turn_off_pins[0] = GPIO_PIN_12;
+      HAL_GPIO_WritePin(GPIOD, GPIO_PIN_14, GPIO_PIN_SET);//turn_off_pins[1] = GPIO_PIN_14;
+      HAL_GPIO_WritePin(GPIOD, GPIO_PIN_15, GPIO_PIN_SET);//turn_off_pins[2] = GPIO_PIN_15;
       break;
 
     default:
       pin = 0U;
       break;
     }
-    if (pin == 0U) {
+    /*if (pin == 0U) {
       foreach(uint16_t, arr_pin, led_pins) {
         HAL_GPIO_WritePin(GPIOD, *arr_pin, GPIO_PIN_RESET);
       }
@@ -225,7 +231,7 @@ void brake_task(const void *args) {
       foreach(uint16_t, turn_off_pin, turn_off_pins) {
         HAL_GPIO_WritePin(GPIOD, *turn_off_pin, GPIO_PIN_RESET);
       }
-    }
+    }*/
 
     osDelayUntil(&wake_time, T_BRAKE_TASK);
   }

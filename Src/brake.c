@@ -18,19 +18,16 @@
  */
 #include "brake.h"
 #include <lock.h>
-#include <semphr.h>
 #include <FreeRTOS.h>
 #include <FreeRTOSConfig.h>
 #include <task.h>
 #include <stdbool.h>
 #include <event_groups.h>
 
-static SemaphoreHandle_t BRAKE_sem = NULL;
 static EventGroupHandle_t BRAKE_event = NULL;
 bool BRAKE_active = false;
 
 void BRAKE_init(void) {
-    BRAKE_sem = LOCK_create(NULL);
     BRAKE_event = xEventGroupCreate();
 }
 
@@ -44,27 +41,7 @@ void BRAKE_set_event(void) {
     xEventGroupSetBits(BRAKE_event, BIT_SET);
 }
 
-bool BRAKE_lock(void) {
-    /*configASSERT(BRAKE_sem != NULL);
-    while (BRAKE_active);
-    
-    return xSemaphoreTake(BRAKE_sem, 0) == pdTRUE;*/
-	BRAKE_active = 0;
-	return true;
-}
-
-bool BRAKE_wait(void) {
-    configASSERT(BRAKE_sem != NULL);
-    //while (!BRAKE_active);
-
-    return xSemaphoreTake(BRAKE_sem, portMAX_DELAY) == pdTRUE;
-}
-
-bool BRAKE_set(void) {
-		configASSERT(BRAKE_sem != NULL);
-    return true;//xSemaphoreGive(BRAKE_sem) == pdTRUE;
-}
-
-bool BRAKE_free(void) {
-    return true;
+void BRAKE_clr(void) {
+    xEventGroupClearBits(BRAKE_event);
+    vEventGroupDelete(BRAKE_event);
 }

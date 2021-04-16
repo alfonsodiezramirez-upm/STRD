@@ -40,6 +40,6 @@ void BRAKE_set_event(void) {
 }
 
 void BRAKE_clr(void) {
-    xEventGroupClearBits(BRAKE_event);
+    xEventGroupClearBits(BRAKE_event, BIT_SET);
     vEventGroupDelete(BRAKE_event);
 }

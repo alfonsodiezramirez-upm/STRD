@@ -27,6 +27,6 @@ extern const uint32_t STD_ID;
 void CAN_init(void);
 void CAN_send(uint8_t);
 uint8_t CAN_recv(void);
-void CAN1_RX0_IRQHandler(void);
+void CAN_Handle_IRQ(void);
 
 #endif /* CAN_H */

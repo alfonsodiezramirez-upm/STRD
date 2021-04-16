@@ -93,7 +93,7 @@ uint8_t CAN_recv(void) {
     return byte_recv;
 }
 
-void CAN1_RX0_IRQHandler(void) {
+void CAN_Handle_IRQ(void) {
     HAL_CAN_IRQHandler(&hcan1);
     HAL_CAN_GetRxMessage(&hcan1, CAN_RX_FIFO0, &rx_header, &byte_recv);
 }

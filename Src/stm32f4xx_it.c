@@ -37,6 +37,7 @@
 #include "main.h"
 #include "stm32f4xx_it.h"
 #include "cmsis_os.h"
+#include "can.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 /* USER CODE END Includes */
@@ -206,16 +207,16 @@ void EXTI3_IRQHandler(void)
 /**
   * @brief This function handles CAN1 RX0 interrupts.
   */
-//void CAN1_RX0_IRQHandler(void)
-//{
+void CAN1_RX0_IRQHandler(void)
+{
   /* USER CODE BEGIN CAN1_RX0_IRQn 0 */
 
   /* USER CODE END CAN1_RX0_IRQn 0 */
-  //HAL_CAN_IRQHandler(&hcan1);
+  CAN_Handle_IRQ();
   /* USER CODE BEGIN CAN1_RX0_IRQn 1 */
 
   /* USER CODE END CAN1_RX0_IRQn 1 */
-//}
+}
 
 /**
   * @brief This function handles TIM1 update interrupt and TIM10 global interrupt.

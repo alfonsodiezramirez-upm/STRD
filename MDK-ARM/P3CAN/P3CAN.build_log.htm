@@ -22,20 +22,12 @@ Dialog DLL:      TCM.DLL V1.48.0.0
  
 <h2>Project:</h2>
 C:\Users\alfon\Documents\STRDLab\STM32\Pinicio\MDK-ARM\P3CAN.uvprojx
-Project File Date:  04/10/2021
+Project File Date:  04/21/2021
 
 <h2>Output:</h2>
 *** Using Compiler 'V5.06 update 7 (build 960)', folder: 'C:\Keil_v5\ARM\ARMCC\Bin'
 Build target 'P3CAN'
-Note: source file '..\Src\modes.c' - object file renamed from 'P3CAN\modes.o' to 'P3CAN\modes_1.o'.
-compiling modes.c...
-../Inc/modes.h(11): warning:  #1-D: last line of file ends without a newline
-  #endif /* MODE_H */
-../Inc/lock.h(31): warning:  #1-D: last line of file ends without a newline
-  #endif /* LOCK_H */
-..\Src\modes.c(48): warning:  #1-D: last line of file ends without a newline
-  }
-..\Src\modes.c: 3 warnings, 0 errors
+Note: source file '../Src/system_stm32f4xx.c' - object file renamed from 'P3CAN\system_stm32f4xx.o' to 'P3CAN\system_stm32f4xx_1.o'.
 compiling main.c...
 ../Inc/symptoms.h(36): warning:  #1-D: last line of file ends without a newline
   #endif /* SYMPTOMPS_H */
@@ -43,13 +35,24 @@ compiling main.c...
   #endif /* MODE_H */
 ../Inc/lock.h(31): warning:  #1-D: last line of file ends without a newline
   #endif /* LOCK_H */
-../Src/main.c(646): warning:  #1-D: last line of file ends without a newline
+../Inc/can.h(32): warning:  #1-D: last line of file ends without a newline
+  #endif /* CAN_H */
+../Src/main.c(649): warning:  #1-D: last line of file ends without a newline
   /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
-../Src/main.c: 4 warnings, 0 errors
+../Src/main.c: 5 warnings, 0 errors
 linking...
-Program Size: Code=17424 RO-data=608 RW-data=228 ZI-data=16884  
-FromELF: creating hex file...
-"P3CAN\P3CAN.axf" - 0 Error(s), 7 Warning(s).
+P3CAN\P3CAN.axf: Error: L6200E: Symbol SystemInit multiply defined (by system_stm32f4xx_1.o and system_stm32f4xx.o).
+P3CAN\P3CAN.axf: Error: L6200E: Symbol __asm___18_system_stm32f4xx_c_5d646a67____REV16 multiply defined (by system_stm32f4xx_1.o and system_stm32f4xx.o).
+P3CAN\P3CAN.axf: Error: L6200E: Symbol __asm___18_system_stm32f4xx_c_5d646a67____REVSH multiply defined (by system_stm32f4xx_1.o and system_stm32f4xx.o).
+P3CAN\P3CAN.axf: Error: L6200E: Symbol __asm___18_system_stm32f4xx_c_5d646a67____RRX multiply defined (by system_stm32f4xx_1.o and system_stm32f4xx.o).
+P3CAN\P3CAN.axf: Error: L6200E: Symbol AHBPrescTable multiply defined (by system_stm32f4xx_1.o and system_stm32f4xx.o).
+P3CAN\P3CAN.axf: Error: L6200E: Symbol APBPrescTable multiply defined (by system_stm32f4xx_1.o and system_stm32f4xx.o).
+P3CAN\P3CAN.axf: Error: L6200E: Symbol SystemCoreClock multiply defined (by system_stm32f4xx_1.o and system_stm32f4xx.o).
+P3CAN\P3CAN.axf: Error: L6200E: Symbol SystemCoreClockUpdate multiply defined (by system_stm32f4xx_1.o and system_stm32f4xx.o).
+Not enough information to list image symbols.
+Not enough information to list load addresses in the image map.
+Finished: 2 information, 0 warning and 8 error messages.
+"P3CAN\P3CAN.axf" - 8 Error(s), 5 Warning(s).
 
 <h2>Software Packages used:</h2>
 
@@ -72,6 +75,7 @@ Package Vendor: Keil
 <h2>Collection of Component Files used:</h2>
 
    * Component: ARM::CMSIS:CORE:5.4.0
+Target not created.
 Build Time Elapsed:  00:00:02
 </pre>
 </body>

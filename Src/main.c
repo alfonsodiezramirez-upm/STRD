@@ -66,9 +66,11 @@
 
 #include "lock.h"
 
+#include "can.h"
+
 /* Private variables ---------------------------------------------------------*/
 ADC_HandleTypeDef hadc1;
-CAN_HandleTypeDef hcan1;
+//CAN_HandleTypeDef hcan1;
 SPI_HandleTypeDef hspi1;
 
 SemaphoreHandle_t interrupcion;
@@ -78,7 +80,7 @@ void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_ADC1_Init(void);
 static void MX_SPI1_Init(void);
-static void MX_CAN1_Init(void);
+//static void MX_CAN1_Init(void);
 
 /*Prioridades de las Tareas Periodicas*/
 #define PR_RIESGOS 5
@@ -106,7 +108,7 @@ uint8_t Iz1, Iz2;
 double X, Y, Z;
 double rotX, rotY;
 int modo=0;
-
+int recepcion=0;
 /*funcion para las lecturas de los registros del acelerometro */
 uint8_t spiTxBuf[2], spiRxBuf[2];
 uint8_t SPI_Read(uint8_t address);
@@ -166,6 +168,7 @@ void cabeza(const void * argument) {
   int y;
   uint32_t wake_time = osKernelSysTick();
   for (;;) {
+		recepcion = CAN_recv();
     /* Lectura del canal ADC1 */
     ADC_ChannelConfTypeDef sConfig = {
       0
@@ -275,8 +278,9 @@ int main(void) {
   MX_GPIO_Init();
   MX_ADC1_Init();
   MX_SPI1_Init();
-  MX_CAN1_Init();
+  CAN_init();
 	Inicializa_Acelerometro();
+	
 	
 	interrupcion = xSemaphoreCreateBinary(); //LOCK_create(NULL);
 	//LOCK_acquire(interrupcion);
@@ -420,15 +424,14 @@ static void MX_ADC1_Init(void) {
  * @param None
  * @retval None
  */
-static void MX_CAN1_Init(void) {
+/*static void MX_CAN1_Init(void) {
 
-  /* USER CODE BEGIN CAN1_Init 0 */
+  USER CODE BEGIN CAN1_Init 0 
 
-  /* USER CODE END CAN1_Init 0 */
+  USER CODE END CAN1_Init 0 
 
-  /* USER CODE BEGIN CAN1_Init 1 */
-
-  /* USER CODE END CAN1_Init 1 */
+  USER CODE BEGIN CAN1_Init 1 
+  USER CODE END CAN1_Init 1 
   hcan1.Instance = CAN1;
   hcan1.Init.Prescaler = 21;
   hcan1.Init.Mode = CAN_MODE_NORMAL;
@@ -444,10 +447,10 @@ static void MX_CAN1_Init(void) {
   if (HAL_CAN_Init( & hcan1) != HAL_OK) {
     Error_Handler();
   }
-  /* USER CODE BEGIN CAN1_Init 2 */
+   USER CODE BEGIN CAN1_Init 2 
 
-  /* USER CODE END CAN1_Init 2 */
-}
+   USER CODE END CAN1_Init 2 
+}*/
 
 /**
  * @brief SPI1 Initialization Function

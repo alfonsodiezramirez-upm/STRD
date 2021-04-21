@@ -54,3 +54,4 @@ p3can\main.o: ../Inc/symptoms.h
 p3can\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h
 p3can\main.o: ../Inc/modes.h
 p3can\main.o: ../Inc/lock.h
+p3can\main.o: ../Inc/can.h

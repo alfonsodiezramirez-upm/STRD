@@ -444,14 +444,14 @@
               <FilePath>..\Src\dwt_stm32_delay.h</FilePath>
             </File>
             <File>
-              <FileName>symptoms.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\Inc\symptoms.h</FilePath>
+              <FileName>can.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Src\can.c</FilePath>
             </File>
             <File>
-              <FileName>symptoms.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Src\symptoms.c</FilePath>
+              <FileName>can.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\Inc\can.h</FilePath>
             </File>
             <File>
               <FileName>modes.c</FileName>
@@ -459,9 +459,44 @@
               <FilePath>..\Src\modes.c</FilePath>
             </File>
             <File>
+              <FileName>symptoms.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Src\symptoms.c</FilePath>
+            </File>
+            <File>
+              <FileName>system_stm32f4xx.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Src\system_stm32f4xx.c</FilePath>
+            </File>
+            <File>
+              <FileName>FreeRTOSConfig.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\Inc\FreeRTOSConfig.h</FilePath>
+            </File>
+            <File>
+              <FileName>main.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\Inc\main.h</FilePath>
+            </File>
+            <File>
               <FileName>modes.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\Inc\modes.h</FilePath>
+            </File>
+            <File>
+              <FileName>stm32f4xx_hal_conf.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\Inc\stm32f4xx_hal_conf.h</FilePath>
+            </File>
+            <File>
+              <FileName>stm32f4xx_it.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\Inc\stm32f4xx_it.h</FilePath>
+            </File>
+            <File>
+              <FileName>symptoms.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\Inc\symptoms.h</FilePath>
             </File>
           </Files>
         </Group>

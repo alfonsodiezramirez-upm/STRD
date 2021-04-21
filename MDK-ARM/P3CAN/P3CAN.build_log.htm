@@ -27,40 +27,7 @@ Project File Date:  04/10/2021
 <h2>Output:</h2>
 *** Using Compiler 'V5.06 update 7 (build 960)', folder: 'C:\Keil_v5\ARM\ARMCC\Bin'
 Build target 'P3CAN'
-compiling main.c...
-../Inc/speed.h(29): warning:  #1-D: last line of file ends without a newline
-  #endif /* SPEED_H */
-../Inc/distance.h(29): warning:  #1-D: last line of file ends without a newline
-  #endif /* DISTANCE_H */
-../Inc/brake.h(33): warning:  #1-D: last line of file ends without a newline
-  #endif /* BRAKE_H */
-../Inc/uss.h(25): warning:  #1-D: last line of file ends without a newline
-  #endif
-../Inc/utils.h(31): warning:  #1-D: last line of file ends without a newline
-  #endif /* UTILS_H */
-../Src/main.c(139): warning:  #1035-D: single-precision operand implicitly converted to double-precision
-  			distance = (float)USS_read_distance() * 0.00171821;
-../Src/main.c(182): warning:  #550-D: variable "pin"  was set but never used
-      uint16_t pin = 0U;
-../Src/main.c(183): warning:  #177-D: variable "turn_off_pins"  was declared but never referenced
-      uint16_t turn_off_pins[3] = {0U};
-../Src/main.c(171): warning:  #177-D: variable "intensity"  was declared but never referenced
-    int intensity;
-../Src/main.c(172): warning:  #177-D: variable "pin"  was declared but never referenced
-    uint16_t pin;
-../Src/main.c(173): warning:  #177-D: variable "turn_off_pins"  was declared but never referenced
-    uint16_t turn_off_pins[3] = {0U};
-../Src/main.c(175): warning:  #177-D: variable "led_pins"  was declared but never referenced
-    uint16_t led_pins[] = {GPIO_PIN_12, GPIO_PIN_13, GPIO_PIN_14, GPIO_PIN_15};
-../Src/main.c(261): warning:  #188-D: enumerated type mixed with another type
-          HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8, 0);
-../Src/main.c(265): warning:  #188-D: enumerated type mixed with another type
-          HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8, 1);
-../Src/main.c: 14 warnings, 0 errors
-linking...
-Program Size: Code=18532 RO-data=596 RW-data=168 ZI-data=16976  
-FromELF: creating hex file...
-"P3CAN\P3CAN.axf" - 0 Error(s), 14 Warning(s).
+"P3CAN\P3CAN.axf" - 0 Error(s), 0 Warning(s).
 
 <h2>Software Packages used:</h2>
 
@@ -83,7 +50,7 @@ Package Vendor: Keil
 <h2>Collection of Component Files used:</h2>
 
    * Component: ARM::CMSIS:CORE:5.4.0
-Build Time Elapsed:  00:00:02
+Build Time Elapsed:  00:00:00
 </pre>
 </body>
 </html>

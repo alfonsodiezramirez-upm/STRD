@@ -62,7 +62,7 @@
 #include "brake.h"
 #include "uss.h"
 #include "utils.h"
-//#include "can.h"
+#include "can.h"
 /* Private variables ---------------------------------------------------------*/
 ADC_HandleTypeDef hadc1;
 SPI_HandleTypeDef hspi1;
@@ -101,11 +101,13 @@ int map(int x, int in_min, int in_max, int out_min, int out_max)
 
 void acelerador(void const *argument)
 {
+	
   /* Infinite loop */
   int actual;
   uint32_t wake_time = osKernelSysTick();
   for (;;)
   {
+		CAN_send(1);
     /* Lectura del canal ADC0 */
     ADC_ChannelConfTypeDef sConfig = {0};
     sConfig.Channel = ADC_CHANNEL_0; // seleccionamos el canal 0
@@ -288,7 +290,7 @@ int main(void)
   MX_GPIO_Init();
   MX_ADC1_Init();
   MX_SPI1_Init();
-  //CAN_init();
+  CAN_init();
 
   /* Create the mutex(es) */
   /* definition and creation of mutex1 */

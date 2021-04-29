@@ -18,6 +18,7 @@
  */
 #ifndef UTILS_H
 #define UTILS_H
+#include <stdint.h>
 
 // Gets the size of an array
 #define arrsize(array) (sizeof (array) / sizeof *(array))
@@ -27,5 +28,10 @@
     idxtype* item; \
     size_t size = arrsize(array); \
     for (item = array; item < (array + size); ++item)
+
+int map(int, int, int, int);
+
+void f2b(float, uint8_t*);
+float b2f(uint8_t*);
 
 #endif /* UTILS_H */

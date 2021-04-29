@@ -31,7 +31,11 @@
         "can.h": "c",
         "stm32f4xx_hal_can.h": "c",
         "freertos.h": "c",
-        "event_groups.h": "c"
+        "event_groups.h": "c",
+        "utils.h": "c",
+        "array": "c",
+        "cstring": "c",
+        "variant": "c"
     },
     "cmake.configureOnOpen": false
 }

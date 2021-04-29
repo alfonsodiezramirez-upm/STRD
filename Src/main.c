@@ -62,6 +62,7 @@
 #include "uss.h"
 #include "utils.h"
 #include "can.h"
+#include "utils.h"
 
 /* Private variables ---------------------------------------------------------*/
 ADC_HandleTypeDef hadc1;
@@ -85,12 +86,6 @@ static void MX_SPI1_Init(void);
 #define T_TAREAVELOCIDAD 250
 #define T_TAREALUCESCRUCE 1000
 #define T_DISTANCIA   300
-
-//función auxiliar de estandarización de valores:
-inline int map(int x, int in_min, int in_max, int out_min, int out_max)
-{
-  return (int)((x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min);
-}
 
 void acelerador(void const *argument)
 {

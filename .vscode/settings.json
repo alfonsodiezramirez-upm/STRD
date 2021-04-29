@@ -29,7 +29,8 @@
         "speed.h": "c",
         "symptoms.h": "c",
         "can.h": "c",
-        "freertosconfig.h": "c"
+        "freertosconfig.h": "c",
+        "stm32f4xx_it.h": "c"
     },
     "cmake.configureOnOpen": false
 }

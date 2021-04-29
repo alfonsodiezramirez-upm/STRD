@@ -62,6 +62,7 @@
 #include "modes.h"
 #include "lock.h"
 #include "can.h"
+#include "node1.h"
 
 /* Private variables ---------------------------------------------------------*/
 ADC_HandleTypeDef hadc1;
@@ -77,10 +78,12 @@ static void MX_SPI1_Init(void);
 //static void MX_CAN1_Init(void);
 
 /*Prioridades de las Tareas Periodicas*/
-#define PR_RIESGOS 5
-#define PR_TAREAGIRO 4
-#define PR_TAREAAGARRADO 3
-#define PR_CABEZA 2
+#define PR_RIESGOS        5
+#define PR_TAREAGIRO      4
+#define PR_TAREAAGARRADO  3
+#define PR_CABEZA         2
+#define PR_SPEED_MSG      6
+#define PR_DISTANCE_MSG   6
 
 /*Periodos de las tareas*/
 #define T_TAREAGIRO 400
@@ -229,6 +232,20 @@ void risks_task(const void *args) {
   }
 }
 
+void CAN_speed_task(const void *args) {
+  while (true) {
+    SPEED_wait_recv();
+    SPEED_update(CAN_recv());
+  }
+}
+
+void CAN_distance_task(const void *args) {
+  while (true) {
+    DISTANCE_wait_recv();
+    DISTANCE_set(CAN_recvf());
+  }
+}
+
 uint8_t SPI_Read(uint8_t address)
 {
   // 1.Bring slave select low
@@ -296,28 +313,34 @@ int main(void)
 
   xTaskCreate((TaskFunction_t)giroVolante,
               "lectura potenciometro Giro Volante",
-              configMINIMAL_STACK_SIZE,
-              0,
-              PR_TAREAGIRO,
-              0);
+              configMINIMAL_STACK_SIZE, 
+              NULL, PR_TAREAGIRO, NULL);
+              
   xTaskCreate((TaskFunction_t)volanteAgarrado,
               "lectura sensor agarrado",
-              configMINIMAL_STACK_SIZE,
-              0,
-              PR_TAREAAGARRADO,
-              0);
+              configMINIMAL_STACK_SIZE, 
+              NULL, PR_TAREAAGARRADO, NULL);
+
   xTaskCreate((TaskFunction_t)Tarea_Control_Inclinacion,
               "lectura sensor agarrado",
-              configMINIMAL_STACK_SIZE,
-              0,
-              PR_CABEZA,
-              0);
+              configMINIMAL_STACK_SIZE, 
+              NULL, PR_CABEZA, NULL);
+
   xTaskCreate((TaskFunction_t)deteccionPulsador,
               "Tarea esporadica",
               configMINIMAL_STACK_SIZE,
-              0,
-              0,
-              0);
+              NULL, 0, NULL);
+
+  xTaskCreate((TaskFunction_t) CAN_speed_task,
+              "CANBus speed recv task", 
+              configMINIMAL_STACK_SIZE, 
+              NULL, PR_SPEED_MSG, NULL);
+
+  xTaskCreate((TaskFunction_t) CAN_distance_task,
+              "CANBus distance recv task",
+              configMINIMAL_STACK_SIZE,
+              NULL, PR_DISTANCE_MSG, NULL);
+
   /* Start scheduler */
   vTaskStartScheduler();
   /* We should never get here as control is now taken by the scheduler */

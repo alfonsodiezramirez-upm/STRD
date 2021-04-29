@@ -23,6 +23,7 @@
 #include <task.h>
 #include <stdint.h>
 #include "utils.h"
+#include "node1.h"
 
 const uint32_t STD_ID1 = 0x6FA;
 const uint32_t STD_ID2 = 0x6FB;
@@ -144,9 +145,11 @@ void CAN_Handle_IRQ(void) {
     HAL_CAN_GetRxMessage(&hcan1, CAN_RX_FIFO0, &rx_header, &bytes);
     if (rx_header.StdId == STD_ID1) {
         byte_recv = bytes[0];
+        SPEED_set_recv();
     }
     if (rx_header.StdId == STD_ID2) {
         float_recv = b2f(&bytes[0]);
+        DISTANCE_set_recv();
     }
     #endif
 }

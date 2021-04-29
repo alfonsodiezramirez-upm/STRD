@@ -36,6 +36,7 @@ void CAN_init(void);
 void CAN_sendi(uint8_t);
 void CAN_sendf(float);
 uint8_t CAN_recv(void);
+float CAN_recvf(void);
 void CAN_Handle_IRQ(void);
 
 #endif /* CAN_H */

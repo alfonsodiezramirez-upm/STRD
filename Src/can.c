@@ -43,6 +43,7 @@ static volatile uint32_t tx_mailbox;
 
 static volatile uint8_t byte_sent = 0;
 static volatile uint8_t byte_recv = 0;
+static volatile float float_recv = .0F;
 
 static volatile CAN_FilterTypeDef filter_config;
 
@@ -70,6 +71,7 @@ static void MX_CAN1_Init(void) {
 
 void CAN_init(void) {
     MX_CAN1_Init();
+    #ifndef NODE_2
     // Message size of 1 byte
     tx_header.DLC = 1U;
     // Identifier to standard
@@ -79,8 +81,8 @@ void CAN_init(void) {
     // Standard identifier
     tx_header.StdId = STD_ID1;
 
-    #ifndef NODE_2
-    tx_header2.DLC = 1U;
+    // Message size of 4 bytes (float)
+    tx_header2.DLC = 4U;
     // Identifier to standard
     tx_header2.IDE = CAN_ID_STD;
     // Data type to remote transmission
@@ -127,9 +129,16 @@ uint8_t CAN_recv(void) {
     return byte_recv;
 }
 
+float CAN_recvf(void) {
+    return float_recv;
+}
+
 void CAN_Handle_IRQ(void) {
     HAL_CAN_IRQHandler(&hcan1);
     #ifdef NODE_2
-    HAL_CAN_GetRxMessage(&hcan1, CAN_RX_FIFO0, &rx_header, &byte_recv);
+    uint8_t bytes[4];
+    HAL_CAN_GetRxMessage(&hcan1, CAN_RX_FIFO0, &rx_header, &bytes);
+    if (rx_header.StdId == STD_ID1) byte_recv = bytes[0];
+    if (rx_header.StdId == STD_ID2) float_recv = b2f(&bytes[0]);
     #endif
 }

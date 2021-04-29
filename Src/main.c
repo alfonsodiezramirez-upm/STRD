@@ -93,7 +93,7 @@ void acelerador(void const *argument)
   uint32_t wake_time = osKernelSysTick();
   for (;;)
   {
-		CAN_send(1);
+		CAN_sendi(1);
     /* Lectura del canal ADC0 */
     ADC_ChannelConfTypeDef sConfig = {0};
     sConfig.Channel = ADC_CHANNEL_0; // seleccionamos el canal 0

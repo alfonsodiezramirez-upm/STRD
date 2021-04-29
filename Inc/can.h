@@ -33,7 +33,8 @@ extern const uint32_t HFILTER_MASK;
 #endif
 
 void CAN_init(void);
-void CAN_send(uint8_t);
+void CAN_sendi(uint8_t);
+void CAN_sendf(float);
 uint8_t CAN_recv(void);
 void CAN_Handle_IRQ(void);
 

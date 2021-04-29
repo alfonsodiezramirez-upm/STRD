@@ -22,6 +22,7 @@
 #include <FreeRTOSConfig.h>
 #include <task.h>
 #include <stdint.h>
+#include "utils.h"
 
 const uint32_t STD_ID1 = 0x6FA;
 const uint32_t STD_ID2 = 0x6FB;
@@ -111,9 +112,15 @@ void CAN_init(void) {
     HAL_CAN_ActivateNotification(&hcan1, CAN_IT_RX_FIFO0_MSG_PENDING);
 }
 
-void CAN_send(uint8_t b) {
+void CAN_sendi(uint8_t b) {
     byte_sent = b;
     HAL_CAN_AddTxMessage(&hcan1, &tx_header, &byte_sent, &tx_mailbox);
+}
+
+void CAN_sendf(float value) {
+    uint8_t bytes[4];
+    f2b(value, bytes);
+    HAL_CAN_AddTxMessage(&hcan1, &tx_header2, &bytes[0], &tx_mailbox);
 }
 
 uint8_t CAN_recv(void) {

@@ -27,7 +27,9 @@
         "core_cminstr.h": "c",
         "cmsis_os.h": "c",
         "speed.h": "c",
-        "symptoms.h": "c"
+        "symptoms.h": "c",
+        "can.h": "c",
+        "freertosconfig.h": "c"
     },
     "cmake.configureOnOpen": false
 }

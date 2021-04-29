@@ -1,5 +1,5 @@
 /*
- * Copyright © 2021 - present | can.h by Javinator9889
+ * Copyright © 2021 - present | utils.h by Javinator9889
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,28 +14,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see https://www.gnu.org/licenses/.
  *
- * Created by Javinator9889 on 10/04/21 - can.h.
+ * Created by Javinator9889 on 10/04/21 - utils.h.
  */
-#ifndef CAN_H
-#define CAN_H
-#include <FreeRTOSConfig.h>
+#ifndef UTILS_H
+#define UTILS_H
 #include <stdint.h>
-#ifndef CAN1
-#define CAN1
-#endif
 
-extern const uint32_t STD_ID1;
-extern const uint32_t STD_ID2;
-extern const uint32_t HFILTER_ID;
+// Gets the size of an array
+#define arrsize(array) (sizeof (array) / sizeof *(array))
 
-#ifdef NODE_2
-extern const uint32_t HFILTER_MASK;
-#endif
+// Iterates through an array
+#define foreach(idxtype, item, array) \
+    idxtype* item; \
+    size_t size = arrsize(array); \
+    for (item = array; item < (array + size); ++item)
 
-void CAN_init(void);
-void CAN_sendi(uint8_t);
-void CAN_sendf(float);
-uint8_t CAN_recv(void);
-void CAN_Handle_IRQ(void);
+int map(int, int, int, int);
 
-#endif /* CAN_H */
+void f2b(float, uint8_t*);
+float b2f(uint8_t*);
+
+#endif /* UTILS_H */

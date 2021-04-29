@@ -168,8 +168,7 @@ void cabeza(const void *argument) {
   while (true) {
     recepcion = CAN_recv();
     /* Lectura del canal ADC1 */
-    ADC_ChannelConfTypeDef sConfig = {
-        0};
+    ADC_ChannelConfTypeDef sConfig = {0};
     sConfig.Channel = ADC_CHANNEL_1; // seleccionamos el canal 1
     sConfig.Rank = 1;
     sConfig.SamplingTime = ADC_SAMPLETIME_28CYCLES;
@@ -222,7 +221,8 @@ void Tarea_Control_Inclinacion(void const *argument) {
   }
 }
 
-uint8_t SPI_Read(uint8_t address) {
+uint8_t SPI_Read(uint8_t address)
+{
   // 1.Bring slave select low
   HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3, GPIO_PIN_RESET);
   // 2.Transmit register + 0x80 (To set MSB high) Most Significant Bit(MSB) high = read mode
@@ -236,7 +236,8 @@ uint8_t SPI_Read(uint8_t address) {
   return spiRxBuf[0];
 }
 
-void Inicializa_Acelerometro() {
+void Inicializa_Acelerometro()
+{
   /*To transmit data in SPI follow the next steps: */
   // 1. Bring slave select to low
   HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3, GPIO_PIN_RESET);
@@ -265,7 +266,8 @@ void Inicializa_Acelerometro() {
  * @brief  The application entry point.
  * @retval int
  */
-int main(void) {
+int main(void)
+{
 
   /* MCU Configuration--------------------------------------------------------*/
 
@@ -321,10 +323,8 @@ int main(void) {
  * @retval None
  */
 void SystemClock_Config(void) {
-  RCC_OscInitTypeDef RCC_OscInitStruct = {
-      0};
-  RCC_ClkInitTypeDef RCC_ClkInitStruct = {
-      0};
+  RCC_OscInitTypeDef RCC_OscInitStruct = {0};
+  RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
 
   /**Configure the main internal regulator output voltage 
    */

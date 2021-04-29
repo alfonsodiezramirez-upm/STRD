@@ -142,7 +142,11 @@ void CAN_Handle_IRQ(void) {
     #ifdef NODE_2
     uint8_t bytes[4];
     HAL_CAN_GetRxMessage(&hcan1, CAN_RX_FIFO0, &rx_header, &bytes);
-    if (rx_header.StdId == STD_ID1) byte_recv = bytes[0];
-    if (rx_header.StdId == STD_ID2) float_recv = b2f(&bytes[0]);
+    if (rx_header.StdId == STD_ID1) {
+        byte_recv = bytes[0];
+    }
+    if (rx_header.StdId == STD_ID2) {
+        float_recv = b2f(&bytes[0]);
+    }
     #endif
 }

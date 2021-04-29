@@ -221,6 +221,14 @@ void Tarea_Control_Inclinacion(void const *argument) {
   }
 }
 
+void risks_task(const void *args) {
+  const uint32_t T_RISKS_TASK = 300U;
+  uint32_t wake_time = osKernelSysTick();
+  while (true) {
+    osDelayUntil(&wake_time, T_RISKS_TASK);
+  }
+}
+
 uint8_t SPI_Read(uint8_t address)
 {
   // 1.Bring slave select low

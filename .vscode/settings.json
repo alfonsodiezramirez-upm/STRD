@@ -30,7 +30,11 @@
         "symptoms.h": "c",
         "can.h": "c",
         "freertosconfig.h": "c",
-        "stm32f4xx_it.h": "c"
+        "stm32f4xx_it.h": "c",
+        "semphr.h": "c",
+        "lock.h": "c",
+        "cmath": "c",
+        "bit": "c"
     },
     "cmake.configureOnOpen": false
 }

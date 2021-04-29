@@ -87,12 +87,10 @@ static void MX_SPI1_Init(void);
 #define T_TAREALUCESCRUCE 1000
 #define T_DISTANCIA   300
 
-void acelerador(void const *argument)
-{
-  int actual;
+void acelerador(void const *argument) {
+  int speed;
   uint32_t wake_time = osKernelSysTick();
-  for (;;)
-  {
+  while(true) {
 		CAN_sendi(1);
     /* Lectura del canal ADC0 */
     ADC_ChannelConfTypeDef sConfig = {0};
@@ -102,15 +100,15 @@ void acelerador(void const *argument)
     HAL_ADC_ConfigChannel(&hadc1, &sConfig);
     HAL_ADC_Start(&hadc1); // comenzamos la conversión AD
     if (HAL_ADC_PollForConversion(&hadc1, 5) == HAL_OK) {
-      actual = map(HAL_ADC_GetValue(&hadc1), 0, 255, 0, 200); // leemos el valor
-      SPEED_set(actual);
+      speed = map(HAL_ADC_GetValue(&hadc1), 0, 255, 0, 200); // leemos el valor
+      SPEED_set(speed);
+      CAN_sendi(speed);
     }
     osDelayUntil(&wake_time, T_TAREAVELOCIDAD);
   }
 }
 
-void distanceTask(const void *args)
-{
+void distanceTask(const void *args) {
   const uint16_t T_DISTANCE_TASK = 300U;
   uint32_t wake_time = osKernelSysTick();
   float distance;
@@ -119,35 +117,35 @@ void distanceTask(const void *args)
   int old_intensity = 0;
   int intensity = 0;
   HAL_GPIO_WritePin(GPIOA, GPIO_PIN_9, GPIO_PIN_RESET);
-  while (1)
-  {
-			distance = (float)USS_read_distance() * 0.00171821F;
-			if (distance == 500000)
-				distance = 1;
-			DISTANCE_set(distance);
+  while (1) {
+    distance = (float) USS_read_distance() * 0.00171821F;
+    if (distance == 500000)
+      distance = 1;
+    DISTANCE_set(distance);
 
-			speed = SPEED_get();
-			secure_dist = (float)pow((speed / 10), 2);
+    speed = SPEED_get();
+    secure_dist = (float) pow((speed / 10), 2);
 
-			if (distance < secure_dist) HAL_GPIO_WritePin(GPIOA, GPIO_PIN_9, GPIO_PIN_SET);
-			else HAL_GPIO_WritePin(GPIOA, GPIO_PIN_9, GPIO_PIN_RESET);
+    if (distance < secure_dist) HAL_GPIO_WritePin(GPIOA, GPIO_PIN_9, GPIO_PIN_SET);
+    else HAL_GPIO_WritePin(GPIOA, GPIO_PIN_9, GPIO_PIN_RESET);
 
-			old_intensity = BRAKE_intensity_get();
-			if (distance <= secure_dist)
-				intensity = 4;
-			else if (distance <= 2 * secure_dist)
-				intensity = 3;
-			else if (distance <= 3 * secure_dist)
-				intensity = 2;
-			else if (distance <= 4 * secure_dist)
-				intensity = 1;
-			else
-				intensity = 0;
-			
-			if (intensity != old_intensity) {
-				BRAKE_intensity_set(intensity);
-				BRAKE_set_event();
-			}
+    old_intensity = BRAKE_intensity_get();
+    if (distance <= secure_dist)
+      intensity = 4;
+    else if (distance <= 2 * secure_dist)
+      intensity = 3;
+    else if (distance <= 3 * secure_dist)
+      intensity = 2;
+    else if (distance <= 4 * secure_dist)
+      intensity = 1;
+    else
+      intensity = 0;
+    
+    if (intensity != old_intensity) {
+      BRAKE_intensity_set(intensity);
+      BRAKE_set_event();
+    }
+    CAN_sendf(distance);
     osDelayUntil(&wake_time, T_DISTANCE_TASK);
   }
 }
@@ -204,13 +202,11 @@ void brake_task(const void *args) {
   }
 }
 
-void lucesCruce(void const *argument)
-{
+void lucesCruce(void const *argument) {
   HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8, GPIO_PIN_RESET);
   int luminosity;
   uint32_t wake_time = osKernelSysTick();
-  for (;;)
-  {
+  while(true) {
     /* Lectura del canal ADC0 */
     ADC_ChannelConfTypeDef sConfig = {0};
     sConfig.Channel = ADC_CHANNEL_1; // seleccionamos el canal 1
@@ -231,8 +227,7 @@ void lucesCruce(void const *argument)
   * @brief  The application entry point.
   * @retval int
   */
-int main(void)
-{
+int main(void) {
 
   /* MCU Configuration--------------------------------------------------------*/
 

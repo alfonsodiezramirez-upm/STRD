@@ -51,26 +51,20 @@
 /* Includes ------------------------------------------------------------------*/
 
 #include "main.h"
-
 #include "cmsis_os.h"
+#include <stdbool.h>
+#include <math.h>
+#include "dwt_stm32_delay.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include <math.h>
-
-#include "dwt_stm32_delay.h"
-
 #include "symptoms.h"
-
 #include "modes.h"
-
 #include "lock.h"
-
 #include "can.h"
 
 /* Private variables ---------------------------------------------------------*/
 ADC_HandleTypeDef hadc1;
-//CAN_HandleTypeDef hcan1;
 SPI_HandleTypeDef hspi1;
 
 SemaphoreHandle_t interrupcion;
@@ -94,9 +88,6 @@ static void MX_SPI1_Init(void);
 #define T_CABEZA 600
 #define T_RIESGOS 300
 
-#define TRUE 1
-#define FALSE 0
-
 #define LONG_TIME 0xffff
 #define TICKS_TO_WAIT 10
 
@@ -107,120 +98,128 @@ uint8_t Iy1, Iy2;
 uint8_t Iz1, Iz2;
 double X, Y, Z;
 double rotX, rotY;
-int modo=0;
-int recepcion=0;
+int modo = 0;
+int recepcion = 0;
 /*funcion para las lecturas de los registros del acelerometro */
 uint8_t spiTxBuf[2], spiRxBuf[2];
 uint8_t SPI_Read(uint8_t address);
 
 //funci�n auxiliar de estandarizaci�n de valores:
-int map(int x, int in_min, int in_max, int out_min, int out_max) {
+int map(int x, int in_min, int in_max, int out_min, int out_max)
+{
   return (int)((x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min);
 }
 
-void deteccionPulsador(const void * argument) {
-	uint32_t wake_time = osKernelSysTick();
-	MODE_init();
-	for(;;){
-		if( xSemaphoreTake( interrupcion, LONG_TIME ) == pdTRUE ){
-			modo++;
-			modo=modo%3;
-			MODE_set(modo);
-		}
-	}
+void deteccionPulsador(const void *argument)
+{
+  uint32_t wake_time = osKernelSysTick();
+  MODE_init();
+  for (;;)
+  {
+    if (xSemaphoreTake(interrupcion, LONG_TIME) == pdTRUE) {
+      modo++;
+      modo %= 3;
+      MODE_set(modo);
+    }
+  }
 }
 
-void giroVolante(const void * argument) {
+void giroVolante(const void *argument) {
   /* Infinite loop */
   int actual;
   uint32_t wake_time = osKernelSysTick();
-  for (;;) {
+  while (true) {
     /* Lectura del canal ADC0 */
     ADC_ChannelConfTypeDef sConfig = {
-      0
-    };
+        0};
     sConfig.Channel = ADC_CHANNEL_0; // seleccionamos el canal 0
     sConfig.Rank = 1;
     sConfig.SamplingTime = ADC_SAMPLETIME_28CYCLES;
-    HAL_ADC_ConfigChannel( & hadc1, & sConfig);
-    HAL_ADC_Start( & hadc1); // comenzamos la convers�n AD
-    if (HAL_ADC_PollForConversion( & hadc1, 5) == HAL_OK) {
-      actual = map(HAL_ADC_GetValue( & hadc1), 0, 255, 0, 200); // leemos el valor
+    HAL_ADC_ConfigChannel(&hadc1, &sConfig);
+    HAL_ADC_Start(&hadc1); // comenzamos la convers�n AD
+    if (HAL_ADC_PollForConversion(&hadc1, 5) == HAL_OK)
+    {
+      actual = map(HAL_ADC_GetValue(&hadc1), 0, 255, 0, 200); // leemos el valor
       WHEEL_set(actual);
     }
-    osDelayUntil( & wake_time, T_TAREAGIRO);
+    osDelayUntil(&wake_time, T_TAREAGIRO);
   }
 }
-void volanteAgarrado(const void * argument) {
+
+
+void volanteAgarrado(const void *argument) {
   /* Infinite loop */
   int actual;
   uint32_t wake_time = osKernelSysTick();
-  for (;;) {
+  while (true) {
     /* Lectura del canal ADC0 */
     actual = HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_8);
     WHEEL_grab(actual);
-    osDelayUntil( & wake_time, T_TAREAAGARRADO);
+    osDelayUntil(&wake_time, T_TAREAAGARRADO);
   }
 }
-void cabeza(const void * argument) {
+
+
+void cabeza(const void *argument) {
   /* Infinite loop */
   int x;
   int y;
   uint32_t wake_time = osKernelSysTick();
-  for (;;) {
-		recepcion = CAN_recv();
+  while (true) {
+    recepcion = CAN_recv();
     /* Lectura del canal ADC1 */
     ADC_ChannelConfTypeDef sConfig = {
-      0
-    };
+        0};
     sConfig.Channel = ADC_CHANNEL_1; // seleccionamos el canal 1
     sConfig.Rank = 1;
     sConfig.SamplingTime = ADC_SAMPLETIME_28CYCLES;
-    HAL_ADC_ConfigChannel( & hadc1, & sConfig);
-    HAL_ADC_Start( & hadc1); // comenzamos la convers�n AD
-    x = HAL_ADC_GetValue( & hadc1); // leemos el valor
+    HAL_ADC_ConfigChannel(&hadc1, &sConfig);
+    HAL_ADC_Start(&hadc1);        // comenzamos la convers�n AD
+    x = HAL_ADC_GetValue(&hadc1); // leemos el valor
     DWT_Delay_us(10);
     sConfig.Channel = ADC_CHANNEL_2; // seleccionamos el canal 2
     sConfig.Rank = 1;
     sConfig.SamplingTime = ADC_SAMPLETIME_28CYCLES;
-    HAL_ADC_ConfigChannel( & hadc1, & sConfig);
-    HAL_ADC_Start( & hadc1); // comenzamos la convers�n AD
-    y = HAL_ADC_GetValue( & hadc1); // leemos el valor
+    HAL_ADC_ConfigChannel(&hadc1, &sConfig);
+    HAL_ADC_Start(&hadc1);        // comenzamos la convers�n AD
+    y = HAL_ADC_GetValue(&hadc1); // leemos el valor
     GIROSCOPE_set(x, y, 0);
 
-    osDelayUntil( & wake_time, T_CABEZA);
+    osDelayUntil(&wake_time, T_CABEZA);
   }
 }
 
-void Tarea_Control_Inclinacion(void
-  const * argument) {
-	uint32_t wake_time = osKernelSysTick();
+void Tarea_Control_Inclinacion(void const *argument) {
+  uint32_t wake_time = osKernelSysTick();
   /* Calculo de la trotaci�n en el eje X e Y, dentro de la tarea que controla la inclinaci�n de la cabeza */
-	for (;;) {
-		Ix1 = SPI_Read(0x28);
-		Ix2 = SPI_Read(0x29);
-		Ix = (Ix2 << 8) + Ix1;
-		if (Ix >= 0x8000) Ix = -(65536 - Ix);
-		X = Ix / 16384.0;
+  while (true) {
+    Ix1 = SPI_Read(0x28);
+    Ix2 = SPI_Read(0x29);
+    Ix = (Ix2 << 8) + Ix1;
+    if (Ix >= 0x8000)
+      Ix = -(65536 - Ix);
+    X = Ix / 16384.0;
 
-		Iy1 = SPI_Read(0x2A);
-		Iy2 = SPI_Read(0x2B);
-		Iy = (Iy2 << 8) + Iy1;
-		if (Iy >= 0x8000) Iy = -(65536 - Iy);
-		Y = Iy / 16384.0;
+    Iy1 = SPI_Read(0x2A);
+    Iy2 = SPI_Read(0x2B);
+    Iy = (Iy2 << 8) + Iy1;
+    if (Iy >= 0x8000)
+      Iy = -(65536 - Iy);
+    Y = Iy / 16384.0;
 
-		Iz1 = SPI_Read(0x2C);
-		Iz2 = SPI_Read(0x2D);
-		Iz = (Iz2 << 8) + Iz1;
-		if (Iz >= 0x8000) Iz = -(65536 - Iz);
-		Z = Iz / 16384.0;
+    Iz1 = SPI_Read(0x2C);
+    Iz2 = SPI_Read(0x2D);
+    Iz = (Iz2 << 8) + Iz1;
+    if (Iz >= 0x8000)
+      Iz = -(65536 - Iz);
+    Z = Iz / 16384.0;
 
-		rotX = atan2(Y, sqrt(X * X + Z * Z)) * 180.0 / 3.1416;
-		rotY = -atan2(X, sqrt(Y * Y + Z * Z)) * 180.0 / 3.1416;
-		GIROSCOPE_set(rotX, rotY, 0);
+    rotX = atan2(Y, sqrt(X * X + Z * Z)) * 180.0 / 3.1416;
+    rotY = -atan2(X, sqrt(Y * Y + Z * Z)) * 180.0 / 3.1416;
+    GIROSCOPE_set(rotX, rotY, 0);
 
-    osDelayUntil( & wake_time, T_CABEZA);
-	}
+    osDelayUntil(&wake_time, T_CABEZA);
+  }
 }
 
 uint8_t SPI_Read(uint8_t address) {
@@ -228,9 +227,9 @@ uint8_t SPI_Read(uint8_t address) {
   HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3, GPIO_PIN_RESET);
   // 2.Transmit register + 0x80 (To set MSB high) Most Significant Bit(MSB) high = read mode
   spiTxBuf[0] = address | 0x80; //Register
-  HAL_SPI_Transmit( & hspi1, spiTxBuf, 1, 50);
+  HAL_SPI_Transmit(&hspi1, spiTxBuf, 1, 50);
   // 3.Receive data
-  HAL_SPI_Receive( & hspi1, spiRxBuf, 1, 50);
+  HAL_SPI_Receive(&hspi1, spiRxBuf, 1, 50);
   // 4.Bring slave select high
   HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3, GPIO_PIN_SET);
 
@@ -245,7 +244,7 @@ void Inicializa_Acelerometro() {
   spiTxBuf[0] = 0x20; // control Register
   spiTxBuf[1] = 0x17; //Data  Enable X Y Z Rate 3.125 Hz --- Valor original = 0x11
   //								size, timeout
-  HAL_SPI_Transmit( & hspi1, spiTxBuf, 2, 50);
+  HAL_SPI_Transmit(&hspi1, spiTxBuf, 2, 50);
   // 3. Bring slave select high
   HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3, GPIO_PIN_SET);
 
@@ -254,12 +253,14 @@ void Inicializa_Acelerometro() {
   HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3, GPIO_PIN_RESET);
   // 2.Transmit register + 0x80 (To set MSB high) Most Significant Bit(MSB) high = read mode
   spiTxBuf[0] = 0x20 | 0x80; //Register
-  HAL_SPI_Transmit( & hspi1, spiTxBuf, 1, 50);
+  HAL_SPI_Transmit(&hspi1, spiTxBuf, 1, 50);
   // 3.Receive data
-  HAL_SPI_Receive( & hspi1, spiRxBuf, 1, 50);
+  HAL_SPI_Receive(&hspi1, spiRxBuf, 1, 50);
   // 4.Bring slave select high
   HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3, GPIO_PIN_SET);
 }
+
+
 /**
  * @brief  The application entry point.
  * @retval int
@@ -279,53 +280,40 @@ int main(void) {
   MX_ADC1_Init();
   MX_SPI1_Init();
   CAN_init();
-	Inicializa_Acelerometro();
-	
-	
-	interrupcion = xSemaphoreCreateBinary(); //LOCK_create(NULL);
-	//LOCK_acquire(interrupcion);
-	/* Create the mutex(es) */
-  /* definition and creation of mutex1 */
-  //osMutexDef(mutex1);
-  //mutex1Handle = osMutexCreate(osMutex(mutex1));
-	
-  xTaskCreate((TaskFunction_t) giroVolante,
-    "lectura potenciometro Giro Volante",
-    configMINIMAL_STACK_SIZE,
-    0,
-    PR_TAREAGIRO,
-    0);
-  xTaskCreate((TaskFunction_t) volanteAgarrado,
-    "lectura sensor agarrado",
-    configMINIMAL_STACK_SIZE,
-    0,
-    PR_TAREAAGARRADO,
-    0);
-  xTaskCreate((TaskFunction_t) Tarea_Control_Inclinacion,
-    "lectura sensor agarrado",
-    configMINIMAL_STACK_SIZE,
-    0,
-    PR_CABEZA,
-    0);
-	xTaskCreate((TaskFunction_t) deteccionPulsador,
-    "Tarea esporadica",
-    configMINIMAL_STACK_SIZE,
-    0,
-    0,
-    0);
+  Inicializa_Acelerometro();
+
+  interrupcion = xSemaphoreCreateBinary();
+
+  xTaskCreate((TaskFunction_t)giroVolante,
+              "lectura potenciometro Giro Volante",
+              configMINIMAL_STACK_SIZE,
+              0,
+              PR_TAREAGIRO,
+              0);
+  xTaskCreate((TaskFunction_t)volanteAgarrado,
+              "lectura sensor agarrado",
+              configMINIMAL_STACK_SIZE,
+              0,
+              PR_TAREAAGARRADO,
+              0);
+  xTaskCreate((TaskFunction_t)Tarea_Control_Inclinacion,
+              "lectura sensor agarrado",
+              configMINIMAL_STACK_SIZE,
+              0,
+              PR_CABEZA,
+              0);
+  xTaskCreate((TaskFunction_t)deteccionPulsador,
+              "Tarea esporadica",
+              configMINIMAL_STACK_SIZE,
+              0,
+              0,
+              0);
   /* Start scheduler */
-  //osKernelStart();
   vTaskStartScheduler();
   /* We should never get here as control is now taken by the scheduler */
 
   /* Infinite loop */
-  /* USER CODE BEGIN WHILE */
-  while (1) {
-    /* USER CODE END WHILE */
-
-    /* USER CODE BEGIN 3 */
-  }
-  /* USER CODE END 3 */
+  while (1);
 }
 
 /**
@@ -334,11 +322,9 @@ int main(void) {
  */
 void SystemClock_Config(void) {
   RCC_OscInitTypeDef RCC_OscInitStruct = {
-    0
-  };
+      0};
   RCC_ClkInitTypeDef RCC_ClkInitStruct = {
-    0
-  };
+      0};
 
   /**Configure the main internal regulator output voltage 
    */
@@ -354,7 +340,8 @@ void SystemClock_Config(void) {
   RCC_OscInitStruct.PLL.PLLN = 336;
   RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
   RCC_OscInitStruct.PLL.PLLQ = 7;
-  if (HAL_RCC_OscConfig( & RCC_OscInitStruct) != HAL_OK) {
+  if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
+  {
     Error_Handler();
   }
   /**Initializes the CPU, AHB and APB busses clocks 
@@ -365,7 +352,8 @@ void SystemClock_Config(void) {
   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV4;
   RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV2;
 
-  if (HAL_RCC_ClockConfig( & RCC_ClkInitStruct, FLASH_LATENCY_5) != HAL_OK) {
+  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_5) != HAL_OK)
+  {
     Error_Handler();
   }
 }
@@ -375,15 +363,15 @@ void SystemClock_Config(void) {
  * @param None
  * @retval None
  */
-static void MX_ADC1_Init(void) {
+static void MX_ADC1_Init(void)
+{
 
   /* USER CODE BEGIN ADC1_Init 0 */
 
   /* USER CODE END ADC1_Init 0 */
 
   ADC_ChannelConfTypeDef sConfig = {
-    0
-  };
+      0};
 
   /* USER CODE BEGIN ADC1_Init 1 */
 
@@ -403,7 +391,8 @@ static void MX_ADC1_Init(void) {
   hadc1.Init.NbrOfConversion = 1;
   hadc1.Init.DMAContinuousRequests = DISABLE;
   hadc1.Init.EOCSelection = ADC_EOC_SINGLE_CONV;
-  if (HAL_ADC_Init( & hadc1) != HAL_OK) {
+  if (HAL_ADC_Init(&hadc1) != HAL_OK)
+  {
     Error_Handler();
   }
   /**Configure for the selected ADC regular channel its corresponding rank in the sequencer and its sample time. 
@@ -411,7 +400,8 @@ static void MX_ADC1_Init(void) {
   sConfig.Channel = ADC_CHANNEL_1;
   sConfig.Rank = 1;
   sConfig.SamplingTime = ADC_SAMPLETIME_28CYCLES;
-  if (HAL_ADC_ConfigChannel( & hadc1, & sConfig) != HAL_OK) {
+  if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
+  {
     Error_Handler();
   }
   /* USER CODE BEGIN ADC1_Init 2 */
@@ -457,7 +447,8 @@ static void MX_ADC1_Init(void) {
  * @param None
  * @retval None
  */
-static void MX_SPI1_Init(void) {
+static void MX_SPI1_Init(void)
+{
 
   /* USER CODE BEGIN SPI1_Init 0 */
 
@@ -479,7 +470,8 @@ static void MX_SPI1_Init(void) {
   hspi1.Init.TIMode = SPI_TIMODE_DISABLE;
   hspi1.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
   hspi1.Init.CRCPolynomial = 10;
-  if (HAL_SPI_Init( & hspi1) != HAL_OK) {
+  if (HAL_SPI_Init(&hspi1) != HAL_OK)
+  {
     Error_Handler();
   }
   /* USER CODE BEGIN SPI1_Init 2 */
@@ -492,10 +484,10 @@ static void MX_SPI1_Init(void) {
  * @param None
  * @retval None
  */
-static void MX_GPIO_Init(void) {
+static void MX_GPIO_Init(void)
+{
   GPIO_InitTypeDef GPIO_InitStruct = {
-    0
-  };
+      0};
 
   /* GPIO Ports Clock Enable */
   __HAL_RCC_GPIOE_CLK_ENABLE();
@@ -518,40 +510,40 @@ static void MX_GPIO_Init(void) {
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(GPIOE, & GPIO_InitStruct);
+  HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
 
   /*Configure GPIO pins : PB0 PB3: Interrupcion botones externos */
   GPIO_InitStruct.Pin = GPIO_PIN_0 | GPIO_PIN_3;
   GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(GPIOB, & GPIO_InitStruct);
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
   /*Configure GPIO pins : PB1 PB2 */
   GPIO_InitStruct.Pin = GPIO_PIN_1 | GPIO_PIN_2;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(GPIOB, & GPIO_InitStruct);
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
   /*Configure GPIO pins : PD10 PD12 PD13 PD14 PD15 */
   GPIO_InitStruct.Pin = GPIO_PIN_10 |
-    GPIO_PIN_12 | GPIO_PIN_13 | GPIO_PIN_14 | GPIO_PIN_15;
+                        GPIO_PIN_12 | GPIO_PIN_13 | GPIO_PIN_14 | GPIO_PIN_15;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(GPIOD, & GPIO_InitStruct);
+  HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
 
   /*Configure GPIO pin : PD11 */
   GPIO_InitStruct.Pin = GPIO_PIN_11;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(GPIOD, & GPIO_InitStruct);
+  HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
 
   /*Configure GPIO pins : PA8 PA9 */
   GPIO_InitStruct.Pin = GPIO_PIN_8 | GPIO_PIN_9;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(GPIOA, & GPIO_InitStruct);
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
   /* EXTI interrupt init*/
   HAL_NVIC_SetPriority(EXTI0_IRQn, configMAX_SYSCALL_INTERRUPT_PRIORITY - 2, 0);
@@ -568,15 +560,16 @@ static void MX_GPIO_Init(void) {
  * @retval None
  */
 /* USER CODE END Header_StartTarea1 */
-void StartTarea1(void
-  const * argument) {
+void StartTarea1(void const *argument)
+{
   HAL_GPIO_WritePin(GPIOD, GPIO_PIN_12, GPIO_PIN_RESET);
   HAL_GPIO_WritePin(GPIOD, GPIO_PIN_13, GPIO_PIN_SET);
   HAL_GPIO_WritePin(GPIOD, GPIO_PIN_14, GPIO_PIN_RESET);
   HAL_GPIO_WritePin(GPIOD, GPIO_PIN_15, GPIO_PIN_SET);
 
   /* Infinite loop */
-  for (;;) {
+  for (;;)
+  {
     //ContTarea1 ++;
 
     HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_12);
@@ -588,15 +581,17 @@ void StartTarea1(void
 
 /* Funcion para el tratamiento de interrupciones */
 
-void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
+{
   long yield = pdFALSE;
   //  /* Prevent unused argument(s) compilation warning */
   UNUSED(GPIO_Pin);
   portYIELD_FROM_ISR(yield);
-	
-	if(GPIO_Pin == GPIO_PIN_3){
-		xSemaphoreGiveFromISR( interrupcion, &yield );
-	}
+
+  if (GPIO_Pin == GPIO_PIN_3)
+  {
+    xSemaphoreGiveFromISR(interrupcion, &yield);
+  }
 }
 
 /**
@@ -607,11 +602,13 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
  * @param  htim : TIM handle
  * @retval None
  */
-void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef * htim) {
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+{
   /* USER CODE BEGIN Callback 0 */
 
   /* USER CODE END Callback 0 */
-  if (htim -> Instance == TIM1) {
+  if (htim->Instance == TIM1)
+  {
     HAL_IncTick();
   }
   /* USER CODE BEGIN Callback 1 */
@@ -623,7 +620,8 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef * htim) {
  * @brief  This function is executed in case of error occurrence.
  * @retval None
  */
-void Error_Handler(void) {
+void Error_Handler(void)
+{
   /* USER CODE BEGIN Error_Handler_Debug */
   /* User can add his own implementation to report the HAL error return state */
 
@@ -638,7 +636,8 @@ void Error_Handler(void) {
  * @param  line: assert_param error line source number
  * @retval None
  */
-void assert_failed(uint8_t * file, uint32_t line) {
+void assert_failed(uint8_t *file, uint32_t line)
+{
   /* USER CODE BEGIN 6 */
   /* User can add his own implementation to report the file name and line number,
      tex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */

@@ -21,7 +21,6 @@
 #include <FreeRTOSConfig.h>
 #include <stdint.h>
 
-
 extern const uint32_t STD_ID;
 
 void CAN_init(void);

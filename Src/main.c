@@ -227,7 +227,48 @@ void Tarea_Control_Inclinacion(void const *argument) {
 void risks_task(const void *args) {
   const uint32_t T_RISKS_TASK = 300U;
   uint32_t wake_time = osKernelSysTick();
+  float x, y;
+  bool wheel_is_grabbed;
+  int speed;
+  int wheel_position;
+  bool is_distance_ok;
+  int risk_count = 0;
   while (true) {
+    x = GIROSCOPE_get_X();
+    y = GIROSCOPE_get_Y();
+    wheel_is_grabbed = WHEEL_is_grabbed();
+    speed = SPEED_get();
+    wheel_position = WHEEL_get();
+    is_distance_ok = DISTANCE_get_security();
+
+    if (abs(x) >= 20 && abs(y) >= 20 && !wheel_is_grabbed) {
+      // Pitido lvl. 1
+      // Luz amarilla
+      risk_count++;
+    } else if ((abs(x) >= 20 || abs(y) >= 20) && wheel_is_grabbed && speed >= 70) {
+      // Luz amarilla
+      risk_count++;
+    } else if (abs(x) >= 30 && abs(wheel_position) >= 30) {
+      // Luz amarilla
+      // Pitido lvl. 2
+      risk_count++;
+    } else {
+      // Luz amarilla OFF
+      // Pitido off
+    }
+
+    if (risk_count >= 2) {
+      // Luz roja
+      // Pitido lvl. 2
+      if (!is_distance_ok) {
+        // Freno ON
+      }
+    } else {
+      // Luz roja off
+      // Freno OFF
+    }
+    risk_count = 0;
+    
     osDelayUntil(&wake_time, T_RISKS_TASK);
   }
 }
@@ -235,7 +276,7 @@ void risks_task(const void *args) {
 void CAN_speed_task(const void *args) {
   while (true) {
     SPEED_wait_recv();
-    SPEED_update(CAN_recv());
+    SPEED_set(CAN_recv());
   }
 }
 
@@ -315,7 +356,7 @@ int main(void)
               "lectura potenciometro Giro Volante",
               configMINIMAL_STACK_SIZE, 
               NULL, PR_TAREAGIRO, NULL);
-              
+
   xTaskCreate((TaskFunction_t)volanteAgarrado,
               "lectura sensor agarrado",
               configMINIMAL_STACK_SIZE, 

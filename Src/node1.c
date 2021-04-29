@@ -32,7 +32,6 @@ static EventGroupHandle_t SPEED_event = NULL;
 static EventGroupHandle_t DISTANCE_event = NULL;
 
 static volatile int speed = 0;
-static volatile int stored_speed = 0;
 
 static volatile float distance = .0F;
 
@@ -44,27 +43,18 @@ void NODE1_init(void) {
     DISTANCE_event = xEventGroupCreate();
 }
 
-void SPEED_update(int new_speed) {
+void SPEED_set(int new_speed) {
     LOCK_acquire(SPEED_sem);
-    stored_speed = speed;
     speed = new_speed;
     LOCK_release(SPEED_sem);
 }
 
-int SPEED_get_current(void) {
+int SPEED_get(void) {
     int current = -1;
     LOCK_acquire(SPEED_sem);
     current = speed;
     LOCK_release(SPEED_sem);
     return current;
-}
-
-int SPEED_get_stored(void) {
-    int stored = -1;
-    LOCK_acquire(SPEED_sem);
-    stored = stored_speed;
-    LOCK_release(SPEED_sem);
-    return stored;
 }
 
 void SPEED_set_recv(void) {
@@ -93,7 +83,7 @@ float DISTANCE_get(void) {
 
 bool DISTANCE_get_security(void) {
     float current_distance = DISTANCE_get();
-    int current_speed = SPEED_get_current();
+    int current_speed = SPEED_get();
     return (current_distance < (.5F * ((float) pow((current_speed / 10), 2))));
 }
 

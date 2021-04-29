@@ -24,9 +24,8 @@
 
 void NODE1_init(void);
 
-void SPEED_update(int);
-int SPEED_get_current(void);
-int SPEED_get_stored(void);
+void SPEED_set(int);
+int SPEED_get(void);
 void SPEED_set_recv(void);
 void SPEED_wait_recv(void);
 

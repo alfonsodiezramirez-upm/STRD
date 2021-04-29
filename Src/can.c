@@ -23,11 +23,21 @@
 #include <task.h>
 #include <stdint.h>
 
-const uint32_t STD_ID = 0x6FF;
+const uint32_t STD_ID1 = 0x6FA;
+const uint32_t STD_ID2 = 0x6FB;
+const uint32_t HFILTER_ID = 0x6FF << 5;
+
+#ifdef NODE_2
+const uint32_t HFILTER_MASK = 0x7F0 << 5;
+#endif
 
 static volatile CAN_HandleTypeDef hcan1;
+#ifndef NODE_2
 static volatile CAN_TxHeaderTypeDef tx_header;
+static volatile CAN_TxHeaderTypeDef tx_header2;
+#else
 static volatile CAN_RxHeaderTypeDef rx_header;
+#endif
 static volatile uint32_t tx_mailbox;
 
 static volatile uint8_t byte_sent = 0;
@@ -66,15 +76,30 @@ void CAN_init(void) {
     // Data type to remote transmission
     tx_header.RTR = CAN_RTR_DATA;
     // Standard identifier
-    tx_header.StdId = STD_ID;
+    tx_header.StdId = STD_ID1;
+
+    #ifndef NODE_2
+    tx_header2.DLC = 1U;
+    // Identifier to standard
+    tx_header2.IDE = CAN_ID_STD;
+    // Data type to remote transmission
+    tx_header2.RTR = CAN_RTR_DATA;
+    // Standard identifier
+    tx_header2.StdId = STD_ID2;
+    #endif
 
     // Filter one (stack light blink)
     filter_config.FilterFIFOAssignment = CAN_FILTER_FIFO0;
     // ID we're looking for
-    filter_config.FilterIdHigh = STD_ID << 5;
+    filter_config.FilterIdHigh = HFILTER_ID;
     filter_config.FilterIdLow = 0U;
 
+    #ifndef NODE_2
     filter_config.FilterMaskIdHigh = 0U;
+    #else
+    filter_config.FilterMaskIdHigh = HFILTER_MASK;
+    filter_config.FilterMode = CAN_FILTERMODE_IDMASK;
+    #endif
     filter_config.FilterMaskIdLow = 0U;
 
     filter_config.FilterScale = CAN_FILTERSCALE_32BIT;
@@ -97,5 +122,7 @@ uint8_t CAN_recv(void) {
 
 void CAN_Handle_IRQ(void) {
     HAL_CAN_IRQHandler(&hcan1);
+    #ifdef NODE_2
     HAL_CAN_GetRxMessage(&hcan1, CAN_RX_FIFO0, &rx_header, &byte_recv);
+    #endif
 }

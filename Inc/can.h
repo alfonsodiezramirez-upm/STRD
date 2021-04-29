@@ -20,8 +20,17 @@
 #define CAN_H
 #include <FreeRTOSConfig.h>
 #include <stdint.h>
+#ifndef CAN1
+#define CAN1
+#endif
 
-extern const uint32_t STD_ID;
+extern const uint32_t STD_ID1;
+extern const uint32_t STD_ID2;
+extern const uint32_t HFILTER_ID;
+
+#ifdef NODE_2
+extern const uint32_t HFILTER_MASK;
+#endif
 
 void CAN_init(void);
 void CAN_send(uint8_t);

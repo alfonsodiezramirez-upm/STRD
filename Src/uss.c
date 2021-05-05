@@ -23,9 +23,12 @@
 #include <stm32f4xx_hal.h>
 #include "dwt_stm32_delay.h"
 
-/////////////////////////////////////////////////////////////////////
-uint32_t USS_read_distance(void)
-{
+/**
+ * @brief Reads the measured distance from the ultrasonic sensor.
+ * 
+ * @return uint32_t - the measured distance, in meters.
+ */
+uint32_t USS_read_distance(void) {
 	__IO uint8_t flag = 0;
 	__IO uint32_t disTime = 0;
 	
@@ -33,8 +36,8 @@ uint32_t USS_read_distance(void)
 	DWT_Delay_us(10);
 	HAL_GPIO_WritePin(GPIOD, GPIO_PIN_10, GPIO_PIN_RESET);
 	
-	while(flag == 0){
-		while(HAL_GPIO_ReadPin(GPIOD,GPIO_PIN_11) == GPIO_PIN_SET){
+	while(flag == 0) {
+		while(HAL_GPIO_ReadPin(GPIOD, GPIO_PIN_11) == GPIO_PIN_SET) {
 			disTime++;
 			flag = 1;
 		}

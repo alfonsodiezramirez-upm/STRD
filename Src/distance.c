@@ -23,52 +23,83 @@
 #include <FreeRTOSConfig.h>
 #include <task.h>
 
-static SemaphoreHandle_t INSTANCE_sem = NULL;
+// Private variable for locking distance instance
+static Lock_t INSTANCE_sem = NULL;
+// Private variable that stores the distance itself.
 static volatile float DISTANCE_distance = 0;
+// Private variable that stores the brake intensity itself.
 static volatile int BRAKE_intensity = 0;
 
+/**
+ * @brief Initializes the distance protected object alongside
+ *        the brake intensity one (both share the same lock).
+ * 
+ *        This method must be called during the early boot as,
+ *        until then, any call to any method will fail and block
+ *        forever.
+ */
 void DISTANCE_init(void) {
     INSTANCE_sem = LOCK_create(NULL);
 }
 
+/**
+ * @brief Safely updates the stored distance value.
+ * 
+ * @param distance the new distance.
+ */
 void DISTANCE_set(float distance) {
-    configASSERT(INSTANCE_sem != NULL);
-    if (xSemaphoreTake(INSTANCE_sem, portMAX_DELAY) == pdTRUE) {
-        DISTANCE_distance = distance;
-        xSemaphoreGive(INSTANCE_sem);
-    }
+    LOCK_acquire(INSTANCE_sem);
+    DISTANCE_distance = distance;
+    LOCK_release(INSTANCE_sem);
 }
 
+/**
+ * @brief Safely obtains the stored distance value.
+ * 
+ * @return float - the stored distance.
+ */
 float DISTANCE_get(void) {
     float distance = -1;
-    configASSERT(INSTANCE_sem != NULL);
-    if (xSemaphoreTake(INSTANCE_sem, portMAX_DELAY) == pdTRUE) {
-        distance = DISTANCE_distance;
-        xSemaphoreGive(INSTANCE_sem);
-    }
+    LOCK_acquire(INSTANCE_sem);
+    distance = DISTANCE_distance;
+    LOCK_release(INSTANCE_sem);
     return distance;
 }
 
+/**
+ * @brief Deletes all stored objects and resets the
+ *        distance value. After this method call,
+ *        all subsequent calls will fail until
+ *        #DISTANCE_init is called again.
+ * 
+ */
 void DISTANCE_delete(void) {
     LOCK_destroy(INSTANCE_sem);
     INSTANCE_sem = NULL;
     DISTANCE_distance = 0;
+    BRAKE_intensity = 0;
 }
 
+/**
+ * @brief Safely updates the brake intensity value.
+ * 
+ * @param intensity the new intensity.
+ */
 void BRAKE_intensity_set(int intensity) {
-    configASSERT(INSTANCE_sem != NULL);
-    if (xSemaphoreTake(INSTANCE_sem, portMAX_DELAY) == pdTRUE) {
-        BRAKE_intensity = intensity;
-        xSemaphoreGive(INSTANCE_sem);
-    }
+    LOCK_acquire(INSTANCE_sem);
+    BRAKE_intensity = intensity;
+    LOCK_release(INSTANCE_sem);
 }
 
+/**
+ * @brief Safely obtains the stored brake intensity value.
+ * 
+ * @return int - the stored intensity value.
+ */
 int BRAKE_intensity_get(void) {
     int intensity = -1;
-    configASSERT(INSTANCE_sem != NULL);
-    if (xSemaphoreTake(INSTANCE_sem, portMAX_DELAY) == pdTRUE) {
-        intensity = BRAKE_intensity;
-        xSemaphoreGive(INSTANCE_sem);
-    }
+    LOCK_acquire(INSTANCE_sem);
+    intensity = BRAKE_intensity;
+    LOCK_release(INSTANCE_sem);
     return intensity;
 }

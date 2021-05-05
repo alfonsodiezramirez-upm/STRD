@@ -32,8 +32,11 @@
 \usepackage{subfigure} %%Pro­vides sup­port for the ma­nip­u­la­tion and ref­er­ence of small or ‘sub’ fig­ures and ta­bles within a sin­gle fig­ure or ta­ble en­vi­ron­ment.
 \usepackage[toc]{glossaries} %%The glos­saries pack­age sup­ports acronyms and mul­ti­ple glos­saries, and has pro­vi­sion for op­er­a­tion in sev­eral lan­guages (us­ing the fa­cil­i­ties of ei­ther ba­bel or poly­glos­sia).
 \usepackage[left,pagewise,modulo]{lineno} %%Adds line num­bers to se­lected para­graphs with ref­er­ence pos­si­ble through the LATEX \ref and \pageref cross ref­er­ence mech­a­nism
-% \usepackage[pdftex,colorlinks=false,hidelinks,pdfstartview=FitV,bookmarks=true]{hyperref}%%The hy­per­ref pack­age is used to han­dle cross-ref­er­enc­ing com­mands in LATEX to pro­duce hy­per­text links in the doc­u­ment. 
+\usepackage[xetex,colorlinks=false,hidelinks,pdfstartview=FitV,bookmarks=true]{hyperref}%%The hy­per­ref pack­age is used to han­dle cross-ref­er­enc­ing com­mands in LATEX to pro­duce hy­per­text links in the doc­u­ment. 
 \usepackage{metainfo}
+\usepackage[top=1in,bottom=1in,left=1in,right=1in]{geometry}
+% \usepackage[a4paper,left=2.5cm,right=2.5cm,top=\dimexpr15mm+1.5\baselineskip,bottom=2cm]{geometry}
+\usepackage{geometry}
 % \usepackage[pagestyles,raggedright]{titlesec}
 \usepackage{etoolbox}
 \usepackage{tabularx}
@@ -66,6 +69,7 @@
     titling,
     % libertineotf,
     libertine,
+    fancyhdr,
 }
 
 \newcommand{\bigO}[1]{%
@@ -186,7 +190,17 @@
 \author{Javier Alonso Silva\\Alfonso Díez Ramírez\\Sara Moreno Prieto\\Mihai Octavian St\u{a}nescu}
 \title{STRD -- Detección de distracciones al volante}
 \date{2021}
-\setlength{\droptitle}{-4cm}
+% \setlength{\droptitle}{-4cm}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhfoffset[L]{1cm} % left extra length
+\fancyhfoffset[R]{1cm} % right extra length
+\rhead{2021}
+\chead{\thetitle}
+\lhead{\slshape\nouppercase{\leftmark}}
+\cfoot{\thepage}
+\pagenumbering{roman}
+
 \begin{document}
 \settttsize{\footnotesize}
 \ActivateVerbatimLigatures
@@ -209,6 +223,30 @@
     \textit{nodo 1}, alertará al conductor sobre distintos factores que se han visto
     peligrosos para que pueda reconducir su comportamiento. Finalmente, se ofrece
     al conductor un método para evitar ser distraído por el propio sistema pudiendo
-    decidir entre tres niveles de aviso: completo, parcial e inactivo.
+    decidir entre tres niveles de avisos: completo, parcial e inactivo.
 \end{abstract}
+%
+\rule{\linewidth}{.2pt}
+\newpage
+\tableofcontents
+\newpage
+
+\pagenumbering{arabic}
+
+\section{Introducción}
+\subsection{Nodo 1}
+\subsection{Nodo 2}
+
+\section{Implementación}
+\subsection{Nodo 1}
+\subsection{Nodo 2}
+
+\section{Diseño final}
+\section{Aclaraciones}
+\section{Glosario}
+
+\appendix
+\section{Código fuente nodo 1}
+\section{Código fuente nodo 2}
+
 \end{document}

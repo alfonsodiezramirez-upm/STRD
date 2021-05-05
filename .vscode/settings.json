@@ -1,0 +1,41 @@
+{
+    "C_Cpp.default.intelliSenseMode": "gcc-arm",
+    "C_Cpp.default.includePath": [
+        "${workspaceFolder}/Inc/**",
+        "${workspaceFolder}/Inc/sync/**",
+        "${workspaceFolder}/Drivers/STM32F4xx_HAL_Driver/Inc/**",
+        "${workspaceFolder}/Drivers/CMSIS/Include/**",
+        "${workspaceFolder}/Drivers/CMSIS/Device/ST/STM32F4xx/**",
+        "${workspaceFolder}/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/**",
+        "${workspaceFolder}/Middlewares/Third_Party/FreeRTOS/Source/include/**",
+        "${workspaceFolder}/Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/**",
+        "${workspaceFolder}/Src/**",
+        "${workspaceFolder}/FreeRTOS/FreeRTOS/Source/**",
+        "${workspaceFolder}/Middlewares/Third_Party/FreeRTOS/Source/**"
+    ],
+    "files.associations": {
+        ".env": "dotenv",
+        "main.h": "c",
+        "stm32f4xx_hal.h": "c",
+        "stm32f4xx_hal_conf.h": "c",
+        "dwt_stm32_delay.h": "c",
+        "math.h": "c",
+        "stddef.h": "c",
+        "cstdlib": "c",
+        "*.tcc": "c",
+        "random": "c",
+        "core_cminstr.h": "c",
+        "cmsis_os.h": "c",
+        "speed.h": "c",
+        "freertosconfig.h": "c",
+        "can.h": "c",
+        "stm32f4xx_hal_can.h": "c",
+        "freertos.h": "c",
+        "event_groups.h": "c",
+        "utils.h": "c",
+        "array": "c",
+        "cstring": "c",
+        "variant": "c"
+    },
+    "cmake.configureOnOpen": false
+}

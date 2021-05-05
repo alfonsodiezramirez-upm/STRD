@@ -18,6 +18,9 @@
  */
 #ifndef BRAKE_H
 #define BRAKE_H
+
+// The BIT flag set used for identifying if the flag
+// is set or not.
 #define BIT_SET (0x02UL)
 
 void BRAKE_init(void);

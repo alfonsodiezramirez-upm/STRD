@@ -22,23 +22,50 @@
 #include <task.h>
 #include <event_groups.h>
 
+// Private variable storing the BRAKE flag
 static EventGroupHandle_t BRAKE_event = NULL;
 
-
+/**
+ * @brief Initializes BRAKE protected object. This method must be called
+ *        during the early boot of the application in order to be able
+ *        to use the object's methods.
+ * 
+ */
 void BRAKE_init(void) {
     BRAKE_event = xEventGroupCreate();
 }
 
+/**
+ * @brief Waits until the BRAKE event flag is set. Then, resets
+ *        the event itself so it can wait for it again.
+ */
 void BRAKE_wait_event(void) {
     configASSERT(BRAKE_event != NULL);
     xEventGroupWaitBits(BRAKE_event, BIT_SET, pdTRUE, pdFALSE, portMAX_DELAY);
 }
 
+/**
+ * @brief Updates the flag #BRAKE_event indicating that the
+ *        brake intensity has changed so the brake task must run.
+ * 
+ *        Notice that this method is not intended to be called from
+ *        an ISR.
+ * 
+ */
 void BRAKE_set_event(void) {
     configASSERT(BRAKE_event != NULL);
     xEventGroupSetBits(BRAKE_event, BIT_SET);
 }
 
+/**
+ * @brief Clears the BRAKE protected object, making all
+ *        further calls to protected object's methods
+ *        fail and block forever.
+ * 
+ *        A successful call to #BRAKE_init will allow
+ *        new tasks to access these methods.
+ * 
+ */
 void BRAKE_clr(void) {
     xEventGroupClearBits(BRAKE_event, BIT_SET);
     vEventGroupDelete(BRAKE_event);

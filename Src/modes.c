@@ -1,5 +1,5 @@
 /*
- * Copyright © 2021 - present | symptomps.h by Javinator9889
+ * Copyright ï¿½ 2021 - present | symptomps.h by Javinator9889
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,31 +18,29 @@
  */
 #include "modes.h"
 #include <lock.h>
-#include <semphr.h>
 #include <FreeRTOS.h>
 #include <FreeRTOSConfig.h>
-#include <task.h>
-#include <stdbool.h>
 
 
-static SemaphoreHandle_t MODE_sem = NULL;
+static Lock_t MODE_sem = NULL;
 static int MODE_mode = 0;
 
 void MODE_init(void) {
-    SemaphoreHandle_t xSemaphore = xSemaphoreCreateMutex();
-    configASSERT(xSemaphore != NULL);
-    configASSERT(xSemaphoreGive(xSemaphore) != pdTRUE);
-    MODE_sem = xSemaphore;
+    MODE_sem = LOCK_create(NULL);
 }
 
 void MODE_set(int mode) {
-    configASSERT(MODE_sem != NULL);
-    if (xSemaphoreTake(MODE_sem, portMAX_DELAY) == pdTRUE) {
+    if (LOCK_acquire(MODE_sem) == pdTRUE) {
         MODE_mode = mode;
-        xSemaphoreGive(MODE_sem);
+        LOCK_release(MODE_sem);
     }
 }
 
 int MODE_get(void) {
-    return MODE_mode;
+    int mode = -1;
+    if (LOCK_acquire(MODE_sem) == pdTRUE) {
+        mode = MODE_mode;
+        LOCK_release(MODE_sem);
+    }
+    return mode;
 }

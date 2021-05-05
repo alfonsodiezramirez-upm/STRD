@@ -233,6 +233,7 @@ void risks_task(const void *args) {
   int wheel_position;
   bool is_distance_ok;
   int risk_count = 0;
+  int working_mode = 0;
   while (true) {
     x = GIROSCOPE_get_X();
     y = GIROSCOPE_get_Y();
@@ -240,32 +241,43 @@ void risks_task(const void *args) {
     speed = SPEED_get();
     wheel_position = WHEEL_get();
     is_distance_ok = DISTANCE_get_security();
+    working_mode = MODE_get();
 
-    if (abs(x) >= 20 && abs(y) >= 20 && !wheel_is_grabbed) {
-      // Pitido lvl. 1
-      // Luz amarilla
-      risk_count++;
-    } else if ((abs(x) >= 20 || abs(y) >= 20) && wheel_is_grabbed && speed >= 70) {
-      // Luz amarilla
-      risk_count++;
-    } else if (abs(x) >= 30 && abs(wheel_position) >= 30) {
-      // Luz amarilla
-      // Pitido lvl. 2
-      risk_count++;
-    } else {
-      // Luz amarilla OFF
-      // Pitido off
-    }
-
-    if (risk_count >= 2) {
-      // Luz roja
-      // Pitido lvl. 2
-      if (!is_distance_ok) {
-        // Freno ON
+    if (working_mode < 2) {
+      if (abs(x) >= 20 && abs(y) >= 20 && !wheel_is_grabbed) {
+        if (working_mode == 0) {
+        // Pitido lvl. 1
+        // Luz amarilla
+        }
+        risk_count++;
+      } else if ((abs(x) >= 20 || abs(y) >= 20) && wheel_is_grabbed && speed >= 70) {
+        if (working_mode == 0) {
+        // Luz amarilla
+        }
+        risk_count++;
+      } else if (abs(x) >= 30 && abs(wheel_position) >= 30) {
+        if (working_mode == 0) {
+        // Luz amarilla
+        // Pitido lvl. 2
+        }
+        risk_count++;
+      } else {
+        // Luz amarilla OFF
+        // Pitido off
       }
-    } else {
-      // Luz roja off
-      // Freno OFF
+
+      if (risk_count >= 2) {
+        if (working_mode >= 0) {
+        // Luz roja
+        // Pitido lvl. 2
+        }
+        if (!is_distance_ok) {
+          // Freno ON
+        }
+      } else {
+        // Luz roja off
+        // Freno OFF
+      }
     }
     risk_count = 0;
     

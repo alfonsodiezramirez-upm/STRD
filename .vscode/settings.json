@@ -36,7 +36,9 @@
         "cmath": "c",
         "bit": "c",
         "node1.h": "c",
-        "freertos.h": "c"
+        "freertos.h": "c",
+        "projdefs.h": "c",
+        "task.h": "c"
     },
     "cmake.configureOnOpen": false
 }

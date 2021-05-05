@@ -24,21 +24,43 @@
 #include <task.h>
 #include <stdbool.h>
 
+// Private variable storing the SYMPTOMS1 lock.
 static Lock_t SYMPTOMS1_sem = NULL;
+
+// Private variable storing the SYMPTOMS1 lock.
 static Lock_t SYMPTOMS2_sem = NULL;
 
+// Private variable storing giroscope X value.
 static float GIROSCOPE_x = .0F;
+// Private variable storing giroscope Y value.
 static float GIROSCOPE_y = .0F;
+// Private variable storing giroscope Z value.
 static float GIROSCOPE_z = .0F;
 
+// Private variable storing the steering wheel position.
 static int WHEEL_position = 0;
+// Private variable storing whether the steering wheel is
+// grabbed or not
 static bool WHEEL_status_grab = false;
 
+/**
+ * @brief Initializes the protected object containing the symptoms.
+ *        This method must be called during the early boot of the
+ *        code so the rest of the methods available will work
+ *        as expected.
+ */
 void SYMPTOMS_init(void) {
     SYMPTOMS1_sem = LOCK_create(NULL);
     SYMPTOMS2_sem = LOCK_create(NULL);
 }
 
+/**
+ * @brief Safely updates the stored values of the giroscope positions.
+ * 
+ * @param x the new X position.
+ * @param y the new Y position.
+ * @param z the new Z position.
+ */
 void GIROSCOPE_set(float x, float y, float z) {
     LOCK_acquire(SYMPTOMS1_sem);
     GIROSCOPE_x = x;
@@ -47,6 +69,11 @@ void GIROSCOPE_set(float x, float y, float z) {
     LOCK_release(SYMPTOMS1_sem);
 }
 
+/**
+ * @brief Safely obtains the X value of the giroscope.
+ * 
+ * @return float - the X value.
+ */
 float GIROSCOPE_get_X(void) {
     float x = -1;
     LOCK_acquire(SYMPTOMS1_sem);
@@ -55,6 +82,11 @@ float GIROSCOPE_get_X(void) {
     return x;
 }
 
+/**
+ * @brief Safely obtains the Y value of the giroscope.
+ * 
+ * @return float - the Y value.
+ */
 float GIROSCOPE_get_Y(void) {
     float y = -1;
     LOCK_acquire(SYMPTOMS1_sem);
@@ -63,6 +95,11 @@ float GIROSCOPE_get_Y(void) {
     return y;
 }
 
+/**
+ * @brief Safely obtains the Z value of the giroscope.
+ * 
+ * @return float - the Z value.
+ */
 float GIROSCOPE_get_Z(void) {
     float z = -1;
     LOCK_acquire(SYMPTOMS1_sem);
@@ -71,12 +108,22 @@ float GIROSCOPE_get_Z(void) {
     return z;
 }
 
+/**
+ * @brief Safely sets the steering wheel position, in angles.
+ * 
+ * @param position the new wheel position.
+ */
 void WHEEL_set(int position) {
     LOCK_acquire(SYMPTOMS1_sem);
     WHEEL_position = position;
     LOCK_release(SYMPTOMS1_sem);
 }
 
+/**
+ * @brief Safely obtains the steering wheel position, in angles.
+ * 
+ * @return int - the steering wheel position.
+ */
 int WHEEL_get(void) {
     int position = -1;
     LOCK_acquire(SYMPTOMS1_sem);
@@ -85,12 +132,23 @@ int WHEEL_get(void) {
     return position;
 }
 
+/**
+ * @brief Safely sets whether if the steering wheel is grabbed or not.
+ * 
+ * @param is_grabbed true if grabbed/false otherwise.
+ */
 void WHEEL_grab(bool is_grabbed) {
     LOCK_acquire(SYMPTOMS2_sem);
     WHEEL_status_grab = is_grabbed;
     LOCK_release(SYMPTOMS2_sem);
 }
 
+/**
+ * @brief Safely obtains whether the steering wheel is grabbed or not.
+ * 
+ * @return true - if the wheel is grabbed.
+ * @return false - if the wheel is not grabbed.
+ */
 bool WHEEL_is_grabbed(void) {
     bool is_grabbed = false;
     LOCK_acquire(SYMPTOMS2_sem);
@@ -99,6 +157,12 @@ bool WHEEL_is_grabbed(void) {
     return is_grabbed;
 }
 
+/**
+ * @brief Destroys the symptoms protected object, freeing all the
+ *        used memory. After this method is called, the SYMPTOMS
+ *        object is not usable anymore until #SYMPTOMS_init is called
+ *        again.
+ */
 void SYMPTOMS_delete(void) {
     LOCK_destroy(SYMPTOMS1_sem);
     LOCK_destroy(SYMPTOMS2_sem);

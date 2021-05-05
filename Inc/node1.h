@@ -20,6 +20,8 @@
 #define NODE1_H
 #include <stdbool.h>
 
+// The BIT flag set used for identifying if the flag
+// is set or not.
 #define BIT_SET (0x02UL)
 
 void NODE1_init(void);

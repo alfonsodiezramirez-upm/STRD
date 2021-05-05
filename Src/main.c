@@ -117,11 +117,9 @@ void deteccionPulsador(const void *argument)
 {
   uint32_t wake_time = osKernelSysTick();
   MODE_init();
-  for (;;)
-  {
-    if (xSemaphoreTake(interrupcion, LONG_TIME) == pdTRUE) {
-      modo++;
-      modo %= 3;
+  while(true) {
+    if (xSemaphoreTake(interrupcion, portMAX_DELAY) == pdTRUE) {
+      modo = ++modo % 3;
       MODE_set(modo);
     }
   }
@@ -679,8 +677,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
   UNUSED(GPIO_Pin);
   portYIELD_FROM_ISR(yield);
 
-  if (GPIO_Pin == GPIO_PIN_3)
-  {
+  if (GPIO_Pin == GPIO_PIN_3) {
     xSemaphoreGiveFromISR(interrupcion, &yield);
   }
 }

@@ -21,14 +21,26 @@
 #include <FreeRTOS.h>
 #include <FreeRTOSConfig.h>
 
-
+// Private variable storing protected object lock.
 static Lock_t MODE_sem = NULL;
+
+// Private variable storing the mode itself.
 static int MODE_mode = 0;
 
+/**
+ * @brief Initializes the protected object itself. This method
+ *        must be called during code initialization so the other
+ *        methods calls would work.
+ */
 void MODE_init(void) {
     MODE_sem = LOCK_create(NULL);
 }
 
+/**
+ * @brief Updates the stored mode safely using the #MODE_sem lock.
+ * 
+ * @param mode the new mode to store.
+ */
 void MODE_set(int mode) {
     if (LOCK_acquire(MODE_sem) == pdTRUE) {
         MODE_mode = mode;
@@ -36,6 +48,11 @@ void MODE_set(int mode) {
     }
 }
 
+/**
+ * @brief Obtains safely the stored mode, using the #MODE_sem lock.
+ * 
+ * @return int - the stored mode. If any error occurs, returns -1.
+ */
 int MODE_get(void) {
     int mode = -1;
     if (LOCK_acquire(MODE_sem) == pdTRUE) {

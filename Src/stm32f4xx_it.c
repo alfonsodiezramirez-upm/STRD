@@ -209,13 +209,8 @@ void EXTI3_IRQHandler(void)
   */
 void CAN1_RX0_IRQHandler(void)
 {
-  /* USER CODE BEGIN CAN1_RX0_IRQn 0 */
-
-  /* USER CODE END CAN1_RX0_IRQn 0 */
+  // Handle the CANBus interruption routine
   CAN_Handle_IRQ();
-  /* USER CODE BEGIN CAN1_RX0_IRQn 1 */
-
-  /* USER CODE END CAN1_RX0_IRQn 1 */
 }
 
 /**

@@ -38,7 +38,8 @@
         "node1.h": "c",
         "freertos.h": "c",
         "projdefs.h": "c",
-        "task.h": "c"
+        "task.h": "c",
+        "utils.h": "c"
     },
     "cmake.configureOnOpen": false
 }

@@ -93,7 +93,6 @@ static void MX_SPI1_Init(void);
 #define LONG_TIME 0xffff
 #define TICKS_TO_WAIT 10
 
-/* Variables para calcular la inclinaci�n en funcion de los valores leidos en los tres ejes del acelerometro */
 int Ix, Iy, Iz;
 uint8_t Ix1, Ix2;
 uint8_t Iy1, Iy2;
@@ -102,6 +101,7 @@ double X, Y, Z;
 double rotX, rotY;
 int modo = 0;
 int recepcion = 0;
+
 /*funcion para las lecturas de los registros del acelerometro */
 uint8_t spiTxBuf[2], spiRxBuf[2];
 uint8_t SPI_Read(uint8_t address);
@@ -168,7 +168,6 @@ void volanteAgarrado(const void *argument) {
  */
 void Tarea_Control_Inclinacion(void const *argument) {
   uint32_t wake_time = osKernelSysTick();
-  /* Calculo de la trotaci�n en el eje X e Y, dentro de la tarea que controla la inclinaci�n de la cabeza */
   while (true) {
     Ix1 = SPI_Read(0x28);
     Ix2 = SPI_Read(0x29);

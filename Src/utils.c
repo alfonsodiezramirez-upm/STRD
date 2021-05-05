@@ -43,7 +43,7 @@ int map(int x, int in_min, int in_max, int out_min, int out_max) {
  * @param value the input float to convert.
  * @param bytes the output bytes array (4) to produce.
  */
-void f2b(float value, uint8_t* bytes[4]) {
+void f2b(float value, uint8_t bytes[4]) {
     FloatU_t u;
     
     u.float_var = value;
@@ -61,7 +61,7 @@ void f2b(float value, uint8_t* bytes[4]) {
  * @param bytes the input bytes array (4) to read.
  * @return float - the converted float data from bytes.
  */
-float b2f(uint8_t* bytes[4]) {
+float b2f(uint8_t bytes[4]) {
     FloatU_t u;
     memcpy(u.bytes_repr, bytes, 4);
     

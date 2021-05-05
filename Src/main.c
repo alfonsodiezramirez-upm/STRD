@@ -49,7 +49,6 @@
 /* USER CODE END Header */
 
 /* Includes ------------------------------------------------------------------*/
-
 #include "main.h"
 #include "cmsis_os.h"
 #include <stdbool.h>
@@ -63,6 +62,7 @@
 #include "lock.h"
 #include "can.h"
 #include "node1.h"
+#include "utils.h"
 
 /* Private variables ---------------------------------------------------------*/
 ADC_HandleTypeDef hadc1;
@@ -75,7 +75,6 @@ void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_ADC1_Init(void);
 static void MX_SPI1_Init(void);
-//static void MX_CAN1_Init(void);
 
 /*Prioridades de las Tareas Periodicas*/
 #define PR_RIESGOS        5
@@ -107,16 +106,14 @@ int recepcion = 0;
 uint8_t spiTxBuf[2], spiRxBuf[2];
 uint8_t SPI_Read(uint8_t address);
 
-//funci�n auxiliar de estandarizaci�n de valores:
-int map(int x, int in_min, int in_max, int out_min, int out_max)
-{
-  return (int)((x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min);
-}
-
-void deteccionPulsador(const void *argument)
-{
+/**
+ * @brief Tarea esporádica que espera la detección del pulsador para
+ *        el cambio de modo.
+ * 
+ * @param argument lista de posibles argumentos a usar. Vacía por defecto.
+ */
+void deteccionPulsador(const void *argument) {
   uint32_t wake_time = osKernelSysTick();
-  MODE_init();
   while(true) {
     if (xSemaphoreTake(interrupcion, portMAX_DELAY) == pdTRUE) {
       modo = ++modo % 3;
@@ -125,70 +122,50 @@ void deteccionPulsador(const void *argument)
   }
 }
 
+/**
+ * @brief Tarea periódica (400 ms) que actualiza la posición
+ *        del volante.
+ * 
+ * @param argument lista de posibles argumentos a usar. Vacía por defecto.
+ */
 void giroVolante(const void *argument) {
-  /* Infinite loop */
   int actual;
   uint32_t wake_time = osKernelSysTick();
   while (true) {
-    /* Lectura del canal ADC0 */
-    ADC_ChannelConfTypeDef sConfig = {
-        0};
-    sConfig.Channel = ADC_CHANNEL_0; // seleccionamos el canal 0
+    ADC_ChannelConfTypeDef sConfig = {0};
+    sConfig.Channel = ADC_CHANNEL_0;
     sConfig.Rank = 1;
     sConfig.SamplingTime = ADC_SAMPLETIME_28CYCLES;
     HAL_ADC_ConfigChannel(&hadc1, &sConfig);
-    HAL_ADC_Start(&hadc1); // comenzamos la convers�n AD
-    if (HAL_ADC_PollForConversion(&hadc1, 5) == HAL_OK)
-    {
-      actual = map(HAL_ADC_GetValue(&hadc1), 0, 255, 0, 200); // leemos el valor
+    HAL_ADC_Start(&hadc1);
+    if (HAL_ADC_PollForConversion(&hadc1, 5) == HAL_OK) {
+      actual = map(HAL_ADC_GetValue(&hadc1), 0, 255, 0, 200);
       WHEEL_set(actual);
     }
     osDelayUntil(&wake_time, T_TAREAGIRO);
   }
 }
 
-
+/**
+ * @brief Tarea periódica (500 ms) que actualiza si el volante está agarrado o no
+ * 
+ * @param argument lista de posibles argumentos a usar. Vacía por defecto.
+ */
 void volanteAgarrado(const void *argument) {
-  /* Infinite loop */
   int actual;
   uint32_t wake_time = osKernelSysTick();
   while (true) {
-    /* Lectura del canal ADC0 */
     actual = HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_8);
     WHEEL_grab(actual);
     osDelayUntil(&wake_time, T_TAREAAGARRADO);
   }
 }
 
-
-void cabeza(const void *argument) {
-  /* Infinite loop */
-  int x;
-  int y;
-  uint32_t wake_time = osKernelSysTick();
-  while (true) {
-    recepcion = CAN_recv();
-    /* Lectura del canal ADC1 */
-    ADC_ChannelConfTypeDef sConfig = {0};
-    sConfig.Channel = ADC_CHANNEL_1; // seleccionamos el canal 1
-    sConfig.Rank = 1;
-    sConfig.SamplingTime = ADC_SAMPLETIME_28CYCLES;
-    HAL_ADC_ConfigChannel(&hadc1, &sConfig);
-    HAL_ADC_Start(&hadc1);        // comenzamos la convers�n AD
-    x = HAL_ADC_GetValue(&hadc1); // leemos el valor
-    DWT_Delay_us(10);
-    sConfig.Channel = ADC_CHANNEL_2; // seleccionamos el canal 2
-    sConfig.Rank = 1;
-    sConfig.SamplingTime = ADC_SAMPLETIME_28CYCLES;
-    HAL_ADC_ConfigChannel(&hadc1, &sConfig);
-    HAL_ADC_Start(&hadc1);        // comenzamos la convers�n AD
-    y = HAL_ADC_GetValue(&hadc1); // leemos el valor
-    GIROSCOPE_set(x, y, 0);
-
-    osDelayUntil(&wake_time, T_CABEZA);
-  }
-}
-
+/**
+ * @brief Tarea periódica (600 ms) que actualiza la posición de la cabeza.
+ * 
+ * @param argument lista de posibles argumentos a usar. Vacía por defecto.
+ */
 void Tarea_Control_Inclinacion(void const *argument) {
   uint32_t wake_time = osKernelSysTick();
   /* Calculo de la trotaci�n en el eje X e Y, dentro de la tarea que controla la inclinaci�n de la cabeza */
@@ -222,6 +199,15 @@ void Tarea_Control_Inclinacion(void const *argument) {
   }
 }
 
+/**
+ * @brief Tarea de riesgos periódica (300 ms) que actúa directamente
+ *        sobre los distintos sensores y actuadores para aletar al
+ *        conductor de ciertos peligros o problemas. Lee de todos los
+ *        objetos protegidos pero no actualiza datos, solo muestra
+ *        información.
+ * 
+ * @param args lista de posibles argumentos a usar. Vacía por defecto.
+ */
 void risks_task(const void *args) {
   const uint32_t T_RISKS_TASK = 300U;
   uint32_t wake_time = osKernelSysTick();
@@ -289,6 +275,17 @@ void risks_task(const void *args) {
   }
 }
 
+/**
+ * @brief Tarea esporádica encargada únicamente de actualizar el valor
+ *        contenido de la velocidad cuando llega un mensaje por el
+ *        CANBus que contiene una cabecera #STD_ID1.
+ * 
+ *        El tratamiento se realiza en una tarea esporádica para evitar
+ *        bloquear en demasía la rutina de tratamiento de interrupción
+ *        del CANBus.
+ * 
+ * @param args lista de posibles argumentos a usar. Vacía por defecto.
+ */
 void CAN_speed_task(const void *args) {
   while (true) {
     SPEED_wait_recv();
@@ -296,6 +293,17 @@ void CAN_speed_task(const void *args) {
   }
 }
 
+/**
+ * @brief Tarea esporádica encargada únicamente de actualizar el valor
+ *        contenido de la distancia cuando llega un mensaje por el
+ *        CANBus que contiene una cabecera #STD_ID2.
+ * 
+ *        El tratamiento se realiza en una tarea esporádica para evitar
+ *        bloquear en demasía la rutina de tratamiento de interrupción
+ *        del CANBus. 
+ * 
+ * @param args lista de posibles argumentos a usar. Vacía por defecto.
+ */
 void CAN_distance_task(const void *args) {
   while (true) {
     DISTANCE_wait_recv();
@@ -348,14 +356,12 @@ void Inicializa_Acelerometro()
  * @brief  The application entry point.
  * @retval int
  */
-int main(void)
-{
+int main(void) {
 
   /* MCU Configuration--------------------------------------------------------*/
 
   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
   HAL_Init();
-  SYMPTOMS_init();
   /* Configure the system clock */
   SystemClock_Config();
 
@@ -363,31 +369,38 @@ int main(void)
   MX_GPIO_Init();
   MX_ADC1_Init();
   MX_SPI1_Init();
+  MODE_init();
   CAN_init();
   NODE1_init();
+  SYMPTOMS_init();
   Inicializa_Acelerometro();
 
   interrupcion = xSemaphoreCreateBinary();
 
-  xTaskCreate((TaskFunction_t)giroVolante,
+  xTaskCreate((TaskFunction_t) giroVolante,
               "lectura potenciometro Giro Volante",
               configMINIMAL_STACK_SIZE, 
               NULL, PR_TAREAGIRO, NULL);
 
-  xTaskCreate((TaskFunction_t)volanteAgarrado,
+  xTaskCreate((TaskFunction_t) volanteAgarrado,
               "lectura sensor agarrado",
               configMINIMAL_STACK_SIZE, 
               NULL, PR_TAREAAGARRADO, NULL);
 
-  xTaskCreate((TaskFunction_t)Tarea_Control_Inclinacion,
-              "lectura sensor agarrado",
+  xTaskCreate((TaskFunction_t) Tarea_Control_Inclinacion,
+              "lectura giroscopio",
               configMINIMAL_STACK_SIZE, 
               NULL, PR_CABEZA, NULL);
 
-  xTaskCreate((TaskFunction_t)deteccionPulsador,
+  xTaskCreate((TaskFunction_t) deteccionPulsador,
               "Tarea esporadica",
               configMINIMAL_STACK_SIZE,
               NULL, 0, NULL);
+
+  xTaskCreate((TaskFunction_t) risks_task,
+              "Risks task",
+              configMINIMAL_STACK_SIZE, 
+              NULL, PR_RIESGOS, NULL);
 
   xTaskCreate((TaskFunction_t) CAN_speed_task,
               "CANBus speed recv task", 

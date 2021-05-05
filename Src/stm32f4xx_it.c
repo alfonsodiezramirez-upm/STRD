@@ -212,6 +212,7 @@ void CAN1_RX0_IRQHandler(void)
   /* USER CODE BEGIN CAN1_RX0_IRQn 0 */
 
   /* USER CODE END CAN1_RX0_IRQn 0 */
+  // Handle the interruption using can.h object
   CAN_Handle_IRQ();
   /* USER CODE BEGIN CAN1_RX0_IRQn 1 */
 

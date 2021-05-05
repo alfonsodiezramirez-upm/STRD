@@ -76,7 +76,7 @@ static void MX_CAN1_Init(void) {
  */
 void CAN_init(void) {
     MX_CAN1_Init();
-    #ifndef NODE_2
+#ifndef NODE_2
     // Message size of 1 byte
     tx_header.DLC = 1U;
     // Identifier to standard
@@ -94,7 +94,7 @@ void CAN_init(void) {
     tx_header2.RTR = CAN_RTR_DATA;
     // Standard identifier
     tx_header2.StdId = STD_ID2;
-    #endif
+#endif
 
     // Filter one (stack light blink)
     filter_config.FilterFIFOAssignment = CAN_FILTER_FIFO0;
@@ -102,12 +102,12 @@ void CAN_init(void) {
     filter_config.FilterIdHigh = HFILTER_ID;
     filter_config.FilterIdLow = 0U;
 
-    #ifndef NODE_2
+#ifndef NODE_2
     filter_config.FilterMaskIdHigh = 0U;
-    #else
+#else
     filter_config.FilterMaskIdHigh = HFILTER_MASK;
     filter_config.FilterMode = CAN_FILTERMODE_IDMASK;
-    #endif
+#endif
     filter_config.FilterMaskIdLow = 0U;
 
     filter_config.FilterScale = CAN_FILTERSCALE_32BIT;
@@ -128,10 +128,10 @@ void CAN_init(void) {
  * @param b the byte to send.
  */
 void CAN_sendi(uint8_t b) {
-    #ifndef NODE_2
+#ifndef NODE_2
     byte_sent = b;
     HAL_CAN_AddTxMessage(&hcan1, &tx_header, &byte_sent, &tx_mailbox);
-    #endif
+#endif
 }
 
 /**
@@ -144,11 +144,11 @@ void CAN_sendi(uint8_t b) {
  * @see   f2b(float, uint8_t*)
  */
 void CAN_sendf(float value) {
-    #ifndef NODE_2
+#ifndef NODE_2
     uint8_t bytes[4];
     f2b(value, bytes);
     HAL_CAN_AddTxMessage(&hcan1, &tx_header2, &bytes[0], &tx_mailbox);
-    #endif
+#endif
 }
 
 /**
@@ -198,7 +198,7 @@ float CAN_recvf(void) {
  */
 void CAN_Handle_IRQ(void) {
     HAL_CAN_IRQHandler(&hcan1);
-    #ifdef NODE_2
+#ifdef NODE_2
     uint8_t bytes[4];
     HAL_CAN_GetRxMessage(&hcan1, CAN_RX_FIFO0, &rx_header, &bytes);
     if (rx_header.StdId == STD_ID1) {
@@ -209,5 +209,5 @@ void CAN_Handle_IRQ(void) {
         float_recv = b2f(&bytes[0]);
         DISTANCE_set_recv();
     }
-    #endif
+#endif
 }

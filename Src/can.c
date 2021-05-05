@@ -49,9 +49,7 @@ static volatile float float_recv = .0F;
 static volatile CAN_FilterTypeDef filter_config;
 
 /**
-  * @brief CAN1 Initialization Function
-  * @param None
-  * @retval None
+  * @brief CAN1 Initialization Function - extracted from main.
   */
 static void MX_CAN1_Init(void) {
     hcan1.Instance = CAN1;
@@ -70,6 +68,12 @@ static void MX_CAN1_Init(void) {
     configASSERT(HAL_CAN_Init(&hcan1) == HAL_OK);
 }
 
+/**
+ * @brief Initializes CANBus communications. This function
+ * must be called early during initialization at main() as
+ * the CAN functions won't work (and will block forever)
+ * if called.
+ */
 void CAN_init(void) {
     MX_CAN1_Init();
     #ifndef NODE_2
@@ -115,6 +119,14 @@ void CAN_init(void) {
     HAL_CAN_ActivateNotification(&hcan1, CAN_IT_RX_FIFO0_MSG_PENDING);
 }
 
+/**
+ * @brief Sends a byte through the CANBus using the #STD_ID1
+ *        message identifier.
+ * 
+ *        Note: this method will do nothing if NODE_2 is defined.
+ * 
+ * @param b the byte to send.
+ */
 void CAN_sendi(uint8_t b) {
     #ifndef NODE_2
     byte_sent = b;
@@ -122,6 +134,15 @@ void CAN_sendi(uint8_t b) {
     #endif
 }
 
+/**
+ * @brief Sends a float through the CANBus using the #STD_ID2
+ *        message identifier.
+ * 
+ *        Note: this method will do nothing if NODE_2 is defined.
+ * 
+ * @param value the float value to send.
+ * @see   f2b(float, uint8_t*)
+ */
 void CAN_sendf(float value) {
     #ifndef NODE_2
     uint8_t bytes[4];
@@ -130,14 +151,51 @@ void CAN_sendf(float value) {
     #endif
 }
 
+/**
+ * @brief When a message arrives, the received byte (if any) is stored in
+ *        a private variable. Use this method to recover its value.
+ * 
+ *        Notice that this value will only be updated when the received
+ *        message ID matches the #STD_ID1.
+ * 
+ * @return uint8_t the stored byte.
+ */
 uint8_t CAN_recv(void) {
     return byte_recv;
 }
 
+/**
+ * @brief When a message arrives, the received float (if any) is stored in
+ *        a private variable. Use this method to recover its value.
+ * 
+ *        Notice that this value will only be updated when the received
+ *        message ID matches the #STD_ID2.
+ * 
+ * @return float - the stored float.
+ */
 float CAN_recvf(void) {
     return float_recv;
 }
 
+/**
+ * @brief This method must be called if the board wants to receive
+ *        CANBus messages during the CANBus interruption routine.
+ * 
+ *        By filtering the ID, identifies whether the received array
+ *        is either a single byte or a float value.
+ * 
+ *        In addition, this method sets a flag at the respective
+ *        protected objects indicating that a new message is received
+ *        and is ready to be used (notice that this method is called
+ *        from an IRQ, so the processing must be as efficient as
+ *        possible. In this function, setting a flag is easy and
+ *        not blocking - at least not as much as changing a lock/semaphore).
+ * 
+ *        The affected protected objects are the ones that store the
+ *        SPEED and the DISTANCE.
+ * 
+ * @see node1.h
+ */
 void CAN_Handle_IRQ(void) {
     HAL_CAN_IRQHandler(&hcan1);
     #ifdef NODE_2

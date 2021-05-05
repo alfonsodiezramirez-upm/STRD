@@ -23,9 +23,12 @@
 #include <stddef.h>
 #include <semphr.h>
 
-SemaphoreHandle_t LOCK_create(StaticSemaphore_t*);
-void LOCK_destroy(SemaphoreHandle_t);
-long LOCK_acquire(SemaphoreHandle_t);
-void LOCK_release(SemaphoreHandle_t);
+// Custom data type used for identifying LOCK created locks.
+typedef SemaphoreHandle_t Lock_t;
+
+Lock_t LOCK_create(StaticSemaphore_t*);
+void LOCK_destroy(Lock_t);
+long LOCK_acquire(Lock_t);
+void LOCK_release(Lock_t);
 
 #endif /* LOCK_H */

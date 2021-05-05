@@ -29,6 +29,18 @@
     size_t size = arrsize(array); \
     for (item = array; item < (array + size); ++item)
 
+/**
+ * @brief Custom datatype representing the union of
+ *        a float value and its representation as a
+ *        array of four bytes. Useful when converting
+ *        from float to bytes and viceversa.
+ */
+typedef union float_u {
+    float float_var;
+    uint8_t bytes_repr[4];
+} FloatU_t;
+
+
 int map(int, int, int, int);
 
 void f2b(float, uint8_t*);

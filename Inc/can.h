@@ -20,22 +20,35 @@
 #define CAN_H
 #include <FreeRTOSConfig.h>
 #include <stdint.h>
+#include <stm32f4xx_hal.h>
 #ifndef CAN1
 #define CAN1
 #endif
 
+// Standard TX/RX ID 1
 extern const uint32_t STD_ID1;
+
+// Standard TX/RX ID 2
 extern const uint32_t STD_ID2;
+
+// High filter ID
 extern const uint32_t HFILTER_ID;
 
 #ifdef NODE_2
+// High filter mask for node 2 only
 extern const uint32_t HFILTER_MASK;
 #endif
 
 void CAN_init(void);
+
 void CAN_sendi(uint8_t);
+
 void CAN_sendf(float);
+
 uint8_t CAN_recv(void);
+
+float CAN_recvf(void);
+
 void CAN_Handle_IRQ(void);
 
 #endif /* CAN_H */

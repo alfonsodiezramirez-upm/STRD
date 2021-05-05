@@ -246,38 +246,44 @@ void risks_task(const void *args) {
     if (working_mode < 2) {
       if (abs(x) >= 20 && abs(y) >= 20 && !wheel_is_grabbed) {
         if (working_mode == 0) {
-        // Pitido lvl. 1
-        // Luz amarilla
+          // Pitido lvl. 1
+          // Luz amarilla ON
+          HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8, GPIO_PIN_SET);
         }
         risk_count++;
       } else if ((abs(x) >= 20 || abs(y) >= 20) && wheel_is_grabbed && speed >= 70) {
         if (working_mode == 0) {
-        // Luz amarilla
+          // Luz amarilla ON
+          HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8, GPIO_PIN_SET);
         }
         risk_count++;
       } else if (abs(x) >= 30 && abs(wheel_position) >= 30) {
         if (working_mode == 0) {
-        // Luz amarilla
-        // Pitido lvl. 2
+          // Pitido lvl. 2
+          // Luz amarilla ON
+          HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8, GPIO_PIN_SET);
         }
         risk_count++;
       } else {
-        // Luz amarilla OFF
         // Pitido off
+        // Luz amarilla OFF
+        HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8, GPIO_PIN_RESET);
       }
 
       if (risk_count >= 2) {
-        if (working_mode >= 0) {
-        // Luz roja
-        // Pitido lvl. 2
-        }
-        if (!is_distance_ok) {
-          // Freno ON
+        if (working_mode >= 0 || !is_distance_ok) {
+          // Pitido lvl. 2
+          // Luz roja
+          HAL_GPIO_WritePin(GPIOA, GPIO_PIN_9, GPIO_PIN_SET);
         }
       } else {
         // Luz roja off
-        // Freno OFF
+        HAL_GPIO_WritePin(GPIOA, GPIO_PIN_9, GPIO_PIN_RESET);
       }
+    } else {
+      // Pitido OFF
+      HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8, GPIO_PIN_RESET);
+      HAL_GPIO_WritePin(GPIOA, GPIO_PIN_9, GPIO_PIN_RESET);
     }
     risk_count = 0;
     

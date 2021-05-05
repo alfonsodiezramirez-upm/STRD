@@ -87,20 +87,25 @@ static void MX_SPI1_Init(void);
 #define T_TAREALUCESCRUCE 1000
 #define T_DISTANCIA   300
 
-void acelerador(void const *argument) {
+/**
+ * @brief Tarea periódica (250 ms) que lee y actualiza el valor de la
+ *        velocidad del vehículo. Además, en cada iteración envía los
+ *        datos de la velocidad actualizados al nodo 2.
+ * 
+ * @param argument lista de posibles argumentos a usar. Vacía por defecto.
+ */
+void acelerador(const void *argument) {
   int speed;
   uint32_t wake_time = osKernelSysTick();
   while(true) {
-		CAN_sendi(1);
-    /* Lectura del canal ADC0 */
     ADC_ChannelConfTypeDef sConfig = {0};
-    sConfig.Channel = ADC_CHANNEL_0; // seleccionamos el canal 0
+    sConfig.Channel = ADC_CHANNEL_0;
     sConfig.Rank = 1;
     sConfig.SamplingTime = ADC_SAMPLETIME_28CYCLES;
     HAL_ADC_ConfigChannel(&hadc1, &sConfig);
-    HAL_ADC_Start(&hadc1); // comenzamos la conversión AD
+    HAL_ADC_Start(&hadc1);
     if (HAL_ADC_PollForConversion(&hadc1, 5) == HAL_OK) {
-      speed = map(HAL_ADC_GetValue(&hadc1), 0, 255, 0, 200); // leemos el valor
+      speed = map(HAL_ADC_GetValue(&hadc1), 0, 255, 0, 200);
       SPEED_set(speed);
       CAN_sendi(speed);
     }
@@ -108,6 +113,15 @@ void acelerador(void const *argument) {
   }
 }
 
+/**
+ * @brief Tarea periódica (300 ms) que lee y actualiza el valor de la
+ *        distancia con el vehículo precedente. Además, en cada iteración
+ *        se envía el valor de la distancia por el CANBus al nodo 2 y, además,
+ *        se computa el valor de la intensidad de frenada para activar (o no)
+ *        a la tarea esporádica #brake_task.
+ * 
+ * @param args lista de posibles argumentos a usar. Vacía por defecto.
+ */
 void distanceTask(const void *args) {
   const uint16_t T_DISTANCE_TASK = 300U;
   uint32_t wake_time = osKernelSysTick();
@@ -150,6 +164,14 @@ void distanceTask(const void *args) {
   }
 }
 
+/**
+ * @brief Tarea esporádica que es activada por #distanceTask cuando la intensidad
+ *        de la frenada cambia. Además, se limita la activación de la tarea a, como
+ *        mucho, 150 ms de periodo para evitar cambios bruscos en la intensidad
+ *        de la frenada y cómo afecta a la comodidad de los pasajeros.
+ * 
+ * @param args lista de posibles argumentos a usar. Vacía por defecto.
+ */
 void brake_task(const void *args) {
   int intensity;
   uint32_t wake_time = osKernelSysTick();
@@ -160,38 +182,37 @@ void brake_task(const void *args) {
 
     switch (intensity) {
     case 0:
-      HAL_GPIO_WritePin(GPIOD, GPIO_PIN_12, GPIO_PIN_RESET);//pin = GPIO_PIN_12;
-      HAL_GPIO_WritePin(GPIOD, GPIO_PIN_13, GPIO_PIN_RESET);//turn_off_pins[0] = GPIO_PIN_13;
-      HAL_GPIO_WritePin(GPIOD, GPIO_PIN_14, GPIO_PIN_RESET);//turn_off_pins[1] = GPIO_PIN_14;
-      HAL_GPIO_WritePin(GPIOD, GPIO_PIN_15, GPIO_PIN_RESET);//turn_off_pins[2] = GPIO_PIN_15;
+      HAL_GPIO_WritePin(GPIOD, GPIO_PIN_12, GPIO_PIN_RESET);
+      HAL_GPIO_WritePin(GPIOD, GPIO_PIN_13, GPIO_PIN_RESET);
+      HAL_GPIO_WritePin(GPIOD, GPIO_PIN_14, GPIO_PIN_RESET);
+      HAL_GPIO_WritePin(GPIOD, GPIO_PIN_15, GPIO_PIN_RESET);
       break;
     
     case 1:
-			//HAL_GPIO_WritePin(GPIOD, *turn_off_pin, GPIO_PIN_RESET);
-      HAL_GPIO_WritePin(GPIOD, GPIO_PIN_12, GPIO_PIN_SET);//pin = GPIO_PIN_13;
-      HAL_GPIO_WritePin(GPIOD, GPIO_PIN_13, GPIO_PIN_RESET);//turn_off_pins[0] = GPIO_PIN_12;
-      HAL_GPIO_WritePin(GPIOD, GPIO_PIN_14, GPIO_PIN_RESET);//turn_off_pins[1] = GPIO_PIN_14;
-      HAL_GPIO_WritePin(GPIOD, GPIO_PIN_15, GPIO_PIN_RESET);//turn_off_pins[2] = GPIO_PIN_15;
+      HAL_GPIO_WritePin(GPIOD, GPIO_PIN_12, GPIO_PIN_SET);
+      HAL_GPIO_WritePin(GPIOD, GPIO_PIN_13, GPIO_PIN_RESET);
+      HAL_GPIO_WritePin(GPIOD, GPIO_PIN_14, GPIO_PIN_RESET);
+      HAL_GPIO_WritePin(GPIOD, GPIO_PIN_15, GPIO_PIN_RESET);
       break;
 
     case 2:
-      HAL_GPIO_WritePin(GPIOD, GPIO_PIN_12, GPIO_PIN_SET);//pin = GPIO_PIN_13;
-      HAL_GPIO_WritePin(GPIOD, GPIO_PIN_13, GPIO_PIN_SET);//turn_off_pins[0] = GPIO_PIN_12;
-      HAL_GPIO_WritePin(GPIOD, GPIO_PIN_14, GPIO_PIN_RESET);//turn_off_pins[1] = GPIO_PIN_14;
-      HAL_GPIO_WritePin(GPIOD, GPIO_PIN_15, GPIO_PIN_RESET);//turn_off_pins[2] = GPIO_PIN_15;
+      HAL_GPIO_WritePin(GPIOD, GPIO_PIN_12, GPIO_PIN_SET);
+      HAL_GPIO_WritePin(GPIOD, GPIO_PIN_13, GPIO_PIN_SET);
+      HAL_GPIO_WritePin(GPIOD, GPIO_PIN_14, GPIO_PIN_RESET);
+      HAL_GPIO_WritePin(GPIOD, GPIO_PIN_15, GPIO_PIN_RESET);
       break;
 
     case 3:
-      HAL_GPIO_WritePin(GPIOD, GPIO_PIN_12, GPIO_PIN_SET);//pin = GPIO_PIN_13;
-      HAL_GPIO_WritePin(GPIOD, GPIO_PIN_13, GPIO_PIN_SET);//turn_off_pins[0] = GPIO_PIN_12;
-      HAL_GPIO_WritePin(GPIOD, GPIO_PIN_14, GPIO_PIN_SET);//turn_off_pins[1] = GPIO_PIN_14;
-      HAL_GPIO_WritePin(GPIOD, GPIO_PIN_15, GPIO_PIN_RESET);//turn_off_pins[2] = GPIO_PIN_15;
+      HAL_GPIO_WritePin(GPIOD, GPIO_PIN_12, GPIO_PIN_SET);
+      HAL_GPIO_WritePin(GPIOD, GPIO_PIN_13, GPIO_PIN_SET);
+      HAL_GPIO_WritePin(GPIOD, GPIO_PIN_14, GPIO_PIN_SET);
+      HAL_GPIO_WritePin(GPIOD, GPIO_PIN_15, GPIO_PIN_RESET);
       break;
 		case 4:
-      HAL_GPIO_WritePin(GPIOD, GPIO_PIN_12, GPIO_PIN_SET);//pin = GPIO_PIN_13;
-      HAL_GPIO_WritePin(GPIOD, GPIO_PIN_13, GPIO_PIN_SET);//turn_off_pins[0] = GPIO_PIN_12;
-      HAL_GPIO_WritePin(GPIOD, GPIO_PIN_14, GPIO_PIN_SET);//turn_off_pins[1] = GPIO_PIN_14;
-      HAL_GPIO_WritePin(GPIOD, GPIO_PIN_15, GPIO_PIN_SET);//turn_off_pins[2] = GPIO_PIN_15;
+      HAL_GPIO_WritePin(GPIOD, GPIO_PIN_12, GPIO_PIN_SET);
+      HAL_GPIO_WritePin(GPIOD, GPIO_PIN_13, GPIO_PIN_SET);
+      HAL_GPIO_WritePin(GPIOD, GPIO_PIN_14, GPIO_PIN_SET);
+      HAL_GPIO_WritePin(GPIOD, GPIO_PIN_15, GPIO_PIN_SET);
       break;
 
     default:
@@ -202,20 +223,26 @@ void brake_task(const void *args) {
   }
 }
 
+/**
+ * @brief Tarea periódica (1 s) que se encarga de detectar cambios en
+ *        en entorno para activar las luces de cruce en condiciones
+ *        de poca visibilidad.
+ * 
+ * @param argument lista de posibles argumentos a usar. Vacía por defecto.
+ */
 void lucesCruce(void const *argument) {
   HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8, GPIO_PIN_RESET);
   int luminosity;
   uint32_t wake_time = osKernelSysTick();
   while(true) {
-    /* Lectura del canal ADC0 */
     ADC_ChannelConfTypeDef sConfig = {0};
-    sConfig.Channel = ADC_CHANNEL_1; // seleccionamos el canal 1
+    sConfig.Channel = ADC_CHANNEL_1;
     sConfig.Rank = 1;
     sConfig.SamplingTime = ADC_SAMPLETIME_28CYCLES;
     HAL_ADC_ConfigChannel(&hadc1, &sConfig);
-    HAL_ADC_Start(&hadc1); // comenzamos la conversión AD
+    HAL_ADC_Start(&hadc1);
     if (HAL_ADC_PollForConversion(&hadc1, 5) == HAL_OK) {
-      luminosity = map(HAL_ADC_GetValue(&hadc1), 0, 255, 0, 200); // leemos el valor
+      luminosity = map(HAL_ADC_GetValue(&hadc1), 0, 255, 0, 200);
       if (luminosity < 100) HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8, 0);
       else HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8, 1);
     }
@@ -247,31 +274,22 @@ int main(void) {
   BRAKE_init();
 
   /* Create the thread(s) */
-  /* definition and creation of Tarea1 */
   xTaskCreate((TaskFunction_t) acelerador,
               "lectura potenciometro",
-              configMINIMAL_STACK_SIZE,
-              0,
-              PR_TAREA2,
-              0);
+              configMINIMAL_STACK_SIZE, 
+              NULL, PR_TAREA2, NULL);
   xTaskCreate((TaskFunction_t) lucesCruce,
               "lectura luces",
               configMINIMAL_STACK_SIZE,
-              0,
-              PR_TAREA2,
-              0);
+              NULL, PR_TAREA2, NULL);
   xTaskCreate((TaskFunction_t) distanceTask,
               "lectura distancia",
               configMINIMAL_STACK_SIZE,
-              0,
-              PR_DISTANCIA,
-              0);
+              NULL, PR_DISTANCIA, NULL);
   xTaskCreate((TaskFunction_t) brake_task,
               "tarea freno",
               configMINIMAL_STACK_SIZE,
-              0,
-              PR_BRAKE,
-              0);
+              NULL, PR_BRAKE, NULL);
 
   /* Start scheduler */
   vTaskStartScheduler();
@@ -480,32 +498,6 @@ static void MX_GPIO_Init(void)
 
   HAL_NVIC_SetPriority(EXTI3_IRQn, configMAX_SYSCALL_INTERRUPT_PRIORITY - 1, 0);
   HAL_NVIC_EnableIRQ(EXTI3_IRQn);
-}
-
-/* USER CODE BEGIN Header_StartTarea1 */
-/**
-  * @brief  Function implementing the Tarea1 thread.
-  * @param  argument: Not used 
-  * @retval None
-  */
-/* USER CODE END Header_StartTarea1 */
-void StartTarea1(void const *argument)
-{
-  HAL_GPIO_WritePin(GPIOD, GPIO_PIN_12, GPIO_PIN_RESET);
-  HAL_GPIO_WritePin(GPIOD, GPIO_PIN_13, GPIO_PIN_SET);
-  HAL_GPIO_WritePin(GPIOD, GPIO_PIN_14, GPIO_PIN_RESET);
-  HAL_GPIO_WritePin(GPIOD, GPIO_PIN_15, GPIO_PIN_SET);
-
-  /* Infinite loop */
-  for (;;)
-  {
-    //ContTarea1 ++;
-
-    HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_12);
-    HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_13);
-    HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_14);
-    HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_15);
-  }
 }
 
 /* Funcion para el tratamiento de interrupciones */

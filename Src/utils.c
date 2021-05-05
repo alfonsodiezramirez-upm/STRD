@@ -44,13 +44,10 @@ int map(int x, int in_min, int in_max, int out_min, int out_max) {
  * @param bytes the output bytes array (4) to produce.
  */
 void f2b(float value, uint8_t* bytes[4]) {
-    union {
-        float float_var;
-        uint8_t tmp_arr[4];
-    } u;
+    FloatU_t u;
     
     u.float_var = value;
-    memcpy(bytes, u.tmp_arr, 4);
+    memcpy(bytes, u.bytes_repr, 4);
 }
 
 /**
@@ -65,11 +62,8 @@ void f2b(float value, uint8_t* bytes[4]) {
  * @return float - the converted float data from bytes.
  */
 float b2f(uint8_t* bytes[4]) {
-    union {
-        float val;
-        uint8_t tmp_arr[4];
-    } u;
-    memcpy(u.tmp_arr, bytes, 4);
+    FloatU_t u;
+    memcpy(u.bytes_repr, bytes, 4);
     
-    return u.val;
+    return u.float_var;
 }

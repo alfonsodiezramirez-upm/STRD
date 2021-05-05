@@ -34,7 +34,9 @@
         "semphr.h": "c",
         "lock.h": "c",
         "cmath": "c",
-        "bit": "c"
+        "bit": "c",
+        "node1.h": "c",
+        "freertos.h": "c"
     },
     "cmake.configureOnOpen": false
 }

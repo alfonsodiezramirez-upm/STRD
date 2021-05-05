@@ -366,6 +366,7 @@ int main(void)
   MX_ADC1_Init();
   MX_SPI1_Init();
   CAN_init();
+  NODE1_init();
   Inicializa_Acelerometro();
 
   interrupcion = xSemaphoreCreateBinary();

@@ -20,6 +20,7 @@
 #define CAN_H
 #include <FreeRTOSConfig.h>
 #include <stdint.h>
+#include <stm32f4xx_hal.h>
 #ifndef CAN1
 #define CAN1
 #endif

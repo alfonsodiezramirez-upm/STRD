@@ -41,7 +41,7 @@ typedef union float_u {
 } FloatU_t;
 
 
-int map(int, int, int, int);
+int map(int, int, int, int, int);
 
 void f2b(float, uint8_t*);
 float b2f(uint8_t*);

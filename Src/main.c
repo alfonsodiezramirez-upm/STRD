@@ -144,13 +144,13 @@ void distanceTask(const void *args) {
     else HAL_GPIO_WritePin(GPIOA, GPIO_PIN_9, GPIO_PIN_RESET);
 
     old_intensity = BRAKE_intensity_get();
-    if (distance <= secure_dist)
+    if (distance <= .2 * secure_dist)
       intensity = 4;
-    else if (distance <= 2 * secure_dist)
+    else if (distance <= .3 * secure_dist)
       intensity = 3;
-    else if (distance <= 3 * secure_dist)
+    else if (distance <= .4 * secure_dist)
       intensity = 2;
-    else if (distance <= 4 * secure_dist)
+    else if (distance <= .5 * secure_dist)
       intensity = 1;
     else
       intensity = 0;

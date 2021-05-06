@@ -225,7 +225,7 @@ void risks_task(const void *args) {
   float x, y;
   bool wheel_is_grabbed;
   int speed;
-  int wheel_position;
+  bool wheel_is_swerving;
   bool is_distance_ok;
   int risk_count = 0;
   int working_mode = 0;
@@ -234,7 +234,7 @@ void risks_task(const void *args) {
     y = GIROSCOPE_get_Y();
     wheel_is_grabbed = WHEEL_is_grabbed();
     speed = SPEED_get();
-    wheel_position = WHEEL_get();
+    wheel_is_swerving = WHEEL_get_is_swerving();
     is_distance_ok = DISTANCE_get_security();
     working_mode = MODE_get();
 
@@ -246,26 +246,27 @@ void risks_task(const void *args) {
           HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8, GPIO_PIN_SET);
         }
         risk_count++;
-      } else if ((abs(x) >= 20 || abs(y) >= 20) && wheel_is_grabbed && speed >= 70) {
+      }
+      if ((abs(x) >= 20 || abs(y) >= 20) && wheel_is_grabbed && speed >= 70) {
         if (working_mode == 0) {
           // Luz amarilla ON
           HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8, GPIO_PIN_SET);
         }
         risk_count++;
-      } else if (abs(x) >= 30 && abs(wheel_position) >= 30) {
+      }
+      if (abs(x) >= 30 && wheel_is_swerving) {
         if (working_mode == 0) {
           // Pitido lvl. 2
           // Luz amarilla ON
           HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8, GPIO_PIN_SET);
         }
         risk_count++;
-      } else {
+      } 
+      if (risk_count == 0) {
         // Pitido off
         // Luz amarilla OFF
         HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8, GPIO_PIN_RESET);
-      }
-
-      if (risk_count >= 2) {
+      } else if (risk_count >= 2) {
         if (working_mode >= 0 || !is_distance_ok) {
           // Pitido lvl. 2
           // Luz roja

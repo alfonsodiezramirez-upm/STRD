@@ -39,7 +39,11 @@
         "freertos.h": "c",
         "projdefs.h": "c",
         "task.h": "c",
-        "utils.h": "c"
+        "utils.h": "c",
+        "chrono": "c",
+        "numeric": "c",
+        "ratio": "c",
+        "cinttypes": "c"
     },
     "cmake.configureOnOpen": false
 }

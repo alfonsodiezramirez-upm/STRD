@@ -1,0 +1,54 @@
+\begin{itemize}
+  \item En los códigos \ref{lst:speedtask} y \ref{lst:lightstask}, el mapeo se realiza con valores
+        de entrada $\left[0, 255\right]$ porque el ADC de la placa
+        es de 8 bits, por lo que su resolución máxima es 255.
+  \item En diversos códigos (como \ref{lst:distancetask} o \ref{lst:braketask}) se
+        utilizan eventos para la sincronización de tareas entre sí. Los eventos
+        aparecen en la documentación estándar de FreeRTOS y constituyen un mecanismo
+        muy sencillo y eficiente que respeta el tiempo real para bloquear y desbloquear
+        tareas sin necesidad de programar la lógica subyacente. Un evento, en esencia,
+        se conforma de $1 \dots n$ procesos que esperan y, en principio, un único proceso
+        $k$ que ``produce'' el evento. En ese instante, aquellas tareas que estaban
+        esperando al evento se desbloquean y prosiguen con su ejecución; mientras tanto,
+        el proceso $k$ reiniciaría el evento de forma que nuevas tareas pueden esperar
+        a que se produzca.
+
+        De esta manera, una tarea esporádica estaría esperando a que un evento se
+        produzca y existiría una tarea periódica activadora la cual indicaría
+        mediante dicho evento a la tarea esporádica que se tiene que ejecutar.
+  \item En el código \ref{lst:wheel-task} se esperan 13 iteraciones que equivalen a un
+        tiempo de $\numprint[s]{5.2}$ (en lugar de los $\numprint[s]{5}$ pedidos). Esto
+        es debido a que el periodo no es múltiplo, por lo que se comete un error
+        ``a la alta'' en lugar de ``a la baja''.
+  \item Los ficheros \texttt{lock.h/.c} permiten trabajar con semáforos definidos de
+        forma estática en lugar de forma dinámica (código \ref{lst:lock_c}). Sin embargo,
+        para poder aprovechar dicha funcionalidad es necesario habilitar en el fichero
+        \texttt{FreeRTOSConfig.h} la macro:
+        \begin{center}
+            \lstinline[style=C]!#define configSUPPORT_STATIC_ALLOCATION 1!
+        \end{center}
+        con un valor `1'. En otro caso, aunque se pase un parámetro válido, no se usará
+        dicha funcionalidad.
+  \item El pitido no se ha implementado a nivel de código ya que no venía especificado
+        en los distintos diagramas a qué pin habría que conectarlo ni la lógica de
+        control a usar para que funcionase con cierta intensidad.
+  \item En el código \ref{lst:canbustasks} se han implementado dos tareas esporádicas
+        para la gestión de los mensajes del CANBus porque dicho dispositivo recibe 
+        mensajes desde una rutina de interrupción. Como se quieren
+        actualizar variables las cuales utilizan un \texttt{lock} internamente, se
+        deriva su gestión a un par de tareas esporádicas cuya única finalidad es la
+        de actualizar el valor de los objetos protegidos.
+  \item En los códigos \ref{lst:can_h} y \ref{lst:can_c}, como son en apariencia iguales
+        para ambos nodos, es necesario definir una macro para que la versión del CANBus
+        se adapte a la placa en que se ejecuta. De esta forma, en el nodo 2 habría que
+        definir en alguna cabecera (se sugiere \texttt{FreeRTOSConfig.h}) la macro:
+        \begin{center}
+              \lstinline[style=C]!#define NODE_2!
+        \end{center}
+  \item En el código \ref{lst:riskstask} no se ha implementado la parte de interacción
+        con el freno ya que la tarea \texttt{Cálculo distancia} (código \ref{lst:distancetask})
+        se encarga individualmente de accionar el freno según la distancia de seguridad
+        y una intensidad predefinida. Además, en las diapositivas de la especificación
+        no se menciona esta comunicación con el nodo 1, por lo que se ha asumido que
+        el verdadero encargado de accionar el freno es el nodo 1.
+\end{itemize}

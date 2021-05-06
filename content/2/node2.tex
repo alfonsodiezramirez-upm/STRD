@@ -1,0 +1,109 @@
+En el nodo 2 se han implementado también todas las tareas y requisitos pedidos
+en el documento de requisitos.
+
+La tarea de actualización del modo de funcionamiento viene definida por el código
+\ref{lst:modetask}:
+
+\lstinputlisting[style=C,caption={Tarea esporádica que controla el modo.},label={lst:modetask},linerange={110-124},firstnumber=110]{source-code/node2/Src/main.c}
+
+Dicha tarea espera a un semáforo binario que indica que se ha producido una interrupción
+(línea 119). Una vez desbloqueada, incrementa el modo hasta un máximo de `2' (línea 120)
+y finalmente actualiza el objeto protegido \texttt{mode} (códigos \ref{lst:mode_h} y
+\ref{lst:mode_c}).
+
+Por otra parte, como hace falta liberar el semáforo cuando se produce la interrupción
+del pulsador, es necesario definir un nuevo fragmento del código que habilite a la
+placa para esa tarea (código \ref{lst:exti}):
+
+\lstinputlisting[style=C,caption={Rutina de tratamiento de interrupciones.},label={lst:exti},linerange={663-675},firstnumber=663]{source-code/node2/Src/main.c}
+
+Cuando se activa el GPIO3 se ``devolverá'' el semáforo, lo que permitirá que la tarea
+esporádica pueda adquirirlo y realizar su ejecución. Sin embargo, cuando lo intente
+adquirir de nuevo se bloqueará y hasta que no se repita este proceso quedará a la
+espera de que se libere el semáforo.
+
+Por otra parte, la tarea que se encarga de detectar si hay o no volantazos viene definida
+por el código \ref{lst:wheel-task}:
+
+\lstinputlisting[style=C,caption={Tarea periódica de control del giro del volante.},label={lst:wheel-task},linerange={126-159},firstnumber=126]{source-code/node2/Src/main.c}
+
+En dicha tarea se lee desde el ADC (canal 0) y se actualiza el valor de la posición
+del volante en la variable \texttt{actual} (líneas 139 -- 146); a continuación se
+conserva el dato en el objeto protegido \texttt{symptoms} (línea 147) y se comprueba,
+accediendo a la velocidad actual, si el conductor está dando volantazos o no. Esto se
+realiza en las líneas 148 -- 155, en donde se aprovechan los recursos provistos por
+el objeto protegido \texttt{wheel} para verificar si la se ha pegado un volantazo
+(códigos \ref{lst:symptoms_h} y \ref{lst:symptoms_c}). Si durante 13 iteraciones no se ha
+reseteado el contador (no ha habido volantazo) se quita el síntoma.
+
+En lo referente a la tarea que identifica si el volante está siendo sujeto o no, se
+define mediante el código \ref{lst:grabtask}:
+
+\lstinputlisting[style=C,caption={Tarea periódica de control de sujección del volante.},label={lst:grabtask},linerange={161-174},firstnumber=161]{source-code/node2/Src/main.c}
+
+Dicha tarea sencillamente leerá el valor del GPIO correspondiente (línea 170) y actualizará
+el valor en el objeto protegido (línea 171), definido en los códigos \ref{lst:symptoms_h}
+y \ref{lst:symptoms_c}.
+
+Para trabajar con la inclinación de la cabeza, se ha de acceder a los valores provistos por
+el giroscopio integrado en la placa. El código de la tarea viene definido por
+\ref{lst:headtask}:
+
+\lstinputlisting[style=C,caption={Tarea periódica de control de la inclinación de la cabeza.},label={lst:headtask},linerange={176-211},firstnumber=176]{source-code/node2/Src/main.c}
+
+De todo el código anterior, los datos se actualizan en la línea 207 en donde guardan en
+el objeto protegido \texttt{symptoms} (códigos \ref{lst:symptoms_h} y \ref{lst:symptoms_c}).
+
+Finalmente, la tarea de riesgos. Esta tarea accede a todos los objetos protegidos y
+además obtiene información mediante el CANBus, por lo que su programación es delicada.
+Dicha tarea viene definida por el código \ref{lst:riskstask}:
+
+\lstinputlisting[style=C,caption={Tarea periódica de control de riesgos.},label={lst:riskstask},linerange={213-288},firstnumber=213]{source-code/node2/Src/main.c}
+
+Lo primero que se realiza en esta tarea es comprobar si el modo de funcionamiento de las
+alarmas es menor a 2 (línea 241). Esto quiere decir que las alarmas están habilitadas al completo
+o parcialmente (un valor de 2 indicaría que ninguna alarma está activa).
+
+Si hay un modo de alarma activado, se empiezan a realizar las comprobaciones:
+\begin{itemize}
+  \item En la línea 242 se comprueba que existe una inclinación simultánea en los ejes $X$
+        e $Y$ y que además no se tiene el volante sujeto. Si está el estado de alarma
+        básico activo (línea 243), se enciende la luz amarilla y se emite un pitido con
+        intensidad 1.
+  \item En la línea 250 se comprueba si la cabeza está inclinada al menos en uno de los ejes,
+        si el volante está sujeto y si se circula a más de $70 \nicefrac{km}{h}$, en cuyo
+        caso se encendería la luz amarilla.
+  \item Si se inclina la cabeza más de 30º en el eje $X$ y se están dando volantazos (línea
+        257) entonces se emite un pitido nivel dos y se enciende la luz amarilla.
+  \item Si no se ha dado ninguna situación de riesgo (\texttt{risk\_count == 0}), se
+        apaga el pitido y la luz amarilla (líneas 265 -- 268). Si, por el contrario, se
+        ha producido al menos dos riesgos se activa el pitido nivel dos y se enciende
+        la luz roja (líneas 269 -- 275). En otro caso, se apagan.
+\end{itemize}
+
+Con esta lógica, el diagrama \ref{fig:risks-diagram} queda implementado a nivel de código.
+En este caso, se utilizan los objetos protegidos de síntomas (códigos \ref{lst:symptoms_h}
+y \ref{lst:symptoms_c}), los que contienen los datos recibidos por el CANBus (\texttt{node1}
+definido por \ref{lst:node1_h} y \ref{lst:node1_c}) y el modo (códigos \ref{lst:mode_h} y
+\ref{lst:mode_c}).
+
+Finalmente, para poder recibir los datos por el CANBus se han creado dos tareas esporádicas
+las cuales esperan un evento para poder actualizar los valores contenidos en los objetos
+protegidos. Dichas funciones vienen definidas por el código \ref{lst:canbustasks}:
+
+\lstinputlisting[style=C,caption={Tareas esporádicas de gestión del CANBus.},label={lst:canbustasks},linerange={290-324},firstnumber=290]{source-code/node2/Src/main.c}
+
+Por otra parte, según la definición del código del CANBus (ver código \ref{lst:can_c}),
+es necesario llamar a la función \texttt{CAN\_Handle\_IRQ} desde la rutina de 
+tratamiento de interrupción para recibir el mensaje de forma efectiva. Por ello, es
+necesario editar el fichero \texttt{stm32f4xx\_it.c} y añadir la llamada a la
+función, como se muestra en el código \ref{lst:canirq}:
+
+\lstinputlisting[style=C,caption={Rutina de tratamiento de interrupción del CANBus.},label={lst:canirq},linerange={37-40,207-220},firstnumber=37]{source-code/node2/Src/stm32f4xx_it.c}
+\rule{\linewidth}{.2pt}
+
+Al igual que en el nodo 1, el uso de las distintas librerías requiere una carga inicial en
+la función \texttt{main}, ya que en otro caso las funciones resultarán inaccesibles.
+Para este nodo, la función de inicialización sería la definida en el código \ref{lst:main_init2}:
+
+\lstinputlisting[style=C,caption={Código del \texttt{main} para el nodo 2.},label={lst:main_init2},linerange={367-433},firstnumber=367]{source-code/node2/Src/main.c}

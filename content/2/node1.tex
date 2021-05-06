@@ -1,0 +1,71 @@
+En el nodo 1 se han implementado en principio todas las tareas cumpliendo con las
+restricciones pedidas.
+
+La tarea del \texttt{Cálculo de velocidad} viene definida por el listado de código
+\ref{lst:speedtask}:
+
+\lstinputlisting[style=C,caption={Tarea periódica que controla el acelerador.},label={lst:speedtask},linerange={90-114},firstnumber=90]{source-code/node1/Src/main.c}
+
+En la susodicha tarea se lee el ADC desde el canal 0 y el valor recibido de la velocidad
+se mapea de $0$ a $200 \nicefrac{km}{h}$ (línea 108). A continuación, se actualiza el valor del
+objeto protegido (línea 109) y se envía el dato recibido por el CANBus (línea 110).
+Finalmente, se programa la siguiente ejecución dentro de $\numprint[ms]{250}$ desde el
+instante de activación (línea 112).
+
+La función de \texttt{map} viene definida en los códigos \ref{lst:utils_h} y \ref{lst:utils_c}.
+El objeto protegido \texttt{SPEED} sigue la definición estándar del resto de objetos
+protegidos y viene definido en los códigos \ref{lst:speed_h} (cabeceras) y \ref{lst:speed_c}
+(cuerpo).
+
+Por otra parte, el envío de datos mediante el CANBus se realiza mediante la librería
+\texttt{can}, definida en los códigos \ref{lst:can_h} y \ref{lst:can_c}.
+
+La tarea del \texttt{Cálculo distancia} viene definida por el código \ref{lst:distancetask}:
+
+\lstinputlisting[style=C,caption={Tarea periódica que controla la distancia.},label={lst:distancetask},linerange={116-165},firstnumber=116]{source-code/node1/Src/main.c}
+
+En dicha tarea se utiliza la librería \texttt{uss} (códigos \ref{lst:uss_h} y \ref{lst:uss_c})
+para leer desde el sensor de ultrasonidos (líneas 135 -- 137); se actualiza el valor de la distancia en el
+objeto protegido \texttt{distance} (línea 138) (códigos \ref{lst:distance_h} y \ref{lst:distance_c});
+se computa la distancia de seguridad y se calcula la intensidad de la frenada
+según unos porcentajes establecidos (líneas 140 -- 156); si el valor de la intensidad de
+la frenada ha cambiado, se actualiza el objeto protegido y se notifica a la tarea
+esporádica que puede continuar su ejecución (líneas 158 -- 161) 
+(códigos \ref{lst:brake_h} y \ref{lst:brake_c}); finalmente, se
+envía el valor de la nueva distancia por el CANBus (línea 162) y se programa la
+siguiente ejecución $\numprint[ms]{300}$ después del instante de activación (línea 163).
+
+La tarea esporádica \texttt{Freno} viene definida por el código \ref{lst:braketask}:
+
+\lstinputlisting[style=C,caption={Tarea esporádica que controla la intensidad de la frenada.},label={lst:braketask},linerange={167-224},firstnumber=167]{source-code/node1/Src/main.c}
+
+Dicha tarea espera a que se le notifique que se ha de ejecutar (línea 180) y después accede
+al objeto protegido que contiene la intensidad de la frenada (códigos \ref{lst:distance_h} y
+\ref{lst:distance_c}); a continuación, según la intensidad de la frenada, enciende o
+apaga diversos LEDs en la placa a modo de indicativo visual de que se está frenando
+(líneas 183 -- 220). Finalmente, para evitar que la tarea se pueda activar con una
+baja periodicidad se esperan al menos $\numprint[ms]{150}$ desde el instante de activación.
+
+Finalmente, la tarea de gestión de las \texttt{Luces de cruce} viene definida por el código
+\ref{lst:lightstask}:
+
+\lstinputlisting[style=C,caption={Tarea periódica que controla las luces de cruce.},label={lst:lightstask},linerange={226-251},firstnumber=226]{source-code/node1/Src/main.c}
+
+Dicha tarea lee desde el ADC (canal 1) el valor recibido por el LDR y, tras comprobar
+su luminosidad con el rango establecido enciende o apaga las luces de cruce (líneas 245 -- 247).
+Finalmente, se programa la siguiente ejecución $\numprint[s]{1}$ después de la
+activación. Esta tarea no accede a ningún objeto protegido.\\
+\rule{\linewidth}{.2pt}
+
+Cabe destacar que los distintos objetos protegidos que se declaran y usan a lo largo
+del código se basan en la librería \texttt{lock}, definida en los códigos \ref{lst:lock_h}
+y \ref{lst:lock_c}. Dicha librería requiere que los objetos protegidos sean inicializados
+antes de realizar ninguna operación con ellos. Por ende, en el bloque \texttt{main} es
+necesario dedicar unas líneas para iniciar cada una de los objetos protegidos que se
+quieren usar (código \ref{lst:main_init1}):
+
+\lstinputlisting[style=C,caption={Código del \texttt{main}.},label={lst:main_init1},linerange={253-300},firstnumber=253]{source-code/node1/Src/main.c}
+
+En las líneas 271 -- 274 se inicializan los objetos protegidos, dejándolos listos para su
+uso. El cuerpo viene definido en los códigos \ref{lst:can_c}, \ref{lst:speed_c},
+\ref{lst:distance_c}, \ref{lst:brake_c}.

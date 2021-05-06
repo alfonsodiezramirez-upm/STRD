@@ -1,0 +1,23 @@
+En el nodo 2 se han implementado también todas las tareas y requisitos pedidos
+en el documento de requisitos.
+
+La tarea de actualización del modo de funcionamiento viene definida por el código
+\ref{lst:modetask}:
+
+\lstinputlisting[style=C,caption={Tarea esporádica que controla el modo.},label={lst:modetask},linerange={110-124},firstnumber=110]{source-code/node2/Src/main.c}
+
+Dicha tarea espera a un semáforo binario que indica que se ha producido una interrupción
+(línea 119). Una vez desbloqueada, incrementa el modo hasta un máximo de `2' (línea 120)
+y finalmente actualiza el objeto protegido \texttt{mode} (códigos \ref{lst:mode_h} y
+\ref{lst:mode_c}).
+
+Por otra parte, como hace falta liberar el semáforo cuando se produce la interrupción
+del pulsador, es necesario definir un nuevo fragmento del código que habilite a la
+placa para esa tarea (código \ref{lst:exti}):
+
+\lstinputlisting[style=C,caption={Rutina de tratamiento de interrupciones.},label={lst:exti},linerange={663-675},firstnumber=663]{source-code/node2/Src/main.c}
+
+Cuando se activa el GPIO3 se ``devolverá'' el semáforo, lo que permitirá que la tarea
+esporádica pueda adquirirlo y realizar su ejecución. Sin embargo, cuando lo intente
+adquirir de nuevo se bloqueará y hasta que no se repita este proceso quedará a la
+espera de que se libere el semáforo.

@@ -1,0 +1,48 @@
+El segundo nodo se encargará directamente de notificar al conductor cuando algún
+comportamiento es errático o peligroso. Entre otras tareas, este nodo se encarga
+de monitorizar el estado del conductor (y detectar posibles signos de somnolencia)
+y emitir avisos luminosos y sonoros cuando se produzcan situaciones de riesgo.
+
+Este sistema cuenta con cinco tareas en tiempo real y tres objetos protegidos: el
+primero recoge datos sobre síntomas como son la inclinación de la cabeza o el
+giro del volante; el segundo, recoge información sobre si el conductor está
+sujetando o no el volante; y el tercero establecerá el modo de funcionamiento de
+los avisos del sistema. Con respecto a las tareas, se tiene:
+
+\begin{enumerate}
+  \item \texttt{Inclinación cabeza} -- cada $\numprint[ms]{600}$, leerá el valor del
+        giroscopio integrado para actualizar los datos de las posiciones $X$ e $Y$,
+        en el objeto protegido \texttt{Síntomas 1}.
+  \item \texttt{Detección volantazos} -- cada $\numprint[ms]{400}$ el sistema leerá
+        el valor de la posición del volante y actualizará el dato recogido en 
+        \texttt{Síntomas 1}.
+  \item \texttt{Relax al volante} -- cada $\numprint[ms]{500}$, el sistema actualizará
+        en \texttt{Síntomas 2} si el conductor está sujetando o no el volante.
+  \item \texttt{Detección pulsador} -- tarea esporádica que será activada desde la rutina
+        de tratamiento de interrupciones \textit{hardware} que establecerá cíclicamente
+        el modo de funcionamiento del sistema en el objeto protegido \texttt{Modo}.
+  \item \texttt{Riesgos} -- cada $\numprint[ms]{300}$, el sistema evaluará los datos
+        recogidos en los objetos protegidos \texttt{Síntomas 1}, \texttt{Síntomas 2} y \texttt{Modo} y 
+        establecerá el nivel de alarma para con el conductor. Dicha detección de riesgos
+        viene definida por la siguiente secuencia:
+        \begin{itemize}
+          \item Si el conductor presenta una inclinación de la cabeza en los ejes $X, Y$
+                de más de $20\degree$ y no tiene sujeto el volante se considera que está
+                manipulando el móvil u otro aparato. Se activa la luz amarilla y se
+                emite un pitido nivel 1.
+          \item Si la inclinación de la cabeza es $X > 20\degree | Y > 20\degree$, el volante
+                está agarrado y la velocidad es mayor de $70\nicefrac{km}{h}$ se interpreta
+                que el conductor no está prestando atención a la carretera y se encenderá la
+                luz amarilla.
+          \item Si se detecta una inclinación en el eje $X$ de más de $30\degree$ y el
+                conductor está dando volantazos se interpreta como síntoma de somnolencia.
+                Se encenderá la luz amarilla y se emitirá un pitido nivel 2.
+          \item Si se dan simultáneamente dos de los riegos anteriores se pasa a estar en 
+                \textbf{NIVEL 2} de alerta y se encenderá la luz roja y emitirá un pitido
+                nivel 2.
+          \item Si se produce un riesgo \textbf{NIVEL 2} y la distancia con el vehículo
+                precedente es menor al 50\% de la distancia de seguridad recomendada, se
+                estará ante una situación de \textbf{EMERGENCIA} y se activará el freno, 
+                junto con todo lo anterior.
+        \end{itemize}
+\end{enumerate}

@@ -245,15 +245,30 @@
 \input{content/1/node2.tex}
 
 \section{Implementación}
+\input{content/2/implementation.tex}
 \subsection{Nodo 1}
+\input{content/2/node1.tex}
 \subsection{Nodo 2}
 
 \section{Diseño final}
 \section{Aclaraciones}
+\input{content/3/explanations.tex}
 \section{Glosario}
 
 \appendix
+\section{Código fuente común}
+\label{anx:common-code}
+\subsection{Cabeceras de código}
+\lstinputlisting[style=C,caption={Cabecera con funciones de utilidad.},label={lst:utils_h}]{source-code/node1/Inc/utils.h}
+\subsection{Cuerpo del código}
+\lstinputlisting[style=C,caption={Cuerpo de las funciones de utilidad.},label={lst:utils_c}]{source-code/node1/Src/utils.c}
 \section{Código fuente nodo 1}
+\subsection{Cabeceras de código}
+\lstinputlisting[style=C,caption={Cabecera del objeto protegido \texttt{SPEED}.},label={lst:speed_h}]{source-code/node1/Inc/speed.h}
+\lstinputlisting[style=C,caption={Cabecera del controlador de ultrasonidos.},label={lst:uss_h}]{source-code/node1/Inc/uss.h}
+\subsection{Cuerpo del código}
+\lstinputlisting[style=C,caption={Cuerpo del objeto protegido \texttt{SPEED}.},label={lst:speed_c}]{source-code/node1/Src/speed.c}
+\lstinputlisting[style=C,caption={Cuerpo del controlador de ultrasonidos.},label={lst:uss_c}]{source-code/node1/Src/uss.c}
 \section{Código fuente nodo 2}
 
 \end{document}

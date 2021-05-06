@@ -1,0 +1,28 @@
+En el nodo 1 se han implementado en principio todas las tareas cumpliendo con las
+restricciones pedidas.
+
+La tarea del \texttt{Cálculo de velocidad} viene definida por el listado de código
+\ref{lst:speedtask}:
+
+\lstinputlisting[style=C,caption={Tarea periódica que controla el acelerador.},label={lst:speedtask},linerange={90-114},firstnumber=90]{source-code/node1/Src/main.c}
+
+En la susodicha tarea se lee el ADC desde el canal 0 y el valor recibido de la velocidad
+se mapea de $0$ a $200 \nicefrac{km}{h}$ (línea 108). A continuación, se actualiza el valor del
+objeto protegido (línea 109) y se envía el dato recibido por el CANBus (línea 110).
+Finalmente, se programa la siguiente ejecución dentro de $\numprint[ms]{250}$ desde el
+instante de activación (línea 112).
+
+La función de \texttt{map} viene definida en los códigos \ref{lst:utils_h} y \ref{lst:utils_c}.
+El objeto protegido \texttt{SPEED} sigue la definición estándar del resto de objetos
+protegidos y viene definido en los códigos \ref{lst:speed_h} (cabeceras) y \ref{lst:speed_c}
+(cuerpo).
+
+La tarea del \texttt{Cálculo distancia} viene definida por el código \ref{lst:distancetask}:
+
+\lstinputlisting[style=C,caption={Tarea periódica que controla la distancia.},label={lst:distancetask},linerange={116-165},firstnumber=116]{source-code/node1/Src/main.c}
+
+En dicha tarea se utiliza la librería \texttt{uss} (códigos \ref{lst:uss_h} y \ref{lst:uss_c})
+para leer desde el sensor de ultrasonidos (líneas 135 -- 137); se actualiza el valor de la distancia en el
+objeto protegido \texttt{distance} (línea 138) (códigos \ref{lst:distance_h} y \ref{lst:distance_c});
+se computa la distancia de seguridad y se calcula la intensidad de la frenada
+según unos porcentajes establecidos (líneas 140 -- 156);

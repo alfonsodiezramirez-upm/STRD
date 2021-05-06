@@ -131,6 +131,9 @@ void deteccionPulsador(const void *argument) {
  */
 void giroVolante(const void *argument) {
   int actual;
+  int speed;
+  bool is_swerving = false;
+  uint8_t counter = 0;
   uint32_t wake_time = osKernelSysTick();
   while (true) {
     ADC_ChannelConfTypeDef sConfig = {0};
@@ -142,6 +145,14 @@ void giroVolante(const void *argument) {
     if (HAL_ADC_PollForConversion(&hadc1, 5) == HAL_OK) {
       actual = map(HAL_ADC_GetValue(&hadc1), 0, 255, 0, 200);
       WHEEL_set(actual);
+      speed = SPEED_get();
+      is_swerving = WHEEL_update_swerving(speed);
+      if (is_swerving) counter = 0;
+      else if (counter == 13) WHEEL_set_is_swerving(false);
+      else {
+        WHEEL_set_is_swerving(true);
+        ++counter;
+      }
     }
     osDelayUntil(&wake_time, T_TAREAGIRO);
   }

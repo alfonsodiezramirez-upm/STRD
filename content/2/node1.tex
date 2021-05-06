@@ -36,7 +36,7 @@ siguiente ejecución $\numprint[ms]{300}$ después del instante de activación (
 
 La tarea esporádica \texttt{Freno} viene definida por el código \ref{lst:braketask}:
 
-\lstinputlisting[style=C,caption={Tarea periódica que controla la intensidad de la frenada.},label={lst:braketask},linerange={167-224},firstnumber=167]{source-code/node1/Src/main.c}
+\lstinputlisting[style=C,caption={Tarea esporádica que controla la intensidad de la frenada.},label={lst:braketask},linerange={167-224},firstnumber=167]{source-code/node1/Src/main.c}
 
 Dicha tarea espera a que se le notifique que se ha de ejecutar (línea 180) y después accede
 al objeto protegido que contiene la intensidad de la frenada (códigos \ref{lst:distance_h} y
@@ -44,3 +44,13 @@ al objeto protegido que contiene la intensidad de la frenada (códigos \ref{lst:
 apaga diversos LEDs en la placa a modo de indicativo visual de que se está frenando
 (líneas 183 -- 220). Finalmente, para evitar que la tarea se pueda activar con una
 baja periodicidad se esperan al menos $\numprint[ms]{150}$ desde el instante de activación.
+
+Finalmente, la tarea de gestión de las \texttt{Luces de cruce} viene definida por el código
+\ref{lst:lightstask}:
+
+\lstinputlisting[style=C,caption={Tarea periódica que controla las luces de cruce.},label={lst:lightstask},linerange={226-251},firstnumber=226]{source-code/node1/Src/main.c}
+
+Dicha tarea lee desde el ADC (canal 1) el valor recibido por el LDR y, tras comprobar
+su luminosidad con el rango establecido enciende o apaga las luces de cruce (líneas 245 -- 247).
+Finalmente, se programa la siguiente ejecución $\numprint[s]{1}$ después de la
+activación. Esta tarea no accede a ningún objeto protegido.

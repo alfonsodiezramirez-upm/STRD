@@ -100,3 +100,10 @@ necesario editar el fichero \texttt{stm32f4xx\_it.c} y añadir la llamada a la
 función, como se muestra en el código \ref{lst:canirq}:
 
 \lstinputlisting[style=C,caption={Rutina de tratamiento de interrupción del CANBus.},label={lst:canirq},linerange={37-40,207-220},firstnumber=37]{source-code/node2/Src/stm32f4xx_it.c}
+\rule{\linewidth}{.2pt}
+
+Al igual que en el nodo 1, el uso de las distintas librerías requiere una carga inicial en
+la función \texttt{main}, ya que en otro caso las funciones resultarán inaccesibles.
+Para este nodo, la función de inicialización sería la definida en el código \ref{lst:main_init2}:
+
+\lstinputlisting[style=C,caption={Código del \texttt{main} para el nodo 2.},label={lst:main_init2},linerange={367-433},firstnumber=367]{source-code/node2/Src/main.c}

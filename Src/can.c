@@ -23,7 +23,9 @@
 #include <task.h>
 #include <stdint.h>
 #include "utils.h"
+#ifdef NODE_2
 #include "node1.h"
+#endif
 
 const uint32_t STD_ID1 = 0x6FA;
 const uint32_t STD_ID2 = 0x6FB;

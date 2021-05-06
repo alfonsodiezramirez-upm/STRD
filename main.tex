@@ -119,6 +119,7 @@
   caption=\lstname,
   literate={á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'{\i}}}1 {ó}{{\'o}}1 {ú}{{\'u}}1 {Á}{{\'A}}1 {É}{{\'E}}1 {Í}{{\'I}}1 {Ó}{{\'O}}1 {Ú}{{\'U}}1 {ü}{{\"u}}1 {Ü}{{\"U}}1 {ñ}{{\~n}}1 {Ñ}{{\~N}}1 {¿}{{?``}}1 {¡}{{!``}}1 {º}{\textdegree}1,
   postbreak=\mbox{\textcolor{red}{$\hookrightarrow$}\space},
+  linewidth=1.1\linewidth
 }
 \lstdefinestyle{C}{%
   language=C,                 % El lenguaje del código
@@ -282,8 +283,10 @@
 \subsection{Cabeceras de código}
 \lstinputlisting[style=C,caption={Cabecera del objeto protegido \texttt{mode}.},label={lst:mode_h}]{source-code/node2/Inc/modes.h}
 \lstinputlisting[style=C,caption={Cabecera del objeto protegido \texttt{symptoms}.},label={lst:symptoms_h}]{source-code/node2/Inc/symptoms.h}
+\lstinputlisting[style=C,caption={Cabecera del objeto protegido \texttt{node1}.},label={lst:node1_h}]{source-code/node2/Inc/node1.h}
 \subsection{Cuerpo del código}
 \lstinputlisting[style=C,caption={Cuerpo del objeto protegido \texttt{mode}.},label={lst:mode_c}]{source-code/node2/Src/modes.c}
 \lstinputlisting[style=C,caption={Cuerpo del objeto protegido \texttt{symptoms}.},label={lst:symptoms_c}]{source-code/node2/Src/symptoms.c}
+\lstinputlisting[style=C,caption={Cuerpo del objeto protegido \texttt{node1}.},label={lst:node1_c}]{source-code/node2/Src/node1.c}
 
 \end{document}

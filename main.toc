@@ -1,0 +1,38 @@
+\boolfalse {citerequest}\boolfalse {citetracker}\boolfalse {pagetracker}\boolfalse {backtracker}\relax 
+\babel@toc {spanish}{}
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {1}Introducción}{1}{section.1}%
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {1.1}Nodo 1}{2}{subsection.1.1}%
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {1.2}Nodo 2}{4}{subsection.1.2}%
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {2}Implementación}{6}{section.2}%
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {2.1}Nodo 1}{6}{subsection.2.1}%
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {2.2}Nodo 2}{11}{subsection.2.2}%
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {3}Diseño final}{16}{section.3}%
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {4}Aclaraciones}{16}{section.4}%
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {5}Glosario}{16}{section.5}%
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {A}Código fuente común}{16}{appendix.Alph1}%
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {A.1}Cabeceras de código}{16}{subsection.Alph1.1}%
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {A.2}Cuerpo del código}{19}{subsection.Alph1.2}%
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {B}Código fuente nodo 1}{26}{appendix.Alph2}%
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {B.1}Cabeceras de código}{26}{subsection.Alph2.1}%
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {B.2}Cuerpo del código}{28}{subsection.Alph2.2}%
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {C}Código fuente nodo 2}{33}{appendix.Alph3}%
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {C.1}Cabeceras de código}{33}{subsection.Alph3.1}%
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {C.2}Cuerpo del código}{35}{subsection.Alph3.2}%

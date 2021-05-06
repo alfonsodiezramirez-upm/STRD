@@ -53,3 +53,36 @@ el giroscopio integrado en la placa. El código de la tarea viene definido por
 
 De todo el código anterior, los datos se actualizan en la línea 207 en donde guardan en
 el objeto protegido \texttt{symptoms} (códigos \ref{lst:symptoms_h} y \ref{lst:symptoms_c}).
+
+Finalmente, la tarea de riesgos. Esta tarea accede a todos los objetos protegidos y
+además obtiene información mediante el CANBus, por lo que su programación es delicada.
+Dicha tarea viene definida por el código \ref{lst:riskstask}:
+
+\lstinputlisting[style=C,caption={Tarea periódica de control de riesgos.},label={lst:riskstask},linerange={213-288},firstnumber=213]{source-code/node2/Src/main.c}
+
+Lo primero que se realiza en esta tarea es comprobar si el modo de funcionamiento de las
+alarmas es menor a 2 (línea 241). Esto quiere decir que las alarmas están habilitadas al completo
+o parcialmente (un valor de 2 indicaría que ninguna alarma está activa).
+
+Si hay un modo de alarma activado, se empiezan a realizar las comprobaciones:
+\begin{itemize}
+  \item En la línea 242 se comprueba que existe una inclinación simultánea en los ejes $X$
+        e $Y$ y que además no se tiene el volante sujeto. Si está el estado de alarma
+        básico activo (línea 243), se enciende la luz amarilla y se emite un pitido con
+        intensidad 1.
+  \item En la línea 250 se comprueba si la cabeza está inclinada al menos en uno de los ejes,
+        si el volante está sujeto y si se circula a más de $70 \nicefrac{km}{h}$, en cuyo
+        caso se encendería la luz amarilla.
+  \item Si se inclina la cabeza más de 30º en el eje $X$ y se están dando volantazos (línea
+        257) entonces se emite un pitido nivel dos y se enciende la luz amarilla.
+  \item Si no se ha dado ninguna situación de riesgo (\texttt{risk\_count == 0}), se
+        apaga el pitido y la luz amarilla (líneas 265 -- 268). Si, por el contrario, se
+        ha producido al menos dos riesgos se activa el pitido nivel dos y se enciende
+        la luz roja (líneas 269 -- 275). En otro caso, se apagan.
+\end{itemize}
+
+Con esta lógica, el diagrama \ref{fig:risks-diagram} queda implementado a nivel de código.
+En este caso, se utilizan los objetos protegidos de síntomas (códigos \ref{lst:symptoms_h}
+y \ref{lst:symptoms_c}), los que contienen los datos recibidos por el CANBus (\texttt{node1}
+definido por \ref{lst:node1_h} y \ref{lst:node1_c}) y el modo (códigos \ref{lst:mode_h} y
+\ref{lst:mode_c}).

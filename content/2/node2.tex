@@ -86,3 +86,17 @@ En este caso, se utilizan los objetos protegidos de síntomas (códigos \ref{lst
 y \ref{lst:symptoms_c}), los que contienen los datos recibidos por el CANBus (\texttt{node1}
 definido por \ref{lst:node1_h} y \ref{lst:node1_c}) y el modo (códigos \ref{lst:mode_h} y
 \ref{lst:mode_c}).
+
+Finalmente, para poder recibir los datos por el CANBus se han creado dos tareas esporádicas
+las cuales esperan un evento para poder actualizar los valores contenidos en los objetos
+protegidos. Dichas funciones vienen definidas por el código \ref{lst:canbustasks}:
+
+\lstinputlisting[style=C,caption={Tareas esporádicas de gestión del CANBus.},label={lst:canbustasks},linerange={290-324},firstnumber=290]{source-code/node2/Src/main.c}
+
+Por otra parte, según la definición del código del CANBus (ver código \ref{lst:can_c}),
+es necesario llamar a la función \texttt{CAN\_Handle\_IRQ} desde la rutina de 
+tratamiento de interrupción para recibir el mensaje de forma efectiva. Por ello, es
+necesario editar el fichero \texttt{stm32f4xx\_it.c} y añadir la llamada a la
+función, como se muestra en el código \ref{lst:canirq}:
+
+\lstinputlisting[style=C,caption={Rutina de tratamiento de interrupción del CANBus.},label={lst:canirq},linerange={37-40,207-220},firstnumber=37]{source-code/node2/Src/stm32f4xx_it.c}

@@ -23,4 +23,9 @@
   \item El pitido no se ha implementado a nivel de código ya que no venía especificado
         en los distintos diagramas a qué pin habría que conectarlo ni la lógica de
         control.
+  \item En el código \ref{lst:canbustasks} se han implementado dos tareas esporádicas
+        porque el CANBus recibe mensajes desde una rutina de interrupción. Como se quieren
+        actualizar variables las cuales utilizan un \texttt{lock} internamente, se
+        deriva su gestión a un par de tareas esporádicas cuya única finalidad es la
+        de actualizar el valor de los objetos protegidos.
 \end{itemize}

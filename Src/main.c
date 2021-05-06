@@ -143,7 +143,7 @@ void giroVolante(const void *argument) {
     HAL_ADC_ConfigChannel(&hadc1, &sConfig);
     HAL_ADC_Start(&hadc1);
     if (HAL_ADC_PollForConversion(&hadc1, 5) == HAL_OK) {
-      actual = map(HAL_ADC_GetValue(&hadc1), 0, 255, 0, 200);
+      actual = HAL_ADC_GetValue(&hadc1);
       WHEEL_set(actual);
       speed = SPEED_get();
       is_swerving = WHEEL_update_swerving(speed);

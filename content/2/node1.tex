@@ -33,3 +33,14 @@ la frenada ha cambiado, se actualiza el objeto protegido y se notifica a la tare
 esporádica que puede continuar su ejecución (líneas 158 -- 161); finalmente, se
 envía el valor de la nueva distancia por el CANBus (línea 162) y se programa la
 siguiente ejecución $\numprint[ms]{300}$ después del instante de activación (línea 163).
+
+La tarea esporádica \texttt{Freno} viene definida por el código \ref{lst:braketask}:
+
+\lstinputlisting[style=C,caption={Tarea periódica que controla la intensidad de la frenada.},label={lst:braketask},linerange={167-224},firstnumber=167]{source-code/node1/Src/main.c}
+
+Dicha tarea espera a que se le notifique que se ha de ejecutar (línea 180) y después accede
+al objeto protegido que contiene la intensidad de la frenada (códigos \ref{lst:distance_h} y
+\ref{lst:distance_c}); a continuación, según la intensidad de la frenada, enciende o
+apaga diversos LEDs en la placa a modo de indicativo visual de que se está frenando
+(líneas 183 -- 220). Finalmente, para evitar que la tarea se pueda activar con una
+baja periodicidad se esperan al menos $\numprint[ms]{150}$ desde el instante de activación.

@@ -2,4 +2,18 @@
   \item En el código \ref{lst:speedtask}, el mapeo se realiza con valores
         de entrada $\left[0, 255\right]$ porque el ADC de la placa
         es de 8 bits, por lo que su resolución máxima es 255.
+  \item En diversos códigos (como \ref{lst:distancetask} o \ref{lst:braketask}) se
+        utilizan eventos para la sincronización de tareas entre sí. Los eventos
+        aparecen en la documentación estándar de FreeRTOS y constituyen un mecanismo
+        muy sencillo y eficiente que respeta el tiempo real para bloquear y desbloquear
+        tareas sin necesidad de programar la lógica subyacente. Un evento, en esencia,
+        se conforma de $1 \dots n$ procesos que esperan y, en principio, un único proceso
+        $k$ que ``produce'' el evento. En ese instante, aquellas tareas que estaban
+        esperando al evento se desbloquean y prosiguen con su ejecución; mientras tanto,
+        el proceso $k$ reiniciaría el evento de forma que nuevas tareas pueden esperar
+        a que se produzca.
+
+        De esta manera, una tarea esporádica estaría esperando a que un evento se
+        produzca y existiría una tarea periódica activadora la cual indicaría
+        mediante dicho evento a la tarea esporádica que se tiene que ejecutar.
 \end{itemize}

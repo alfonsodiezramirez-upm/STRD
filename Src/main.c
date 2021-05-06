@@ -51,6 +51,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "cmsis_os.h"
+#include <stdlib.h>
 #include <stdbool.h>
 #include <math.h>
 #include "dwt_stm32_delay.h"

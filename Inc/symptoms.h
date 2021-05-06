@@ -30,6 +30,10 @@ float GIROSCOPE_get_Z(void);
 void WHEEL_set(int);
 int WHEEL_get(void);
 
+void WHEEL_set_is_swerving(bool);
+bool WHEEL_get_is_swerving(void);
+bool WHEEL_update_swerving(int);
+
 void WHEEL_grab(bool);
 bool WHEEL_is_grabbed(void);
 

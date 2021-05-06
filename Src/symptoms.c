@@ -17,6 +17,7 @@
  * Created by Javinator9889 on 26/03/21 - symptoms.h.
  */
 #include "symptoms.h"
+#include <stdlib.h>
 #include <lock.h>
 #include <semphr.h>
 #include <FreeRTOS.h>
@@ -38,7 +39,11 @@ static float GIROSCOPE_y = .0F;
 static float GIROSCOPE_z = .0F;
 
 // Private variable storing the steering wheel position.
+static int WHEEL_old_position = 0;
 static int WHEEL_position = 0;
+// Private variable for setting if the steering wheel is swerving
+// or not
+static bool WHEEL_is_swerving = false;
 // Private variable storing whether the steering wheel is
 // grabbed or not
 static bool WHEEL_status_grab = false;
@@ -115,6 +120,7 @@ float GIROSCOPE_get_Z(void) {
  */
 void WHEEL_set(int position) {
     LOCK_acquire(SYMPTOMS1_sem);
+    WHEEL_old_position = WHEEL_position;
     WHEEL_position = position;
     LOCK_release(SYMPTOMS1_sem);
 }
@@ -130,6 +136,46 @@ int WHEEL_get(void) {
     position = WHEEL_position;
     LOCK_release(SYMPTOMS1_sem);
     return position;
+}
+
+/**
+ * @brief Safely sets if the steering wheel is swerving or not.
+ * 
+ * @param is_swerving whether if the steering wheel is swerving or not.
+ */
+void WHEEL_set_is_swerving(bool is_swerving) {
+    LOCK_acquire(SYMPTOMS1_sem);
+    WHEEL_is_swerving = is_swerving;
+    LOCK_release(SYMPTOMS1_sem);
+}
+
+/**
+ * @brief Safely checks if the steering wheel is swerving or not.
+ * 
+ * @return true - if swerving.
+ * @return false - otherwise or if any error occurs.
+ */
+bool WHEEL_get_is_swerving(void) {
+    bool is_swerving = false;
+    LOCK_acquire(SYMPTOMS1_sem);
+    is_swerving = WHEEL_is_swerving;
+    LOCK_release(SYMPTOMS1_sem);
+    return is_swerving;
+}
+
+/**
+ * @brief With the given speed, safely updates whether the vehicle is
+ *        swerving or not, based on proposed conditions.
+ * 
+ * @param speed the current vehicle speed.
+ * @return true - if the vehicle is swerving.
+ * @return false - otherwise.
+ */
+bool WHEEL_update_swerving(int speed) {
+    LOCK_acquire(SYMPTOMS1_sem);
+    WHEEL_is_swerving = ((speed > 70) && (abs(WHEEL_position - WHEEL_old_position) >= 150));
+    LOCK_release(SYMPTOMS1_sem);
+    return WHEEL_is_swerving;
 }
 
 /**

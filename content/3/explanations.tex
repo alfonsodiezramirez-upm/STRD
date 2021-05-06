@@ -16,4 +16,8 @@
         De esta manera, una tarea esporádica estaría esperando a que un evento se
         produzca y existiría una tarea periódica activadora la cual indicaría
         mediante dicho evento a la tarea esporádica que se tiene que ejecutar.
+  \item En el código \ref{lst:wheel-task} se esperan 13 iteraciones que equivalen a un
+        tiempo de $\numprint[s]{5.2}$ (en lugar de los $\numprint[s]{5}$ pedidos). Esto
+        es debido a que el periodo no es múltiplo, por lo que se comete un error
+        ``a la alta'' en lugar de ``a la baja''.
 \end{itemize}

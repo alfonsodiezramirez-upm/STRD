@@ -39,4 +39,17 @@ reseteado el contador (no ha habido volantazo) se quita el síntoma.
 En lo referente a la tarea que identifica si el volante está siendo sujeto o no, se
 define mediante el código \ref{lst:grabtask}:
 
+\lstinputlisting[style=C,caption={Tarea periódica de control de sujección del volante.},label={lst:grabtask},linerange={161-174},firstnumber=161]{source-code/node2/Src/main.c}
 
+Dicha tarea sencillamente leerá el valor del GPIO correspondiente (línea 170) y actualizará
+el valor en el objeto protegido (línea 171), definido en los códigos \ref{lst:symptoms_h}
+y \ref{lst:symptoms_c}.
+
+Para trabajar con la inclinación de la cabeza, se ha de acceder a los valores provistos por
+el giroscopio integrado en la placa. El código de la tarea viene definido por
+\ref{lst:headtask}:
+
+\lstinputlisting[style=C,caption={Tarea periódica de control de la inclinación de la cabeza.},label={lst:headtask},linerange={176-211},firstnumber=176]{source-code/node2/Src/main.c}
+
+De todo el código anterior, los datos se actualizan en la línea 207 en donde guardan en
+el objeto protegido \texttt{symptoms} (códigos \ref{lst:symptoms_h} y \ref{lst:symptoms_c}).

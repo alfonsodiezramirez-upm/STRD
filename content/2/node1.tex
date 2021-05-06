@@ -30,7 +30,8 @@ objeto protegido \texttt{distance} (línea 138) (códigos \ref{lst:distance_h} y
 se computa la distancia de seguridad y se calcula la intensidad de la frenada
 según unos porcentajes establecidos (líneas 140 -- 156); si el valor de la intensidad de
 la frenada ha cambiado, se actualiza el objeto protegido y se notifica a la tarea
-esporádica que puede continuar su ejecución (líneas 158 -- 161); finalmente, se
+esporádica que puede continuar su ejecución (líneas 158 -- 161) 
+(códigos \ref{lst:brake_h} y \ref{lst:brake_c}); finalmente, se
 envía el valor de la nueva distancia por el CANBus (línea 162) y se programa la
 siguiente ejecución $\numprint[ms]{300}$ después del instante de activación (línea 163).
 
@@ -53,4 +54,18 @@ Finalmente, la tarea de gestión de las \texttt{Luces de cruce} viene definida p
 Dicha tarea lee desde el ADC (canal 1) el valor recibido por el LDR y, tras comprobar
 su luminosidad con el rango establecido enciende o apaga las luces de cruce (líneas 245 -- 247).
 Finalmente, se programa la siguiente ejecución $\numprint[s]{1}$ después de la
-activación. Esta tarea no accede a ningún objeto protegido.
+activación. Esta tarea no accede a ningún objeto protegido.\\
+\rule{\linewidth}{.2pt}
+
+Cabe destacar que los distintos objetos protegidos que se declaran y usan a lo largo
+del código se basan en la librería \texttt{lock}, definida en los códigos \ref{lst:lock_h}
+y \ref{lst:lock_c}. Dicha librería requiere que los objetos protegidos sean inicializados
+antes de realizar ninguna operación con ellos. Por ende, en el bloque \texttt{main} es
+necesario dedicar unas líneas para iniciar cada una de los objetos protegidos que se
+quieren usar (código \ref{lst:main_init1}):
+
+\lstinputlisting[style=C,caption={Código del \texttt{main}.},label={lst:main_init1},linerange={253-300},firstnumber=253]{source-code/node1/Src/main.c}
+
+En las líneas 271 -- 274 se inicializan los objetos protegidos, dejándolos listos para su
+uso. El cuerpo viene definido en los códigos \ref{lst:can_c}, \ref{lst:speed_c},
+\ref{lst:distance_c}, \ref{lst:brake_c}.

@@ -1,0 +1,6 @@
+[submodule "source-code/node1"]
+	path = source-code/node1
+	url = https://github.com/alfonsodiezramirez-upm/STRD.git
+[submodule "source-code/node2"]
+	path = source-code/node2
+	url = https://github.com/alfonsodiezramirez-upm/STRD.git

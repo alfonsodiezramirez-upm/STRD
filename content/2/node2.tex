@@ -21,3 +21,22 @@ Cuando se activa el GPIO3 se ``devolverá'' el semáforo, lo que permitirá que 
 esporádica pueda adquirirlo y realizar su ejecución. Sin embargo, cuando lo intente
 adquirir de nuevo se bloqueará y hasta que no se repita este proceso quedará a la
 espera de que se libere el semáforo.
+
+Por otra parte, la tarea que se encarga de detectar si hay o no volantazos viene definida
+por el código \ref{lst:wheel-task}:
+
+\lstinputlisting[style=C,caption={Tarea periódica de control del giro del volante.},label={lst:wheel-task},linerange={126-159},firstnumber=126]{source-code/node2/Src/main.c}
+
+En dicha tarea se lee desde el ADC (canal 0) y se actualiza el valor de la posición
+del volante en la variable \texttt{actual} (líneas 139 -- 146); a continuación se
+conserva el dato en el objeto protegido \texttt{symptoms} (línea 147) y se comprueba,
+accediendo a la velocidad actual, si el conductor está dando volantazos o no. Esto se
+realiza en las líneas 148 -- 155, en donde se aprovechan los recursos provistos por
+el objeto protegido \texttt{wheel} para verificar si la se ha pegado un volantazo
+(códigos \ref{lst:symptoms_h} y \ref{lst:symptoms_c}). Si durante 13 iteraciones no se ha
+reseteado el contador (no ha habido volantazo) se quita el síntoma.
+
+En lo referente a la tarea que identifica si el volante está siendo sujeto o no, se
+define mediante el código \ref{lst:grabtask}:
+
+

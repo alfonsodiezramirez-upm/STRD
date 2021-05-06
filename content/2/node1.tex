@@ -17,6 +17,9 @@ El objeto protegido \texttt{SPEED} sigue la definición estándar del resto de o
 protegidos y viene definido en los códigos \ref{lst:speed_h} (cabeceras) y \ref{lst:speed_c}
 (cuerpo).
 
+Por otra parte, el envío de datos mediante el CANBus se realiza mediante la librería
+\texttt{can}, definida en los códigos \ref{lst:can_h} y \ref{lst:can_c}.
+
 La tarea del \texttt{Cálculo distancia} viene definida por el código \ref{lst:distancetask}:
 
 \lstinputlisting[style=C,caption={Tarea periódica que controla la distancia.},label={lst:distancetask},linerange={116-165},firstnumber=116]{source-code/node1/Src/main.c}
@@ -25,4 +28,8 @@ En dicha tarea se utiliza la librería \texttt{uss} (códigos \ref{lst:uss_h} y 
 para leer desde el sensor de ultrasonidos (líneas 135 -- 137); se actualiza el valor de la distancia en el
 objeto protegido \texttt{distance} (línea 138) (códigos \ref{lst:distance_h} y \ref{lst:distance_c});
 se computa la distancia de seguridad y se calcula la intensidad de la frenada
-según unos porcentajes establecidos (líneas 140 -- 156);
+según unos porcentajes establecidos (líneas 140 -- 156); si el valor de la intensidad de
+la frenada ha cambiado, se actualiza el objeto protegido y se notifica a la tarea
+esporádica que puede continuar su ejecución (líneas 158 -- 161); finalmente, se
+envía el valor de la nueva distancia por el CANBus (línea 162) y se programa la
+siguiente ejecución $\numprint[ms]{300}$ después del instante de activación (línea 163).
